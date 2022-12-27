@@ -73,7 +73,7 @@ void function FSA_CommandCallback_Login( entity player, array< string > args ) {
 	}
 
 	array< string > passwords = split( GetConVarString( "FSA_ADMIN_PASSWORDS" ), "," )
-	if( adminUIDs.len() == passwords.len() ) {
+	if( adminUIDs.len() != passwords.len() ) {
 		FSU_Error( "FSA_ADMIN_UIDS length doesnt equal FSA_ADMIN_PASSWORDS length" )
 		FSU_PrivateChatMessage( player, "FSA_ADMIN_UIDS && FSA_ADMIN_PASSWORDS length mismatch. Please check and correct the number of entries for both of thes ConVars!" )
 		return
