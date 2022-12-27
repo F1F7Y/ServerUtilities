@@ -1,0 +1,77 @@
+{
+	"Name" : "Fifty.ServerMessages [FSM]",
+	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements server side messages and player score tracking\n\nDependencies:\n  - Northstar\n  - Fifty.ServerUtilities\n  - Fifty.ServerChatCommands",
+	"Version": "2.0.0",
+	"LoadPriority": 2,
+	"Dependencies": {
+		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
+		"FSU_ENABLED": "Fifty.ServerUtilities [FSU]"
+	},
+	"ConVars": [
+		{
+			"Name": "FSM_WELCOME_MESSAGE_TITLE",
+			"DefaultValue": "Welcome to SERVER"
+		},
+		{
+			"Name": "FSM_WELCOME_MESSAGE_TEXT",
+			"DefaultValue": "Hope you have fun"
+		},
+		{
+			"Name": "FSM_WELCOME_MESSAGE_IMAGE",
+			"DefaultValue": "rui/callsigns/callsign_75_col"
+		},
+		{
+			"Name": "FSM_MARVIN_DEATH_NOTIFICATION",
+			"DefaultValue": "1"
+		},
+		{
+			"Name": "FSM_PLAYER_FALL_DEATH_NOTIFICATION",
+			"DefaultValue": "1"
+		},
+		{
+			"Name": "FSM_PLAYER_KILLSTREAK",
+			"DefaultValue": "1"
+		},
+		{
+			"Name": "FSM_BROADCAST_ENABLE",
+			"DefaultValue": "1"
+		},
+		{
+			"Name": "FSM_BROADCAST_RANDOM",
+			"DefaultValue": "1"
+		},
+		{
+			"Name": "FSM_BROADCAST_0",
+			"DefaultValue": "You can use the %H%Pnextmap <map>%T command to vote for the next map!"
+		},
+		{
+			"Name": "FSM_BROADCAST_1",
+			"DefaultValue": "You can use the %H%Pskip%T command to vote to skip the map!"
+		},
+		{
+			"Name": "FSM_BROADCAST_2",
+			"DefaultValue": "Run %H%Pextend%T to vote to extend teh match."
+		},
+		{
+			"Name": "FSM_BROADCAST_3",
+			"DefaultValue": "Run %H%Phelp <command>%T to get a detailed description of what it does."
+		},
+		{
+			"Name": "FSM_BROADCAST_4",
+			"DefaultValue": "Run %H%Pmaps <page>%T to get a list of maps in the voting pool."
+		}
+	],
+	"Scripts": [
+		{
+			"Path": "fsm_core.nut",
+			"RunOn": "SERVER",
+			"ServerCallback": {
+				"After": "FSM_Init"
+			}
+		},
+		{
+			"Path": "fsm_killstreak.nut",
+			"RunOn": "SERVER"
+		}
+	]
+}

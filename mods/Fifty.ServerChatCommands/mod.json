@@ -1,0 +1,48 @@
+{
+	"Name" : "Fifty.ServerChatCommands [FSCC]",
+	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements server-side chat command functionality. Any mods can use this to register chat commands.\n\nDependencies:\n  - Fifty.ServerUtilities",
+	"Version": "2.0.0",
+	"LoadPriority": 2,
+	"Dependencies": {
+		"FSU_ENABLED": "Fifty.ServerUtilities [FSU]"
+	},
+	"ConVars": [
+		{
+			"Name": "FSCC_PREFIX",
+			"DefaultValue": "!"
+		},
+		{
+			"Name": "FSCC_OWNER",
+			"DefaultValue": "Contact information"
+		},
+		{
+			"Name": "FSCC_RULES",
+			"DefaultValue": "Don't cheat,Don't act funny,vim > nano"
+		},
+		{
+			"Name": "FSCC_DISCORD",
+			"DefaultValue": "northstar.tf"
+		},
+		{
+			"Name": "FSCC_MODE_HIDE_MESSAGES_GLOBAL",
+			"DefaultValue": "1"
+		},
+		{
+			"Name": "FSCC_MODE_SECURE",
+			"DefaultValue": "1"
+		}
+	],
+	"Scripts": [
+		{
+			"Path": "fscc_core.nut",
+			"RunOn": "SERVER",
+			"ServerCallback": {
+				"After": "FSCC_Init"
+			}
+		},
+		{
+			"Path": "fscc_core_commands.nut",
+			"RunOn": "SERVER"
+		}
+	]
+}

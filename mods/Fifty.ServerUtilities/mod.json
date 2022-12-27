@@ -1,0 +1,28 @@
+{
+	"Name" : "Fifty.ServerUtilities [FSU]",
+	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements helper functions used by other mods.\n\nDependencies:\n  - Northstar",
+	"Version": "2.0.0",
+	"LoadPriority": 2,
+	"Dependencies": {
+		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
+		"FSA_ENABLED": "Fifty.ServerAdmin [FSA]",
+		"FSM_ENABLED": "Fifty.ServerMessages [FSM]",
+		"FSTB_ENABLED": "Fifty.ServerTeamBalance [FSTB]",
+		"FSV_ENABLED": "Fifty.ServerVote [FSV]"
+	},
+	"ConVars": [
+	],
+	"Scripts": [
+		{
+			"Path": "fsu_core.nut",
+			"RunOn": "SERVER",
+			"ServerCallback": {
+				"After": "FSU_Init"
+			}
+		},
+		{
+			"Path": "fsu_deprecated.nut",
+			"RunOn": "SERVER"
+		}
+	]
+}

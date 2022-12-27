@@ -1,0 +1,40 @@
+{
+	"Name" : "Fifty.ServerVote [FSV]",
+	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements voting functionality\n\nDependencies:\n  - Northstar\n  - Fifty.ServerUtilities\n  - Fifty.ServerChatCommands",
+	"Version": "2.0.0",
+	"LoadPriority": 2,
+	"Dependencies": {
+		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
+		"FSU_ENABLED": "Fifty.ServerUtilities [FSU]"
+	},
+	"ConVars": [
+		{
+			"Name": "FSV_CUSTOM_MAP_ROTATION",
+			"DefaultValue": "1"
+		},
+		{
+			"Name": "FSV_MAP_ROTATION",
+			"DefaultValue": "mp_angel_city,mp_black_water_canal,mp_grave,mp_colony02,mp_drydock,mp_eden,mp_thaw,mp_forwardbase_kodai,mp_glitch,mp_relic02,mp_wargames"
+		},
+		{
+			"Name": "FSV_MAP_VOTE_ONLY",
+			"DefaultValue": "mp_crashsite3,mp_complex3,mp_homestead,mp_rise"
+		}
+	],
+	"Scripts": [
+		{
+			"Path": "fsv_core.nut",
+			"RunOn": "SERVER",
+			"ServerCallback": {
+				"After": "FSV_Init"
+			}
+		},
+		{
+			"Path": "fsv_localization.nut",
+			"RunOn": "SERVER",
+			"ServerCallback": {
+				"After": "FSV_Localization_Init"
+			}
+		}
+	]
+}
