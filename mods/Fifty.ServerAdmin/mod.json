@@ -32,6 +32,10 @@
 			"ServerCallback": {
 				"After": "FSA_Init"
 			}
+		},
+		{
+			"Path": "fsa_command_callbacks.nut",
+			"RunOn": "SERVER"
 		}
 	]
 }

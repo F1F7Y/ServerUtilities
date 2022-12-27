@@ -23,6 +23,10 @@
 	],
 	"Scripts": [
 		{
+			"Path": "fsv_command_callbacks.nut",
+			"RunOn": "SERVER"
+		},
+		{
 			"Path": "fsv_core.nut",
 			"RunOn": "SERVER",
 			"ServerCallback": {

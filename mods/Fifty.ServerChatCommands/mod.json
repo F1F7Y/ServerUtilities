@@ -41,7 +41,7 @@
 			}
 		},
 		{
-			"Path": "fscc_core_commands.nut",
+			"Path": "fscc_command_callbacks.nut",
 			"RunOn": "SERVER"
 		}
 	]

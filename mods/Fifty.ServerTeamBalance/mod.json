@@ -20,6 +20,10 @@
 			"ServerCallback": {
 				"After": "FSTB_Init"
 			}
+		},
+		{
+			"Path": "fstb_command_callbacks.nut",
+			"RunOn": "SERVER"
 		}
 	]
 }
