@@ -102,7 +102,12 @@ void function FSM_PrintWelcomeMessage_All() {
  * @param player The player to send the message to
 */
 void function FSM_PrintWelcomeMessage( entity player ) {
-	NSSendLargeMessageToPlayer( player, GetConVarString( "FSM_WELCOME_MESSAGE_TITLE" ), GetConVarString( "FSM_WELCOME_MESSAGE_TEXT" ), 20, GetConVarString( "FSM_WELCOME_MESSAGE_IMAGE" ) )
+	if( GetConVarBool( "FSM_WELCOME_USE_RUI" ) ) {
+		NSSendLargeMessageToPlayer( player, GetConVarString( "FSM_WELCOME_MESSAGE_TITLE" ), GetConVarString( "FSM_WELCOME_MESSAGE_TEXT" ), 20, GetConVarString( "FSM_WELCOME_MESSAGE_IMAGE" ) )
+	} else {
+		FSU_ChatBroadcast( FSU_GetFormattedConVar( "FSM_WELCOME_MESSAGE_TITLE" ) )
+		FSU_ChatBroadcast( FSU_GetFormattedConVar( "FSM_WELCOME_MESSAGE_TEXT" ) )
+	}
 }
 #else
 void function FSM_Init() {

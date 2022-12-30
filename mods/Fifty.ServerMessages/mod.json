@@ -9,6 +9,10 @@
 	},
 	"ConVars": [
 		{
+			"Name": "FSM_WELCOME_USE_RUI",
+			"DefaultValue": "1"
+		},
+		{
 			"Name": "FSM_WELCOME_MESSAGE_TITLE",
 			"DefaultValue": "Welcome to SERVER"
 		},
