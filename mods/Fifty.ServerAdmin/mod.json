@@ -9,7 +9,7 @@
 	},
 	"ConVars": [
 		{
-			"Name":"FSA_HIGHLIGHT_OWNERS_IN_CHAT",
+			"Name":"FSA_PREFIX_OWNERS_IN_CHAT",
 			"DefaultValue": "1",
 			"Description": "Whether UIDs in FSA_OWNERS should have the [OWNER] prefix in chat."
 		},

@@ -13,8 +13,8 @@ void function FSA_Init() {
 	if( GetConVarBool( "FSA_PREFIX_ADMINS_IN_CHAT" ) )
  		AddCallback_OnReceivedSayTextMessage( FSA_CheckForAdminMessage )
 
-	if( GetConVarBool("FSA_HIGHLIGHT_OWNERS_IN_CHAT") )
-		AddCallback_OnReceivedSayTextMessage( FSA_AddOwnerTag )
+	if( GetConVarBool( "FSA_PREFIX_OWNERS_IN_CHAT" ) )
+		AddCallback_OnReceivedSayTextMessage( FSA_CheckForOwnerMessage )
 
 	FSCC_CommandStruct command
 	command.m_UsageUser = "npc <npc> <team>"
@@ -64,7 +64,7 @@ ClServer_MessageStruct function FSA_CheckForAdminMessage( ClServer_MessageStruct
 		return message
 	}
 
-	if( FSA_IsAdmin( message.player ) && FSA_IsOwner( message.player ) {
+	if( FSA_IsAdmin( message.player ) ) {
 		message.shouldBlock = true
 		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, "ADMIN")
 	}
@@ -76,9 +76,17 @@ ClServer_MessageStruct function FSA_CheckForAdminMessage( ClServer_MessageStruct
  * Gets called when someone sends a message and checks if they're the owner. If so it adds the [OWNER] tag
  * @param message The message struct containing information about the chat message
 */
-ClServer_MessageStruct function FSA_AddOwnerTag( ClServer_MessageStruct message ) {
-	message.shouldBlock = true
-	FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam, "OWNER" )
+ClServer_MessageStruct function FSA_CheckForOwnerMessage( ClServer_MessageStruct message ) {
+	if( message.message.find( GetConVarString( "FSCC_PREFIX" ) ) == 0 || message.message.len() == 0 || message.shouldBlock ) {
+		message.shouldBlock = true
+		return message
+	}
+
+	if( FSA_IsOwner( message.player ) ) {
+		message.shouldBlock = true
+		FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam, "OWNER" )
+	}
+
 	return message
 }
 
@@ -89,11 +97,11 @@ ClServer_MessageStruct function FSA_AddOwnerTag( ClServer_MessageStruct message 
  * @param isTeamMessage Whether it was sent in team or grobal chat
  * @param prefix The prefix to add
 */
-void function FSA_SendMessageWithPrefix(entity from, string message, bool isTeamMessage, string prefix){
+void function FSA_SendMessageWithPrefix( entity from, string message, bool isTeamMessage, string prefix ){
 	foreach( entity p in GetPlayerArray() ) {
 		if( isTeamMessage && p.GetTeam() != from.GetTeam())
 			continue
-		Chat_ServerPrivateMessage( p, FSU_FmtAdmin() + "["+ prefix +"] " + FSU_FmtEnd() + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" )+ from.GetPlayerName() + FSU_FmtEnd()+ ": "+ message, isTeamMessage, false)
+		Chat_ServerPrivateMessage( p, FSU_FmtAdmin() + "["+ prefix +"] " + FSU_FmtEnd() + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + FSU_FmtEnd()+ ": " + message, isTeamMessage, false)
 	}
 }
 
