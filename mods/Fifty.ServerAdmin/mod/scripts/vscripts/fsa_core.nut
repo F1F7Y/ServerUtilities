@@ -26,6 +26,13 @@ void function FSA_Init() {
 	command.Callback = FSA_CommandCallback_NPC
 	FSCC_RegisterCommand( "npc", command )
 
+	command.m_UsageUser = "titan <type> <team>"
+	command.m_Description = "Spawns a titan at your crosshair."
+	command.m_Group = "ADMIN"
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSA_CommandCallback_Titan
+	FSCC_RegisterCommand( "titan", command )
+
 	if( GetConVarBool( "FSA_ADMINS_REQUIRE_LOGIN" ) ) {
 		command.m_UsageUser = "login <password>"
 		command.m_UsageAdmin = ""

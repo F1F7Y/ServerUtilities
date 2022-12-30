@@ -2,18 +2,18 @@ globalize_all_functions
 
 
 /**
- * Gets called when a player runs !grunt
+ * Gets called when a player runs !npc
  * @param player The player who caled the command
  * @param args The arguments passed by the player
 */
 void function FSA_CommandCallback_NPC( entity player, array< string > args ) {
 	if( args.len() == 0 ) {
-		FSU_PrivateChatMessage( player, "Run " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "npc <grunt/spectre/stalker/reaper/marvin> <imc/militia> to spawn a grunt." ) )
+		FSU_PrivateChatMessage( player, "Run " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "npc <grunt/spectre/stalker/reaper/marvin> <imc/militia> to spawn an npc." ) )
 		return
 	}
 
 	int team = TEAM_UNASSIGNED
-	string npc = "npc_soldier"
+	string npc = ""
 	if( args.len() >= 1 ) {
 		if( args.len() >= 2 ) {
 			switch( args[1].tolower() ) {
@@ -42,8 +42,71 @@ void function FSA_CommandCallback_NPC( entity player, array< string > args ) {
 		}
 	}
 
+	if( npc.len() == 0 ) {
+		FSU_PrivateChatMessage( player, "Couldn't find entity: " + args[0] )
+		return
+	}
 
 	thread DEV_SpawnNPCWithWeaponAtCrosshair( npc, npc, team )
+	FSU_PrivateChatMessage( player, "Spawned a " + args[0] + "!" )
+}
+
+/**
+ * Gets called when a player runs !titan
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSA_CommandCallback_Titan( entity player, array< string > args ) {
+	if( args.len() == 0 ) {
+		FSU_PrivateChatMessage( player, "Run " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "npc <ion/scorch/northstar/ronin/tone/legion/monarch> <imc/militia> to spawn a titan." ) )
+		return
+	}
+
+	int team = TEAM_UNASSIGNED
+	string titan = ""
+	if( args.len() >= 1 ) {
+		if( args.len() >= 2 ) {
+			switch( args[1].tolower() ) {
+				case "imc":
+					team = TEAM_IMC
+					break
+				case "militia":
+					team = TEAM_MILITIA
+					break
+			}
+		}
+
+		switch( args[0].tolower() ) {
+			case "ion":
+				titan = "npc_titan_auto_atlas_ion_prime"
+				break
+			case "scorch":
+				titan = "npc_titan_ogre_meteor"
+				break
+			case "northstar":
+				titan = "npc_titan_auto_stryder_sniper"
+				break
+			case "ronin":
+				titan = "npc_titan_auto_stryder_leadwall"
+				break
+			case "tone":
+				titan = "npc_titan_atlas_tracker"
+				break
+			case "legion":
+				titan = "npc_titan_auto_ogre_minigun"
+				break
+			case "monarch":
+				titan = "npc_titan_auto_atlas_vanguard"
+				break
+		}
+	}
+
+	if( titan.len() == 0 ) {
+		FSU_PrivateChatMessage( player, "Couldn't find entity: " + args[0] )
+		return
+	}
+
+	thread DEV_SpawnNPCWithWeaponAtCrosshair( "npc_titan", titan, team )
 	FSU_PrivateChatMessage( player, "Spawned a " + args[0] + "!" )
 }
 
