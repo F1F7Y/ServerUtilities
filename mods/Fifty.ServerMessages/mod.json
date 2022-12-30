@@ -33,6 +33,10 @@
 			"DefaultValue": "1"
 		},
 		{
+			"Name": "FSM_USE_RUI_POPUP_FOR_KILLSTREAK",
+			"DefaultValue": "1"
+		},
+		{
 			"Name": "FSM_BROADCAST_ENABLE",
 			"DefaultValue": "1"
 		},

@@ -84,9 +84,15 @@ void function FSU_Print( string message ) {
 /**
  * Sends a colored message to global chat and prepends it with [FSU]
  * @param mesage The message to be sent to global chat
+ * @param usePopUp Whether we should use serverside rui instead of chat
 */
-void function FSU_ChatBroadcast( string message ) {
-	Chat_ServerBroadcast( header + "[FSU]" + FSU_FmtBegin() + " " + message, false )
+void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
+	if( usePopUp ) {
+		foreach( entity player in GetPlayerArray() )
+			NSSendPopUpMessageToPlayer( player, message )
+	} else {
+		Chat_ServerBroadcast( header + "[FSU]" + FSU_FmtBegin() + " " + message, false )
+	}
 }
 
 /**

@@ -17,7 +17,14 @@ void function FSM_UpdateKillstreakInformation( entity victim, entity attacker ) 
 
 		foreach( achivement in killstreakAchivements ) {
 			if( killstreak[attacker] == achivement ) {
-				FSU_ChatBroadcast( FSU_Highlight( attacker.GetPlayerName() ) + " is on a " + FSU_Highlight( string( achivement ) ) + " kill streak!" )
+				bool usePopUp = GetConVarBool( "FSM_USE_RUI_POPUP_FOR_KILLSTREAK" )
+				string message
+				if( usePopUp )
+					message = attacker.GetPlayerName() + " is on a " + string( achivement ) + " kill streak!"
+				else
+					message = FSU_Highlight( attacker.GetPlayerName() ) + " is on a " + FSU_Highlight( string( achivement ) ) + " kill streak!"
+				
+				FSU_ChatBroadcast( message, usePopUp )
 				break
 			}
 		}
@@ -27,7 +34,14 @@ void function FSM_UpdateKillstreakInformation( entity victim, entity attacker ) 
 
 	if( victim in killstreak ) {
 		if( killstreak[victim] > 10 ) {
-			FSU_ChatBroadcast( FSU_Highlight( attacker.GetPlayerName() ) + " ended " + FSU_Highlight( victim.GetPlayerName() ) + "s " + FSU_Highlight( string( killstreak[victim] ) ) + " kill streak!" )
+			bool usePopUp = GetConVarBool( "FSM_USE_RUI_POPUP_FOR_KILLSTREAK" )
+			string message
+			if( usePopUp )
+				message = attacker.GetPlayerName() + " ended " + victim.GetPlayerName() + "s " + string( killstreak[victim] ) + " kill streak!"
+			else
+				message = FSU_Highlight( attacker.GetPlayerName() ) + " ended " + FSU_Highlight( victim.GetPlayerName() ) + "s " + FSU_Highlight( string( killstreak[victim] ) ) + " kill streak!"
+			
+			FSU_ChatBroadcast( message, usePopUp )
 		}
 		killstreak[victim] = 0
 	}
