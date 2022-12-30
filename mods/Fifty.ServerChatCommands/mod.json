@@ -9,27 +9,33 @@
 	"ConVars": [
 		{
 			"Name": "FSCC_PREFIX",
-			"DefaultValue": "!"
+			"DefaultValue": "!",
+			"Description": "The prefix used for commands. Should only be one character."
 		},
 		{
 			"Name": "FSCC_OWNER",
-			"DefaultValue": "Contact information"
+			"DefaultValue": "???",
+			"Description": "The contact owner of the owner ( discord, ... ). gets printed by the owner command."
 		},
 		{
 			"Name": "FSCC_RULES",
-			"DefaultValue": "Don't cheat,Don't act funny,vim > nano"
+			"DefaultValue": "Don't cheat,Don't act funny,vim > nano",
+			"Description": "A list of rules. These get printed by the rules command."
 		},
 		{
 			"Name": "FSCC_DISCORD",
-			"DefaultValue": "northstar.tf"
+			"DefaultValue": "northstar.tf",
+			"Description": "A link to discord. Gets printed by the discord command."
 		},
 		{
 			"Name": "FSCC_MODE_HIDE_MESSAGES_GLOBAL",
-			"DefaultValue": "1"
+			"DefaultValue": "1",
+			"Description": "Whether to hide the player messages which are identified as possible commands."
 		},
 		{
 			"Name": "FSCC_MODE_SECURE",
-			"DefaultValue": "1"
+			"DefaultValue": "1",
+			"Description": "Whether to empty the message struct. This may break other chat command mods."
 		}
 	],
 	"Scripts": [

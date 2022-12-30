@@ -10,19 +10,23 @@
 	"ConVars": [
 		{
 			"Name": "FSA_PREFIX_ADMINS_IN_CHAT",
-			"DefaultValue": "1"
+			"DefaultValue": "1",
+			"Description": "Whether admins get [ADMIN] prefixed in chat. ( may require them to first login )"
 		},
 		{
 			"Name": "FSA_ADMINS_REQUIRE_LOGIN",
-			"DefaultValue": "1"
+			"DefaultValue": "1",
+			"Description": "Whether admins need to login to use admin only features."
 		},
 		{
 			"Name": "FSA_ADMIN_UIDS",
-			"DefaultValue": "1000574542451,1008806725370"
+			"DefaultValue": "1000574542451,1008806725370",
+			"Description": "A list of admin UIDs separated by ','."
 		},
 		{
 			"Name": "FSA_ADMIN_PASSWORDS",
-			"DefaultValue": "1234,0987"
+			"DefaultValue": "1234,0987",
+			"Description": "A list of admin passwords separated by ','."
 		}
 	],
 	"Scripts": [
