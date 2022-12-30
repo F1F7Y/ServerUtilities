@@ -9,6 +9,16 @@
 	},
 	"ConVars": [
 		{
+			"Name":"FSA_HIGHLIGHT_OWNERS_IN_CHAT",
+			"DefaultValue": "1",
+			"Description": "Whether UIDs in FSA_OWNERS should have the [OWNER] prefix in chat."
+		},
+		{
+			"Name": "FSA_OWNERS",
+			"DefaultValue": "1000574542451,1008806725370",
+			"Description": "A list of owner UIDs separated by ','."
+		},
+		{
 			"Name": "FSA_PREFIX_ADMINS_IN_CHAT",
 			"DefaultValue": "1",
 			"Description": "Whether admins get [ADMIN] prefixed in chat. ( may require them to first login )"

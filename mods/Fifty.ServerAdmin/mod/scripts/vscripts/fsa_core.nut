@@ -13,6 +13,9 @@ void function FSA_Init() {
 	if( GetConVarBool( "FSA_PREFIX_ADMINS_IN_CHAT" ) )
  		AddCallback_OnReceivedSayTextMessage( FSA_CheckForAdminMessage )
 
+	if( GetConVarBool("FSA_HIGHLIGHT_OWNERS_IN_CHAT") )
+		AddCallback_OnReceivedSayTextMessage( FSA_AddOwnerTag )
+
 	FSCC_CommandStruct command
 	command.m_UsageUser = "npc <npc> <team>"
 	command.m_UsageAdmin = ""
@@ -61,12 +64,51 @@ ClServer_MessageStruct function FSA_CheckForAdminMessage( ClServer_MessageStruct
 		return message
 	}
 
-	if( FSA_IsAdmin( message.player ) ) {
-		Chat_Impersonate( message.player, FSU_FmtAdmin() + "[ADMIN]: " + FSU_FmtEnd() + message.message, false )
+	if( FSA_IsAdmin( message.player ) && FSA_IsOwner( message.player ) {
 		message.shouldBlock = true
+		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, "ADMIN")
 	}
 
 	return message
+}
+
+/**
+ * Gets called when someone sends a message and checks if they're the owner. If so it adds the [OWNER] tag
+ * @param message The message struct containing information about the chat message
+*/
+ClServer_MessageStruct function FSA_AddOwnerTag( ClServer_MessageStruct message ) {
+	message.shouldBlock = true
+	FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam, "OWNER" )
+	return message
+}
+
+/**
+ * Sends a message with a prefix
+ * @param from The player who originally sent the message
+ * @param message The message string
+ * @param isTeamMessage Whether it was sent in team or grobal chat
+ * @param prefix The prefix to add
+*/
+void function FSA_SendMessageWithPrefix(entity from, string message, bool isTeamMessage, string prefix){
+	foreach( entity p in GetPlayerArray() ) {
+		if( isTeamMessage && p.GetTeam() != from.GetTeam())
+			continue
+		Chat_ServerPrivateMessage( p, FSU_FmtAdmin() + "["+ prefix +"] " + FSU_FmtEnd() + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" )+ from.GetPlayerName() + FSU_FmtEnd()+ ": "+ message, isTeamMessage, false)
+	}
+}
+
+/**
+ * Returns true if player is an owner
+ * @ param player The player to check
+*/
+bool function FSA_IsOwner( entity player ) {
+	array< string > ownerUIDs = split( GetConVarString( "FSA_OWNERS" ), "," )
+
+	if( ownerUIDs.find( player.GetUID() ) != -1 ) {
+		return true
+	}
+
+	return false
 }
 
 /**
