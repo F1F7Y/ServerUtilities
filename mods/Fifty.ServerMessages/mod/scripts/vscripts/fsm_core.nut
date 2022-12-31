@@ -7,6 +7,7 @@ global function FSM_Init
 void function FSM_Init() {
 	// Welcome message
 	AddCallback_GameStateEnter( eGameState.Playing, FSM_PrintWelcomeMessage_All )
+	AddCallback_GameStateEnter( eGameState.Prematch, FSM_PrintPrematchMessage )
 
 	AddCallback_OnClientConnected ( FSM_OnClientConnected )
 
@@ -16,6 +17,30 @@ void function FSM_Init() {
 	// Killers >:(
 	AddCallback_OnNPCKilled( FSM_OnNPCKilled )
 	AddCallback_OnPlayerKilled( FSM_OnPlayerKilled )
+}
+
+/**
+ * Prints a message to global chat
+*/
+void function FSM_PrintPrematchMessage() {
+	// Wait so the FSU message is sent first
+	WaitFrame()
+
+	thread FSM_PrintPrematchMessage_Threaded()
+}
+
+/**
+ * Prints a message to global chat
+*/
+void function FSM_PrintPrematchMessage_Threaded() {
+	wait 1
+	if( GetConVarBool( "FSM_LIST_PRINT_ON_MATCH_START" ) ) {
+		for( int i = 0; i < 5; i++ ) {
+			string message = GetConVarString( "FSM_LIST_" + i )
+			if( message.len() != 0 )
+				FSU_ChatBroadcast( "  %H" + i + ".%T " + message )
+		}
+	}
 }
 
 /**

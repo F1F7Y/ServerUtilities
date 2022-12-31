@@ -25,7 +25,6 @@ void function FSU_PrintPrematchMessage() {
 
 #if FSCC_ENABLED
 	FSU_Print( "FSCC is enabled!")
-	FSU_ChatBroadcast( "Do you want to know which mods are installed on this server? Do you want to contact the owner? Use %H%Phelp%T to list avalible commands!" )
 #endif
 #if FSA_ENABLED
 	FSU_Print( "FSA is enabled!")

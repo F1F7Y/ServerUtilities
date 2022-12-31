@@ -82,6 +82,36 @@
 			"Name": "FSM_BROADCAST_4",
 			"DefaultValue": "Run %H%Pmaps <page>%T to get a list of maps in the voting pool.",
 			"Description": "The fifth broadcast message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+		},
+		{
+			"Name": "FSM_LIST_PRINT_ON_MATCH_START",
+			"DefaultValue": "1",
+			"Description": "Whether to print a list when the match starts. ( Rules, How to play, etc... )"
+		},
+		{
+			"Name": "FSM_LIST_0",
+			"DefaultValue": "First %Hlist",
+			"Description": "First list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+		},
+		{
+			"Name": "FSM_LIST_1",
+			"DefaultValue": "%HSecond%T list",
+			"Description": "Second list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+		},
+		{
+			"Name": "FSM_LIST_2",
+			"DefaultValue": "Third %Hlist",
+			"Description": "Third list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+		},
+		{
+			"Name": "FSM_LIST_3",
+			"DefaultValue": "%HFourth%T list",
+			"Description": "Fourth list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+		},
+		{
+			"Name": "FSM_LIST_4",
+			"DefaultValue": "Fifth %Hlist",
+			"Description": "Fifth list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
 		}
 	],
 	"Scripts": [
