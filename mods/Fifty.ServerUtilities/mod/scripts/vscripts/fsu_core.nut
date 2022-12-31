@@ -25,7 +25,7 @@ void function FSU_PrintPrematchMessage() {
 
 #if FSCC_ENABLED
 	FSU_Print( "FSCC is enabled!")
-	FSU_ChatBroadcast( "Do you want to know which mods are installed on this server? Do you want to contact the owner? Use " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "help" ) + " to list avalible commands!" )
+	FSU_ChatBroadcast( "Do you want to know which mods are installed on this server? Do you want to contact the owner? Use %H%Phelp%T to list avalible commands!" )
 #endif
 #if FSA_ENABLED
 	FSU_Print( "FSA is enabled!")
@@ -91,7 +91,7 @@ void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
 		foreach( entity player in GetPlayerArray() )
 			NSSendPopUpMessageToPlayer( player, message )
 	} else {
-		Chat_ServerBroadcast( header + "[FSU]" + FSU_FmtBegin() + " " + message, false )
+		Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%T " + message ), false )
 	}
 }
 
@@ -101,7 +101,7 @@ void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
  * @param mesage The message to be sent to player
 */
 void function FSU_PrivateChatMessage( entity player, string message ) {
-	Chat_ServerPrivateMessage( player, header + "[FSU]" + FSU_FmtBegin() + " " + message, false, false )
+	Chat_ServerPrivateMessage( player, FSU_FormatString( "%F[FSU]%T " + message ), false, false )
 }
 
 /**
@@ -141,10 +141,10 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 
 /**
  * Returns a formatted string convar
- * @param convar The convar to format
+ * @param str The string to format
 */
-string function FSU_GetFormattedConVar( string convar ) {
-	string formatted = GetConVarString( convar )
+string function FSU_FormatString( string str ) {
+	string formatted = str
 
 	int begin, end
 	var index
@@ -161,8 +161,14 @@ string function FSU_GetFormattedConVar( string convar ) {
 			case "%H":
 				code = highlight
 				break
+			case "%F":
+				code = header
+				break
 			case "%T":
 				code = text
+				break
+			case "%A":
+				code = adminHeader
 				break
 			case "%0":
 				code = "\x1b[0m"
@@ -177,6 +183,15 @@ string function FSU_GetFormattedConVar( string convar ) {
 		formatted = formatted.slice( 0, _index ) + code + formatted.slice( _index + 2, formatted.len() )
 	}
 
+	return formatted
+}
+
+/**
+ * Returns a formatted string convar
+ * @param convar The convar to format
+*/
+string function FSU_GetFormattedConVar( string convar ) {
+	string formatted = FSU_FormatString( GetConVarString( convar ) )
 	return formatted
 }
 

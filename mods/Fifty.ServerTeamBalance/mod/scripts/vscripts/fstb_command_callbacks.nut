@@ -25,7 +25,7 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 		}
 
 		if( !foundTarget ) {
-			FSU_PrivateChatMessage( player, FSU_Highlight( "\"" + args[0] + "\"" ) + " couldn't be found!" )
+			FSU_PrivateChatMessage( player, "%H\"" + args[0] + "\"%T couldn't be found!" )
 			return
 		}
 	}

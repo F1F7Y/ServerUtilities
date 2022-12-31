@@ -21,9 +21,9 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 		if( index != commands.len() ) {
 			FSCC_CommandStruct cmdInfo = FSCC_GetCommandAttributes( commands[index] )
 			if( cmdInfo.m_UsageAdmin != "" && FSA_IsAdmin( player ) )
-				FSU_PrivateChatMessage( player, FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + cmdInfo.m_UsageAdmin ) )
+				FSU_PrivateChatMessage( player, "%H%P" + cmdInfo.m_UsageAdmin )
 			else
-				FSU_PrivateChatMessage( player, FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + cmdInfo.m_UsageUser ) )
+				FSU_PrivateChatMessage( player, "%H%P" + cmdInfo.m_UsageUser )
 
 			FSU_PrivateChatMessage( player, cmdInfo.m_Description )
 
@@ -34,7 +34,7 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 					abbreviations += ", "
 			}
 			if( cmdInfo.m_Abbreviations.len() != 0 )
-				FSU_PrivateChatMessage( player, FSU_Highlight( "Abbreviations: " ) + abbreviations )
+				FSU_PrivateChatMessage( player, "%HAbbreviations:%T " + abbreviations )
 
 			return
 		}
@@ -51,7 +51,7 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 	}
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: " + FSU_Highlight( string( pages ) ) )
+		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
@@ -60,7 +60,7 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 
 	FSU_PrivateChatMessage( player, "List of avalible commands:" )
 	FSU_PrintFormattedList( player, commands, page, 3 )
-	FSU_PrivateChatMessage( player, "Page: " + FSU_Highlight( "[" + page + "/" + pages + "]" ) )
+	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
 }
 
 /**
@@ -83,14 +83,14 @@ void function FSCC_CommandCallback_Mods( entity player, array< string > args ) {
 		page = 1
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: " + FSU_Highlight( string( pages ) ) )
+		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
 
 	FSU_PrivateChatMessage( player, "List of mods installed on this server:" )
 	FSU_PrintFormattedList( player, mods, page, 2 )
-	FSU_PrivateChatMessage( player, "Page: " + FSU_Highlight( "[" + page + "/" + pages + "]" ) )
+	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
 }
 
 /**
@@ -99,7 +99,7 @@ void function FSCC_CommandCallback_Mods( entity player, array< string > args ) {
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_Name( entity player, array< string > args ) {
-	FSU_PrivateChatMessage( player, FSU_FmtBegin() + "Name: " + FSU_Highlight( "\"" + GetConVarString( "ns_server_name" ) + "\"") )
+	FSU_PrivateChatMessage( player, "Name: %H\"" + GetConVarString( "ns_server_name" ) + "\"")
 }
 
 /**
@@ -108,7 +108,7 @@ void function FSCC_CommandCallback_Name( entity player, array< string > args ) {
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_Owner( entity player, array< string > args ) {
-	FSU_PrivateChatMessage( player,  FSU_FmtBegin() + "Owner: " + FSU_Highlight( "\"" + GetConVarString( "FSCC_OWNER" ) + "\"") )
+	FSU_PrivateChatMessage( player,  "Owner: %H\"" + GetConVarString( "FSCC_OWNER" ) + "\"")
 }
 
 /**
@@ -131,14 +131,14 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
 		page = 1
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: " + FSU_Highlight( string( pages ) ) )
+		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
 
 	FSU_PrivateChatMessage( player, "List of rules:" )
 	FSU_PrintFormattedList( player, rules, page )
-	FSU_PrivateChatMessage( player, "Page: " + FSU_Highlight( "[" + page + "/" + pages + "]" ) )
+	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
 }
 
 /**
@@ -147,6 +147,6 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_Discord( entity player, array< string > args ) {
-	FSU_PrivateChatMessage( player, FSU_FmtBegin() + "Owner: " + FSU_Highlight( "\"" + GetConVarString( "FSCC_DISCORD" ) + "\"") )
+	FSU_PrivateChatMessage( player, "Owner: %H\"" + GetConVarString( "FSCC_DISCORD" ) + "\"")
 }
 #endif

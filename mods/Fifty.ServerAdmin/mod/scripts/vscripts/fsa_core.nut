@@ -108,7 +108,7 @@ void function FSA_SendMessageWithPrefix( entity from, string message, bool isTea
 	foreach( entity p in GetPlayerArray() ) {
 		if( isTeamMessage && p.GetTeam() != from.GetTeam())
 			continue
-		Chat_ServerPrivateMessage( p, FSU_FmtAdmin() + "["+ prefix +"] " + FSU_FmtEnd() + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + FSU_FmtEnd()+ ": " + message, isTeamMessage, false)
+		Chat_ServerPrivateMessage( p, FSU_FormatString( "%A["+ prefix +"]" + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + "%0: " + message ), isTeamMessage, false )
 	}
 }
 

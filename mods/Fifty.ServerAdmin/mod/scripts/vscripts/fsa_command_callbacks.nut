@@ -8,7 +8,7 @@ globalize_all_functions
 */
 void function FSA_CommandCallback_NPC( entity player, array< string > args ) {
 	if( args.len() == 0 ) {
-		FSU_PrivateChatMessage( player, "Run " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "npc <grunt/spectre/stalker/reaper/marvin> <imc/militia> to spawn an npc." ) )
+		FSU_PrivateChatMessage( player, "Run %H%Pnpc <grunt/spectre/stalker/reaper/marvin> <imc/militia>%T to spawn an npc." )
 		return
 	}
 
@@ -58,7 +58,7 @@ void function FSA_CommandCallback_NPC( entity player, array< string > args ) {
 */
 void function FSA_CommandCallback_Titan( entity player, array< string > args ) {
 	if( args.len() == 0 ) {
-		FSU_PrivateChatMessage( player, "Run " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "npc <ion/scorch/northstar/ronin/tone/legion/monarch> <imc/militia> to spawn a titan." ) )
+		FSU_PrivateChatMessage( player, "Run %H%Ptitan <ion/scorch/northstar/ronin/tone/legion/monarch> <imc/militia>%T to spawn a titan." )
 		return
 	}
 

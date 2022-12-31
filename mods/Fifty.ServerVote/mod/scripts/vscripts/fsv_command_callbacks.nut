@@ -26,7 +26,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 	}
 
 	if( index == maps.len() ) {
-		FSU_PrivateChatMessage( player, "Map " + FSU_Highlight( "\"" + args[0] + "\"" ) + " isn't in the voting pool!" )
+		FSU_PrivateChatMessage( player, "Map %H\"" + args[0] + "\"%T isn't in the voting pool!" )
 		return
 	}
 
@@ -35,7 +35,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 			GameRules_ChangeMap( FSV_UnLocalize( maps[index] ), GAMETYPE )
 			return
 		} else {
-			FSU_PrivateChatMessage( player, "Use " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "nextmap <map> force" ) + " to forcefully change the map.")
+			FSU_PrivateChatMessage( player, "Use %H%Pnextmap <map> force%T  to forcefully change the map.")
 			return
 		}
 	}
@@ -50,7 +50,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 	}
 
 
-	FSU_ChatBroadcast( FSU_Highlight( player.GetPlayerName() ) + " voted " + FSU_Highlight( maps[index] ) + " as the next map." )
+	FSU_ChatBroadcast( "%H" + player.GetPlayerName() + "%T voted %H" + maps[index] + "%T as the next map." )
 	FSV_VoteForNextMap( player, maps[index] )
 }
 
@@ -64,7 +64,7 @@ void function FSV_CommandCallback_Skip( entity player, array< string > args ) {
 		if( args[0].tolower() == "force" ) {
 			FSV_SkipMatch()
 		} else {
-			FSU_PrivateChatMessage( player, "Use " + FSU_Highlight( GetConVarString( "FSCC_PREFIX" ) + "skip force" ) + " to forcefully skip the map.")
+			FSU_PrivateChatMessage( player, "Use %H%Pskip force%T to forcefully skip the map.")
 			return
 		}
 	}
@@ -79,7 +79,7 @@ void function FSV_CommandCallback_Skip( entity player, array< string > args ) {
 	}
 
 	playerBlacklist.append( player )
-	FSU_ChatBroadcast( FSU_Highlight( player.GetPlayerName() ) + " voted to skip this map. " + FSU_Highlight( "[" + string( playerBlacklist.len() ) + "/" + string( ceil( GetPlayerArray().len() / 2.0 ) ) + "]"  ) )
+	FSU_ChatBroadcast( "%H" + player.GetPlayerName() + "%T voted to skip this map. %H[" + playerBlacklist.len() + "/" + ceil( GetPlayerArray().len() / 2.0 ) + "]" )
 
 
 	if ( ceil( GetPlayerArray().len() / 2.0 ) < playerBlacklist.len() )
@@ -111,7 +111,7 @@ void function FSV_CommandCallback_Maps( entity player, array< string > args ) {
 	}
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: " + FSU_Highlight( string( pages ) ) )
+		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
@@ -120,7 +120,7 @@ void function FSV_CommandCallback_Maps( entity player, array< string > args ) {
 
 	FSU_PrivateChatMessage( player, "List of avalible maps:" )
 	FSU_PrintFormattedList( player, maps, page, 2 )
-	FSU_PrivateChatMessage( player, "Page: " + FSU_Highlight( "[" + page + "/" + pages + "]" ) )
+	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
 }
 
 /**
@@ -145,7 +145,7 @@ void function FSV_CommandCallback_Extend( entity player, array< string > args ) 
 	}
 
 	playerBlacklist.append( player )
-	FSU_ChatBroadcast( FSU_Highlight( player.GetPlayerName() ) + " voted to extend this match. " + FSU_Highlight( "[" + string( playerBlacklist.len() ) + "/" + string( ceil( GetPlayerArray().len() / 2.0 ) ) + "]"  ) )
+	FSU_ChatBroadcast( "%H" + player.GetPlayerName() + "%T voted to extend this match. %H[" + playerBlacklist.len() + "/" + ceil( GetPlayerArray().len() / 2.0 ) + "]" )
 
 
 	if ( ceil( GetPlayerArray().len() / 2.0 ) < playerBlacklist.len() )
