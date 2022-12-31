@@ -145,42 +145,14 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 string function FSU_FormatString( string str ) {
 	string formatted = str
 
-	int begin, end
-	var index
-	bool skipNext = false
-	while( true ) {
-		index = formatted.find( "%" )
-		if( index == null )
-			break
-
-		int _index = expect int( index )
-
-		string code = formatted.slice( _index, _index + 2 )
-		switch( code ) {
-			case "%H":
-				code = highlight
-				break
-			case "%F":
-				code = header
-				break
-			case "%T":
-				code = text
-				break
-			case "%A":
-				code = adminHeader
-				break
-			case "%0":
-				code = "\x1b[0m"
-				break
+	formatted = StringReplace( formatted, "%H", highlight, true, false )
+	formatted = StringReplace( formatted, "%F", header, true, false )
+	formatted = StringReplace( formatted, "%T", text, true, false )
+	formatted = StringReplace( formatted, "%A", adminHeader, true, false )
+	formatted = StringReplace( formatted, "%0", "\x1b[0m", true, false )
 #if FSCC_ENABLED
-			case "%P":
-				code = GetConVarString( "FSCC_PREFIX" )
-				break
+	formatted = StringReplace( formatted, "%P", GetConVarString( "FSCC_PREFIX" ), true, false )
 #endif
-		}
-
-		formatted = formatted.slice( 0, _index ) + code + formatted.slice( _index + 2, formatted.len() )
-	}
 
 	return formatted
 }
