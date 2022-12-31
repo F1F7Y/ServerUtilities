@@ -96,7 +96,7 @@ void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
 		if( GetConVarBool( "FSU_PREFIX_SYSTEM_MESSAGES" ) )
 			Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%T " + message ), false )
 		else
-			Chat_ServerBroadcast( FSU_FormatString( message ), false )
+			Chat_ServerBroadcast( FSU_FormatString( "%T" + message ), false )
 	}
 }
 
@@ -109,7 +109,7 @@ void function FSU_PrivateChatMessage( entity player, string message ) {
 	if( GetConVarBool( "FSU_PREFIX_SYSTEM_MESSAGES" ) )
 		Chat_ServerPrivateMessage( player, FSU_FormatString( "%F[FSU]%T " + message ), false, false )
 	else
-		Chat_ServerPrivateMessage( player, FSU_FormatString( message ), false, false )
+		Chat_ServerPrivateMessage( player, FSU_FormatString( "%T" + message ), false, false )
 }
 
 /**
