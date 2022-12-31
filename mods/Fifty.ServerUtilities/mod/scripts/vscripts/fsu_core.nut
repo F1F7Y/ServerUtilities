@@ -4,6 +4,7 @@ string header      = "\x1b[38:5:214m"
 string highlight   = "\x1b[36m"
 string text        = "\x1b[38:5:152m"
 string adminHeader = "\x1b[94m"
+string ownerHeader = "\x1b[92m"
 
 const FSU_LIST_ROWS = 5
 
@@ -48,12 +49,14 @@ void function FSU_PrintPrematchMessage() {
  * @param highlightCode The ANSI code to be used for highlighted text
  * @param textCode The ANSI code to be used for normal text
  * @param adminHeaderCode The ANSI code to be used for the admin header ( "[ADMIN]" )
+ * @param ownerHeaderCode The ANSI code to be used for the owner prefix ( "[OWNER]" )
 */
-void function FSU_SetTheme( string headerCode, string highlightCode, string textCode, string adminHeaderCode ) {
+void function FSU_SetTheme( string headerCode, string highlightCode, string textCode, string adminHeaderCode, string ownerHeaderCode ) {
 	header = headerCode
 	highlight = highlightCode
 	text = textCode
 	adminHeader = adminHeaderCode
+	ownerHeader = ownerHeaderCode
 }
 
 /**
@@ -155,6 +158,7 @@ string function FSU_FormatString( string str ) {
 	formatted = StringReplace( formatted, "%F", header, true, false )
 	formatted = StringReplace( formatted, "%T", text, true, false )
 	formatted = StringReplace( formatted, "%A", adminHeader, true, false )
+	formatted = StringReplace( formatted, "%O", ownerHeader, true, false )
 	formatted = StringReplace( formatted, "%0", "\x1b[0m", true, false )
 #if FSCC_ENABLED
 	formatted = StringReplace( formatted, "%P", GetConVarString( "FSCC_PREFIX" ), true, false )

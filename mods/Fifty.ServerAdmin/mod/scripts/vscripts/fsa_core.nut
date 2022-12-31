@@ -69,13 +69,13 @@ ClServer_MessageStruct function FSA_CheckMessageForPrivilegedUser( ClServer_Mess
 
 	if( FSA_IsOwner( message.player ) && GetConVarBool( "FSA_PREFIX_OWNERS_IN_CHAT" ) ) {
 		message.shouldBlock = true
-		FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam, "OWNER" )
+		FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam, "OWNER", "%O" )
 		return message
 	}
 
 	if( FSA_IsAdmin( message.player ) && GetConVarBool( "FSA_PREFIX_ADMINS_IN_CHAT" ) ) {
 		message.shouldBlock = true
-		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, "ADMIN")
+		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, "ADMIN", "%A" )
 		return message
 	}
 
@@ -88,12 +88,13 @@ ClServer_MessageStruct function FSA_CheckMessageForPrivilegedUser( ClServer_Mess
  * @param message The message string
  * @param isTeamMessage Whether it was sent in team or grobal chat
  * @param prefix The prefix to add
+ * @param code The color code to use
 */
-void function FSA_SendMessageWithPrefix( entity from, string message, bool isTeamMessage, string prefix ){
+void function FSA_SendMessageWithPrefix( entity from, string message, bool isTeamMessage, string prefix, string code ){
 	foreach( entity p in GetPlayerArray() ) {
 		if( isTeamMessage && p.GetTeam() != from.GetTeam())
 			continue
-		Chat_ServerPrivateMessage( p, FSU_FormatString( "%A["+ prefix +"]" + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + "%0: " + message ), isTeamMessage, false )
+		Chat_ServerPrivateMessage( p, FSU_FormatString( code + "["+ prefix +"]" + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + "%0: " + message ), isTeamMessage, false )
 	}
 }
 
