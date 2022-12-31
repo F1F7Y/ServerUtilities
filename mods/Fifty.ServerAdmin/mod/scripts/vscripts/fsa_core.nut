@@ -10,11 +10,7 @@ struct {
  * Gets called after the map is loaded
 */
 void function FSA_Init() {
-	if( GetConVarBool( "FSA_PREFIX_ADMINS_IN_CHAT" ) )
- 		AddCallback_OnReceivedSayTextMessage( FSA_CheckForAdminMessage )
-
-	if( GetConVarBool( "FSA_PREFIX_OWNERS_IN_CHAT" ) )
-		AddCallback_OnReceivedSayTextMessage( FSA_CheckForOwnerMessage )
+	AddCallback_OnReceivedSayTextMessage( FSA_CheckMessageForPrivilegedUser )
 
 	FSCC_CommandStruct command
 	command.m_UsageUser = "npc <npc> <team>"
@@ -65,33 +61,22 @@ array< entity > function FSA_GetLoggedInAdmins() {
  * Gets called when a player sends a chat message
  * @param message The message struct containing information about the chat message
 */
-ClServer_MessageStruct function FSA_CheckForAdminMessage( ClServer_MessageStruct message ) {
+ClServer_MessageStruct function FSA_CheckMessageForPrivilegedUser( ClServer_MessageStruct message ) {
 	if( message.message.find( GetConVarString( "FSCC_PREFIX" ) ) == 0 || message.message.len() == 0 || message.shouldBlock ) {
 		message.shouldBlock = true
 		return message
 	}
 
-	if( FSA_IsAdmin( message.player ) ) {
-		message.shouldBlock = true
-		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, "ADMIN")
-	}
-
-	return message
-}
-
-/**
- * Gets called when someone sends a message and checks if they're the owner. If so it adds the [OWNER] tag
- * @param message The message struct containing information about the chat message
-*/
-ClServer_MessageStruct function FSA_CheckForOwnerMessage( ClServer_MessageStruct message ) {
-	if( message.message.find( GetConVarString( "FSCC_PREFIX" ) ) == 0 || message.message.len() == 0 || message.shouldBlock ) {
-		message.shouldBlock = true
-		return message
-	}
-
-	if( FSA_IsOwner( message.player ) ) {
+	if( FSA_IsOwner( message.player ) && GetConVarBool( "FSA_PREFIX_OWNERS_IN_CHAT" ) ) {
 		message.shouldBlock = true
 		FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam, "OWNER" )
+		return message
+	}
+
+	if( FSA_IsAdmin( message.player ) && GetConVarBool( "FSA_PREFIX_ADMINS_IN_CHAT" ) ) {
+		message.shouldBlock = true
+		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, "ADMIN")
+		return message
 	}
 
 	return message
