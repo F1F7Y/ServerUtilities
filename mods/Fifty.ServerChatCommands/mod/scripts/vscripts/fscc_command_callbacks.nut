@@ -25,7 +25,7 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 			else
 				FSU_PrivateChatMessage( player, "%H%P" + cmdInfo.m_UsageUser )
 
-			FSU_PrivateChatMessage( player, cmdInfo.m_Description )
+			FSU_PrivateChatMessage( player, "%T" + cmdInfo.m_Description )
 
 			string abbreviations
 			foreach( _index, string abv in cmdInfo.m_Abbreviations ) {

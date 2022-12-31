@@ -21,7 +21,7 @@ void function FSU_Init() {
 */
 void function FSU_PrintPrematchMessage() {
 	FSU_Print( "Checking enabled modules!" )
-	FSU_ChatBroadcast( "Fifty.ServerUtilities is active!" )
+	FSU_ChatBroadcast( "%TFifty.ServerUtilities is active!" )
 
 #if FSCC_ENABLED
 	FSU_Print( "FSCC is enabled!")
@@ -90,7 +90,10 @@ void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
 		foreach( entity player in GetPlayerArray() )
 			NSSendPopUpMessageToPlayer( player, message )
 	} else {
-		Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%T " + message ), false )
+		if( GetConVarBool( "FSU_PREFIX_SYSTEM_MESSAGES" ) )
+			Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%T " + message ), false )
+		else
+			Chat_ServerBroadcast( FSU_FormatString( message ), false )
 	}
 }
 
@@ -100,7 +103,10 @@ void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
  * @param mesage The message to be sent to player
 */
 void function FSU_PrivateChatMessage( entity player, string message ) {
-	Chat_ServerPrivateMessage( player, FSU_FormatString( "%F[FSU]%T " + message ), false, false )
+	if( GetConVarBool( "FSU_PREFIX_SYSTEM_MESSAGES" ) )
+		Chat_ServerPrivateMessage( player, FSU_FormatString( "%F[FSU]%T " + message ), false, false )
+	else
+		Chat_ServerPrivateMessage( player, FSU_FormatString( message ), false, false )
 }
 
 /**

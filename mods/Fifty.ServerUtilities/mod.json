@@ -11,6 +11,11 @@
 		"FSV_ENABLED": "Fifty.ServerVote [FSV]"
 	},
 	"ConVars": [
+		{
+			"Name": "FSU_PREFIX_SYSTEM_MESSAGES",
+			"DefaultValue": "1",
+			"Description": "Whether system messages should be prefixed with '[FSU]'."
+		}
 	],
 	"Scripts": [
 		{
