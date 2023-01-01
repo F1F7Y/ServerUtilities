@@ -155,7 +155,7 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 string function FSU_ArrayToString( array< string > args, string separator = " " ) {
 	string result = ""
 	foreach( string s in args )
-		result += s + seperator
+		result += ( s + separator )
 	return result
 }
 
