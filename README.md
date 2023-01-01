@@ -5,6 +5,8 @@ The mod is separated into modules all of which have extensive settings and apart
 
 ### [Documentation](./docs/docs_index.md)
 
+All commands are case insensitive ( e.g. `commandFor` and `comandfor` are the same command ).
+
 ## Commands
 *`!help <page/command>`* - Lists commands avalible to the player. If a `command` is passed it lists its usage and detailed description.
 
@@ -36,3 +38,17 @@ The mod is separated into modules all of which have extensive settings and apart
 *`!npc <npc> <team>`* - Allows admins to spawn an npc.
 
 *`!titan <titan> <team>`* - Allows admins to spawn a titan.
+
+*`!playerlist`* - Prints a list of each player and their index in chat.
+
+*`!script <code>`* - Executes code on the server.
+
+*`!servercommand <command>`* - Executes a command on the server.
+
+*`!reload <time=5>`* - Reloads the server.
+
+*`!ban <player>`* - Bans the given player
+
+*`!kick <player>`* - Kicks the given player.
+
+*`!commandfor <player> <command>`* - Executes a command for a player
