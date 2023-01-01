@@ -73,6 +73,13 @@ Prints a part of an array in pages
 - `columns` The nubre of columns per row
 - `separator` The list item separator
 
+#### `string function FSU_ArrayToString( array< string > args, string separator = " " )`
+
+Returns the given array as a sting
+##### Argumets:
+- `args` Array of stings that will be
+- `separator` optional argument of string that will separate all words
+
 #### `string function FSU_FormatString( string str )`
 
 Returns a formatted string convar
