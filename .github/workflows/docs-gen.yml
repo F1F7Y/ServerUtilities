@@ -1,0 +1,29 @@
+name: Generate documentation
+on: push
+
+jobs:
+  docs-gen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone project
+        uses: actions/checkout@v2
+
+      - name: Clone wiki
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: .wiki
+
+      - name: Titanfall mods docs generator
+        uses: F1F7Y/titanfall-mod-docs-gen@v0
+        with:
+          output: .wiki
+
+      - name: Push new docs
+        working-directory: .wiki
+        run: |
+          git config user.name CI
+          git config user.email "<>"
+          git add .
+          git diff --quiet HEAD || git commit -m "$GITHUB_SHA"
+          git push
