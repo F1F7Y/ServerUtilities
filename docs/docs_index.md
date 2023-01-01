@@ -1,5 +1,5 @@
 # Documentation index
-> Generated at: 2023/01/01 - 16:53 (YYYY/MM/DD - HH:MM)
+> Generated at: 2023/01/01 - 16:55 (YYYY/MM/DD - HH:MM)
 
 ### Index:
 - **Fifty.ServerAdmin [FSA]**
