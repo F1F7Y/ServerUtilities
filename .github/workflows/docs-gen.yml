@@ -17,5 +17,5 @@ jobs:
           git config user.name TitanfallDocsGen
           git config user.email "<>"
           git add .
-          git diff --quiet HEAD || git commit -m "$GITHUB_SHA"
+          git diff --quiet HEAD || git commit -m "New docs"
           git push
