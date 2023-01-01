@@ -153,16 +153,7 @@ void function FSV_SkipMatch() {
 
 	map = maps[index]
 
-	wait 1
-	FSU_ChatBroadcast( "3" )
-	wait 1
-	FSU_ChatBroadcast( "2" )
-	wait 1
-	FSU_ChatBroadcast( "1" )
-	wait 1
-
-	// Change map
-	GameRules_ChangeMap( map, GAMETYPE )
+	SetServerVar( "gameEndTime", Time() )
 }
 
 /**
