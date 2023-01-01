@@ -26,6 +26,8 @@ Returns the command struct containing information about the command
 ##### Argumets:
 - `command` The command to get the info for
 
+#### `table <string, FSCC_CommandStruct > function FSCC_GetCommandList()`
+
 
 ## fscc_command_callbacks.nut
 
