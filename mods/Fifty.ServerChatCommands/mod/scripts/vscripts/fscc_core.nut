@@ -4,7 +4,7 @@ global function FSCC_Init
 global function FSCC_RegisterCommand
 global function FSCC_GetCommands
 global function FSCC_GetCommandAttributes
-
+global function FSCC_GetCommandList
 // Stores information about a command
 // Note: The prefix "!" is used in examples, but can be changed using the FSCC_PREFIX convar
 global struct FSCC_CommandStruct {
@@ -169,6 +169,10 @@ array< string > function FSCC_GetCommands( entity player ) {
 */
 FSCC_CommandStruct function FSCC_GetCommandAttributes( string command ) {
 	return commandsList[command]
+}
+
+table <string, FSCC_CommandStruct > function FSCC_GetCommandList() {
+	return commandsList
 }
 
 #else
