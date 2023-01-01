@@ -147,6 +147,13 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 	}
 }
 
+string function FSU_ArrayToString( array< string > args ) {
+	string result = ""
+	foreach( string s in args )
+		result += s 
+	return result
+}
+
 /**
  * Returns a formatted string convar
  * @param str The string to format
