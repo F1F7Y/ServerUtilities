@@ -158,7 +158,7 @@ void function FSA_SendMessageWithPrefix( entity from, string message, bool isTea
 	foreach( entity p in GetPlayerArray() ) {
 		if( isTeamMessage && p.GetTeam() != from.GetTeam())
 			continue
-		Chat_ServerPrivateMessage( p, FSU_FormatString( code + "["+ prefix +"]" + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + "%0: " + message ), isTeamMessage, false )
+		FSU_PrivateChatMessage( p, FSU_FormatString( code + "["+ prefix +"]" + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + "%0: " + message ), isTeamMessage )
 	}
 }
 
@@ -289,7 +289,7 @@ void function FSCC_CommandCallback_Reload(entity player, array<string> args){
 
 void function FSU_C_Reload_thread(float time){
   while(time > 0){
-    Chat_ServerBroadcast("The server will reload in "+ time)
+    FSU_ChatBroadcast("The server will reload in "+ time)
     wait 1.0
     time = time - 1.0
   }
@@ -303,24 +303,24 @@ void function FSU_C_Reload_thread(float time){
 */
 void function FSCC_CommandCallback_Ban(entity player, array<string> args){
 	if(args.len() < 1){
-		NSSendPopUpMessageToPlayer(player, "Wrong format, !ban <player name>")
+		FSU_PrivateChatMessage(player, "Wrong format, !ban <player name>")
 		return
 	}
 
 	entity toBan = FSA_GetPlayerEntityByName(args[0])
 
 	if(toBan == null){
-		NSSendPopUpMessageToPlayer(player, "Player not found")
+		FSU_PrivateChatMessage(player, "Player not found")
 		return
 	}
 
 	if( FSA_IsOwner(toBan)|| FSA_IsAdmin(toBan) ){
-		NSSendPopUpMessageToPlayer(player, "Cannot ban admins")
+		FSU_PrivateChatMessage(player, "Cannot ban admins")
 		return
 	}
 
 	ServerCommand("ban " + toBan.GetUID())
-  	NSSendPopUpMessageToPlayer(player, "Sucessfully banned")
+  	FSU_PrivateChatMessage(player, "Sucessfully banned")
 	return
 }
 
@@ -331,7 +331,7 @@ void function FSCC_CommandCallback_Ban(entity player, array<string> args){
 */
 void function FSCC_CommandCallback_Kick(entity player, array<string> args){
 	if(args.len()==0){
-		NSSendPopUpMessageToPlayer(player, "Missing argument")
+		FSU_PrivateChatMessage(player, "Missing argument")
 		return
 	}
 
@@ -351,13 +351,13 @@ void function FSCC_CommandCallback_Kick(entity player, array<string> args){
 		}
 		//2nd check if its still not found 
 		if(toBan == ""){
-			NSSendPopUpMessageToPlayer(player, "Player not found")
+			FSU_PrivateChatMessage(player, "Player not found")
 			return
 		}
 	}
 
 	ServerCommand("kick " + toBan)
-  	NSSendPopUpMessageToPlayer(player, "Sucessfully kicked")
+  	FSU_PrivateChatMessage(player, "Sucessfully kicked")
 	return
 }
 
@@ -368,7 +368,7 @@ void function FSCC_CommandCallback_Kick(entity player, array<string> args){
 */
 void function FSCC_CommandCallback_CommandFor(entity player, array<string> args){
 	if(args.len()<2){
-		Chat_ServerPrivateMessage(player, "Missing arguments !cmdFor <player name> <command> <command arguments>",false)
+		FSU_PrivateChatMessage(player, "Missing arguments !cmdFor <player name> <command> <command arguments>")
 		return
 	}
 
@@ -376,7 +376,7 @@ void function FSCC_CommandCallback_CommandFor(entity player, array<string> args)
 	entity foundPlayer = FSA_GetPlayerEntityByName(args[0])
 
 	if(foundPlayer == null){
-		Chat_ServerPrivateMessage(player, "Player not found",false)
+		FSU_PrivateChatMessage(player, "Player not found")
 		return
 	}
 	//copied from the REAL code
