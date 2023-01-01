@@ -3,6 +3,8 @@ A framework for chat command based server mods. Doesn't spam the chat, doesn't c
 
 The mod is separated into modules all of which have extensive settings and apart from the core (FSU) and chat commands (FSCC) can be entirely disabled or even deleted.
 
+### [Documentation](./docs/docs_index.md)
+
 ## Commands
 *`!help <page/command>`* - Lists commands avalible to the player. If a `command` is passed it lists its usage and detailed description.
 
