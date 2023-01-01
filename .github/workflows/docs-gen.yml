@@ -8,13 +8,7 @@ jobs:
       - name: Clone project
         uses: actions/checkout@v2
 
-      - name: Clone wiki
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ github.repository }}.wiki
-          path: .wiki
-
-      - name: Titanfall mods docs generator
+      - name: Generate docs
         uses: F1F7Y/titanfall-mod-docs-gen@v0
         with:
           output: .wiki
@@ -22,7 +16,7 @@ jobs:
       - name: Push new docs
         working-directory: .wiki
         run: |
-          git config user.name CI
+          git config user.name TitanfallDocsGen
           git config user.email "<>"
           git add .
           git diff --quiet HEAD || git commit -m "$GITHUB_SHA"
