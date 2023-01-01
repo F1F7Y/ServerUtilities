@@ -1,3 +1,4 @@
+untyped
 globalize_all_functions
 
 #if FSCC_ENABLED && FSU_ENABLED
@@ -28,6 +29,69 @@ void function FSA_Init() {
 	command.PlayerCanUse = FSA_IsAdmin
 	command.Callback = FSA_CommandCallback_Titan
 	FSCC_RegisterCommand( "titan", command )
+
+	command.m_UsageUser = "playerlist"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Shows the playerlist for the index of each player"
+	command.m_Group = "ADMIN"
+	command.m_Abbreviations = ["pl"]
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSCC_CommandCallback_Playerlist
+	FSCC_RegisterCommand( "playerlist", command )
+
+	command.m_UsageUser = "script <code>"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Executes code on the server"
+	command.m_Group = "ADMIN"
+	command.m_Abbreviations = []
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSCC_CommandCallback_Script
+	FSCC_RegisterCommand( "script", command )
+
+	command.m_UsageUser = "ServerCommand <command>"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Executes a command on the server"
+	command.m_Group = "ADMIN"
+	command.m_Abbreviations = ["sc"]
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSCC_CommandCallback_ServerCommand
+	FSCC_RegisterCommand( "serverCommand", command )
+
+	command.m_UsageUser = "reload <time=5>"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Reloads the server"
+	command.m_Group = "ADMIN"
+	command.m_Abbreviations = []
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSCC_CommandCallback_Reload
+	FSCC_RegisterCommand( "reload", command )
+
+	command.m_UsageUser = "ban <player name>"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Bans the given player"
+	command.m_Group = "ADMIN"
+	command.m_Abbreviations = []
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSCC_CommandCallback_Ban
+	FSCC_RegisterCommand( "ban", command )
+
+	command.m_UsageUser = "kick <player name>"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Kicks the given player"
+	command.m_Group = "ADMIN"
+	command.m_Abbreviations = []
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSCC_CommandCallback_Kick
+	FSCC_RegisterCommand( "kick", command )
+
+	command.m_UsageUser = "commandFor <player name> <command>"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Executes a command for a player"
+	command.m_Group = "ADMIN"
+	command.m_Abbreviations = []
+	command.PlayerCanUse = FSA_IsAdmin
+	command.Callback = FSCC_CommandCallback_CommandFor
+	FSCC_RegisterCommand( "commandFor", command )
 
 	if( GetConVarBool( "FSA_ADMINS_REQUIRE_LOGIN" ) ) {
 		command.m_UsageUser = "login <password>"
@@ -126,6 +190,239 @@ bool function FSA_IsAdmin( entity player ) {
 
 	return false
 }
+/*
+ * Returns the entity of a player name returns null if no player was found
+ * @ param name The name of the player you want the entity of
+*/
+entity function FSA_GetPlayerEntityByName(string name){
+
+	if(name == "")
+    	return null
+
+
+  foreach(entity p in GetPlayerArray())
+    if(p.GetPlayerName().tolower() == name.tolower())
+      return p
+
+
+  if(name.len() <= 2){
+    int PlayerIndex = name.tointeger()
+    if(GetPlayerArray().len()-1>= PlayerIndex && PlayerIndex > -1) // check if the index exits
+      return GetPlayerArray()[PlayerIndex]
+  }
+
+  return null
+}
+
+/**
+ * Gets called when a player runs !playerlist
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSCC_CommandCallback_Playerlist( entity player, array< string > args ){
+	array< string > printList
+	foreach( index, entity p in GetPlayerArray() ) {
+		printList.append( p.GetPlayerName() )
+		printList.append( index.tostring() )
+	}
+	int columns = 2
+	int pages = FSU_GetListPages(printList, columns) +1
+	for( int page = 1; page< pages; page++ )
+		FSU_PrintFormattedList(player, printList, page, columns)
+}
+
+/**
+ * Gets called when a player runs !script
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSCC_CommandCallback_Script(entity player, array<string> args){
+  if(args.len() == 0){
+    FSU_PrivateChatMessage(player, "Missing arguments: !script <code here>")
+    return
+  }
+  try{
+    compilestring( FSU_ArrayToString(args) )()
+    FSU_PrivateChatMessage(player, "Your code seems to have compiled")
+    return
+  }
+  catch ( ex ){
+    printt(ex)
+    FSU_PrivateChatMessage(player, "The code has caused an exception, the error can be found in the server log")
+    return
+  }
+}
+
+/**
+ * Gets called when a player runs !serverCommand
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSCC_CommandCallback_ServerCommand(entity player, array<string> args){
+  if(args.len()==0)
+  {
+    FSU_PrivateChatMessage(player, "Missing arguments")
+    return
+  }
+  try{
+    ServerCommand(FSU_ArrayToString(args))
+  }
+  catch(ex){
+    FSU_PrivateChatMessage(player,"The command has caused an exception")
+  }
+  FSU_PrivateChatMessage(player, "Command executed")
+
+}
+
+/**
+ * Gets called when a player runs !reload
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSCC_CommandCallback_Reload(entity player, array<string> args){
+
+  if(args.len() <= 0)
+    thread FSU_C_Reload_thread(5.0)
+  else
+    thread FSU_C_Reload_thread(args[0].tofloat())
+}
+
+void function FSU_C_Reload_thread(float time){
+  while(time > 0){
+    Chat_ServerBroadcast("The server will reload in "+ time)
+    wait 1.0
+    time = time - 1.0
+  }
+  ServerCommand("reload")
+}
+
+/**
+ * Gets called when a player runs !ban
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSCC_CommandCallback_Ban(entity player, array<string> args){
+	if(args.len() < 1){
+		NSSendPopUpMessageToPlayer(player, "Wrong format, !ban <player name>")
+		return
+	}
+
+	entity toBan = FSA_GetPlayerEntityByName(args[0])
+
+	if(toBan == null){
+		NSSendPopUpMessageToPlayer(player, "Player not found")
+		return
+	}
+
+	if( FSA_IsOwner(toBan)|| FSA_IsAdmin(toBan) ){
+		NSSendPopUpMessageToPlayer(player, "Cannot ban admins")
+		return
+	}
+
+	ServerCommand("ban " + toBan.GetUID())
+  	NSSendPopUpMessageToPlayer(player, "Sucessfully banned")
+	return
+}
+
+/**
+ * Gets called when a player runs !kick
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSCC_CommandCallback_Kick(entity player, array<string> args){
+	if(args.len()==0){
+		NSSendPopUpMessageToPlayer(player, "Missing argument")
+		return
+	}
+
+	string toBan = ""
+	foreach(entity p in GetPlayerArray())
+		if(p.GetPlayerName() == args[0] )
+			toBan = p.GetPlayerName()
+
+	if(toBan == ""){
+		//check for numbers in playerlist 
+		if(args[0] == "0" || ( args[0].tointeger() > 0 && args[0].tointeger() < GetPlayerArray().len()-1 ) ){
+			entity p = FSA_GetPlayerEntityByName(args[0])
+			if(p != null){
+				toBan = p.GetPlayerName()
+			
+			}
+		}
+		//2nd check if its still not found 
+		if(toBan == ""){
+			NSSendPopUpMessageToPlayer(player, "Player not found")
+			return
+		}
+	}
+
+	ServerCommand("kick " + toBan)
+  	NSSendPopUpMessageToPlayer(player, "Sucessfully kicked")
+	return
+}
+
+/**
+ * Gets called when a player runs !commandFor
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
+void function FSCC_CommandCallback_CommandFor(entity player, array<string> args){
+	if(args.len()<2){
+		Chat_ServerPrivateMessage(player, "Missing arguments !cmdFor <player name> <command> <command arguments>",false)
+		return
+	}
+
+	//finds the player to execute the command on
+	entity foundPlayer = FSA_GetPlayerEntityByName(args[0])
+
+	if(foundPlayer == null){
+		Chat_ServerPrivateMessage(player, "Player not found",false)
+		return
+	}
+	//copied from the REAL code
+	string command = args[1].tolower()
+	args.remove(1)
+
+	
+	FSCC_CommandStruct commandInfo
+	bool foundCommand = false
+	table <string, FSCC_CommandStruct > commandsList = FSCC_GetCommandList()
+	// Find command
+	foreach( string c, FSCC_CommandStruct cm in commandsList ) {
+		// Check command
+		if( c == command ) {
+			commandInfo = cm
+			foundCommand = true
+		}
+
+		// Check abbreviations
+		foreach( string a in cm.m_Abbreviations ) {
+			if( ( GetConVarString( "FSCC_PREFIX" ) + a ) == command ) {
+				commandInfo = cm
+				foundCommand = true
+			}
+		}
+
+		if( foundCommand )
+			break
+	}
+
+	// Didnt find command
+	if( !foundCommand ) {
+		FSU_PrivateChatMessage( player, "%H\"" + command + "\"%T wasn't found!" )
+	}
+	// Did find command
+	else {
+		if( commandInfo.PlayerCanUse != null && !commandInfo.PlayerCanUse( foundPlayer ) ){
+			FSU_PrivateChatMessage( player, "%H\"" + command + "\"%T wasn't found!" )
+		} else {
+			thread commandInfo.Callback( foundPlayer, args )
+		}
+	}
+
+}
+
+
 
 #else
 void function FSA_Init() {
