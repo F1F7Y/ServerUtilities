@@ -28,6 +28,8 @@ Returns the command struct containing information about the command
 
 #### `table <string, FSCC_CommandStruct > function FSCC_GetCommandList()`
 
+Retuns the commandList table
+
 
 ## fscc_command_callbacks.nut
 
