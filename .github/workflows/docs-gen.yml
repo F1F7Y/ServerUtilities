@@ -10,11 +10,9 @@ jobs:
 
       - name: Generate docs
         uses: F1F7Y/titanfall-mod-docs-gen@v0
-        with:
-          output: .wiki
 
       - name: Push new docs
-        working-directory: .wiki
+        working-directory: docs
         run: |
           git config user.name TitanfallDocsGen
           git config user.email "<>"
