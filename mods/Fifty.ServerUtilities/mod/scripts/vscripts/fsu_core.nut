@@ -147,10 +147,15 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 	}
 }
 
-string function FSU_ArrayToString( array< string > args ) {
+/**
+ * Returns the given array as a sting
+ * @param args Array of stings that will be
+ * @param separator optional argument of string that will separate all words
+*/
+string function FSU_ArrayToString( array< string > args, string separator = " " ) {
 	string result = ""
 	foreach( string s in args )
-		result += s 
+		result += s + seperator
 	return result
 }
 

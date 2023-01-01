@@ -170,7 +170,9 @@ array< string > function FSCC_GetCommands( entity player ) {
 FSCC_CommandStruct function FSCC_GetCommandAttributes( string command ) {
 	return commandsList[command]
 }
-
+/**
+ * Retuns the commandList table
+*/
 table <string, FSCC_CommandStruct > function FSCC_GetCommandList() {
 	return commandsList
 }
