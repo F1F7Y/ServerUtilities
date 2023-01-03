@@ -82,7 +82,7 @@ void function FSV_CommandCallback_Skip( entity player, array< string > args ) {
 	FSU_ChatBroadcast( "%H" + player.GetPlayerName() + "%T voted to skip this map. %H[" + playerBlacklist.len() + "/" + ceil( GetPlayerArray().len() / 2.0 ) + "]" )
 
 
-	if ( ceil( GetPlayerArray().len() / 2.0 ) < playerBlacklist.len() )
+	if ( ceil( GetPlayerArray().len() / 2.0 ) > playerBlacklist.len() )
 		return
 
 	FSU_ChatBroadcast( "Skipping current map." )
@@ -148,7 +148,7 @@ void function FSV_CommandCallback_Extend( entity player, array< string > args ) 
 	FSU_ChatBroadcast( "%H" + player.GetPlayerName() + "%T voted to extend this match. %H[" + playerBlacklist.len() + "/" + ceil( GetPlayerArray().len() / 2.0 ) + "]" )
 
 
-	if ( ceil( GetPlayerArray().len() / 2.0 ) < playerBlacklist.len() )
+	if ( ceil( GetPlayerArray().len() / 2.0 ) > playerBlacklist.len() )
 		return
 
 	FSU_ChatBroadcast( "Extending current match." )
