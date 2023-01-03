@@ -33,28 +33,32 @@ void function FSV_Init() {
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = [ "nm" ]
 	command.Callback = FSV_CommandCallback_NextMap
-	FSCC_RegisterCommand( "nextmap", command )
+	if( GetConVarBool( "FSV_ENABLE_MAP_VOTING" ) )
+		FSCC_RegisterCommand( "nextmap", command )
 	command.m_UsageUser = "skip"
 	command.m_UsageAdmin = "skip <force>"
 	command.m_Description = "Allows you to vote to skip the current map"
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = []
 	command.Callback = FSV_CommandCallback_Skip
-	FSCC_RegisterCommand( "skip", command )
+	if( GetConVarBool( "FSV_ENABLE_MAP_SKIPPING" ) )
+		FSCC_RegisterCommand( "skip", command )
 	command.m_UsageUser = "extend"
 	command.m_UsageAdmin = "extend <minutes>"
 	command.m_Description = "Allows you to vote to extend the current match"
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = [ "ex" ]
 	command.Callback = FSV_CommandCallback_Extend
-	FSCC_RegisterCommand( "extend", command )
+	if( GetConVarBool( "FSV_ENABLE_MAP_EXTENDING" ) )
+		FSCC_RegisterCommand( "extend", command )
 	command.m_UsageUser = "maps <page>"
 	command.m_UsageAdmin = ""
 	command.m_Description = "Lists maps in the voting pool."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = []
 	command.Callback = FSV_CommandCallback_Maps
-	FSCC_RegisterCommand( "maps", command )
+	if( GetConVarBool( "FSV_ENABLE_MAP_VOTING" ) )
+		FSCC_RegisterCommand( "maps", command )
 }
 
 /**

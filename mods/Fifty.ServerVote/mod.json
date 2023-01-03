@@ -9,6 +9,21 @@
 	},
 	"ConVars": [
 		{
+			"Name": "FSV_ENABLE_MAP_VOTING",
+			"DefaultValue": "1",
+			"Description": "Enables/Disables the !nextmap and !maps commands."
+		},
+		{
+			"Name": "FSV_ENABLE_MAP_SKIPPING",
+			"DefaultValue": "1",
+			"Description": "Enables/Disables the !skip command."
+		},
+		{
+			"Name": "FSV_ENABLE_MAP_EXTENDING",
+			"DefaultValue": "1",
+			"Description": "Enables/Disables the !extend command."
+		},
+		{
 			"Name": "FSV_CUSTOM_MAP_ROTATION",
 			"DefaultValue": "1",
 			"Description": "Whether to use FSV_MAP_ROTATION for a custom map rotation."
