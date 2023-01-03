@@ -75,15 +75,6 @@ void function FSA_Init() {
 	command.Callback = FSCC_CommandCallback_Ban
 	FSCC_RegisterCommand( "ban", command )
 
-	command.m_UsageUser = "kick <player name>"
-	command.m_UsageAdmin = ""
-	command.m_Description = "Kicks the given player"
-	command.m_Group = "ADMIN"
-	command.m_Abbreviations = []
-	command.PlayerCanUse = FSA_IsAdmin
-	command.Callback = FSCC_CommandCallback_Kick
-	FSCC_RegisterCommand( "kick", command )
-
 	command.m_UsageUser = "commandFor <player name> <command>"
 	command.m_UsageAdmin = ""
 	command.m_Description = "Executes a command for a player"
@@ -330,34 +321,34 @@ void function FSCC_CommandCallback_Ban(entity player, array<string> args){
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_Kick(entity player, array<string> args){
-	if(args.len()==0){
+	if( args.len()==0 ){
 		FSU_PrivateChatMessage(player, "Missing argument")
 		return
 	}
 
 	string toBan = ""
-	foreach(entity p in GetPlayerArray())
-		if(p.GetPlayerName() == args[0] )
+	foreach( entity p in GetPlayerArray() )
+		if( p.GetPlayerName() == args[0] )
 			toBan = p.GetPlayerName()
 
-	if(toBan == ""){
+	if( toBan == "" ){
 		//check for numbers in playerlist 
-		if(args[0] == "0" || ( args[0].tointeger() > 0 && args[0].tointeger() < GetPlayerArray().len()-1 ) ){
+		if( args[0] == "0" || ( args[0].tointeger() > 0 && args[0].tointeger() < GetPlayerArray().len()-1 ) ){
 			entity p = FSA_GetPlayerEntityByName(args[0])
-			if(p != null){
+			if( p != null ){
 				toBan = p.GetPlayerName()
 			
 			}
 		}
 		//2nd check if its still not found 
 		if(toBan == ""){
-			FSU_PrivateChatMessage(player, "Player not found")
+			FSU_PrivateChatMessage (player, "Player not found" )
 			return
 		}
 	}
 
-	ServerCommand("kick " + toBan)
-  	FSU_PrivateChatMessage(player, "Sucessfully kicked")
+	ServerCommand( "kick " + toBan )
+  	FSU_PrivateChatMessage( player, "Sucessfully kicked" )
 	return
 }
 
@@ -367,16 +358,16 @@ void function FSCC_CommandCallback_Kick(entity player, array<string> args){
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_CommandFor(entity player, array<string> args){
-	if(args.len()<2){
+	if( args.len()<2 ){
 		FSU_PrivateChatMessage(player, "Missing arguments !cmdFor <player name> <command> <command arguments>")
 		return
 	}
 
 	//finds the player to execute the command on
-	entity foundPlayer = FSA_GetPlayerEntityByName(args[0])
+	entity foundPlayer = FSA_GetPlayerEntityByName( args[0] )
 
-	if(foundPlayer == null){
-		FSU_PrivateChatMessage(player, "Player not found")
+	if( foundPlayer == null ){
+		FSU_PrivateChatMessage( player, "Player not found" )
 		return
 	}
 	//copied from the REAL code
