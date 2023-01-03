@@ -1,7 +1,7 @@
 {
 	"Name" : "Fifty.ServerVote [FSV]",
 	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements voting functionality\n\nDependencies:\n  - Northstar\n  - Fifty.ServerUtilities\n  - Fifty.ServerChatCommands",
-	"Version": "2.2.0",
+	"Version": "2.2.1",
 	"LoadPriority": 2,
 	"Dependencies": {
 		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
