@@ -1,6 +1,18 @@
 # Fifty.ServerVote [FSV] - ConVars
 [Go back](./docs_index.md)
 
+#### `FSV_ENABLE_MAP_VOTING`
+**DefaultValue:** `"1"`
+  Enables/Disables the !nextmap and !maps commands.
+
+#### `FSV_ENABLE_MAP_SKIPPING`
+**DefaultValue:** `"1"`
+  Enables/Disables the !skip command.
+
+#### `FSV_ENABLE_MAP_EXTENDING`
+**DefaultValue:** `"1"`
+  Enables/Disables the !extend command.
+
 #### `FSV_CUSTOM_MAP_ROTATION`
 **DefaultValue:** `"1"`
   Whether to use FSV_MAP_ROTATION for a custom map rotation.
