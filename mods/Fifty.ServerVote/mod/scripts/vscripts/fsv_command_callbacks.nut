@@ -158,33 +158,38 @@ void function FSV_CommandCallback_Extend( entity player, array< string > args ) 
 	playerBlacklist.clear()
 }
 
+/**
+ * Gets called when a player runs !kick
+ * @param player The player who caled the command
+ * @param args The arguments passed by the player
+*/
 void function FSV_CommandCallback_Kick( entity player, array<string> args){
 	if(args.len()==0){
 		FSU_PrivateChatMessage(player, "Missing argument")
 		return
 	}
 	if( FSA_IsAdmin( player ) ){
-		string toBan = ""
+		string toKick = ""
 	foreach(entity p in GetPlayerArray())
 		if(p.GetPlayerName() == args[0] )
-			toBan = p.GetPlayerName()
+			toKick = p.GetPlayerName()
 
-	if(toBan == ""){
+	if(toKick == ""){
 		//check for numbers in playerlist 
 		if(args[0] == "0" || ( args[0].tointeger() > 0 && args[0].tointeger() < GetPlayerArray().len()-1 ) ){
 			entity p = FSA_GetPlayerEntityByName(args[0])
 			if(p != null){
-				toBan = p.GetPlayerName()
+				toKick = p.GetPlayerName()
 			}
 		}
 		//2nd check if its still not found 
-		if(toBan == ""){
+		if(toKick == ""){
 			FSU_PrivateChatMessage(player, "Player not found")
 			return
 		}
 	}
 
-	ServerCommand("kick " + toBan)
+	ServerCommand("kick " + toKick)
   	FSU_PrivateChatMessage(player, "Sucessfully kicked")
 	return
 	}//IS NOT ADMIN

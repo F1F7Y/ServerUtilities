@@ -20,7 +20,7 @@ struct {
 
 struct {
 	// List of kick votes per player
-	table < string, int> StartedKickVotes
+	table < string, int> kickVote
 } canVote
 
 /**
@@ -186,18 +186,19 @@ void function FSV_ExtendMatch( float minutes ) {
 	float newEndTime = currentEndTime + ( 60 * minutes )
 	SetServerVar( "gameEndTime", newEndTime )
 }
-
-bool function FSV_CanPlayerStartKick(entity player) //if a player is in the table and has too many votes then he cant vote anymor
+/**
+ * returns if a player has started to mamy kick votes
+ * @param player The player to check 
+*/
+bool function FSV_CanPlayerStartKick(entity player) 
 {
-  if(player.GetPlayerName() in canVote.StartedKickVotes && canVote.StartedKickVotes[player.GetPlayerName()]>3)
+  if(player.GetPlayerName() in canVote.kickVote && canVote.kickVote[player.GetPlayerName()]>3)
     return false
   return true
 }
 
 void function FSV_PlayerKickVote(entity player)
 {
-	
-
 	array<string> options = ["Yes, kick", "No, stay", "No opinion"]
 	foreach(entity p in GetPlayerArray())
 	NSCreatePollOnPlayer(p, "Should "+player.GetPlayerName() + " be kicked?", options, 30)
@@ -224,11 +225,11 @@ void function FSV_PlayerKickVote(entity player)
 }
 
 void function FSV_increaseVoteForPlayer(entity player){
-	if( player.GetPlayerName() in canVote.StartedKickVotes)
-		canVote.StartedKickVotes[player.GetPlayerName()] += 1 
+	if( player.GetPlayerName() in canVote.kickVote)
+		canVote.kickVote[player.GetPlayerName()] += 1 
 	else
-		canVote.StartedKickVotes[player.GetPlayerName()] <- 1
-	Chat_ServerBroadcast(canVote.StartedKickVotes[player.GetPlayerName()].tostring())
+		canVote.kickVote[player.GetPlayerName()] <- 1
+	Chat_ServerBroadcast(canVote.kickVote[player.GetPlayerName()].tostring())
 }
 
 #else
