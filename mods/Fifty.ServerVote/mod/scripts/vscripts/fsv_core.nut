@@ -18,6 +18,10 @@ struct {
 	array< entity > playerBlacklist
 } extendVote
 
+struct {
+	// List of kick votes per player
+	table < string, int> kickVote
+} canVote
 
 /**
  * Gets called after the map is loaded
@@ -35,6 +39,7 @@ void function FSV_Init() {
 	command.Callback = FSV_CommandCallback_NextMap
 	if( GetConVarBool( "FSV_ENABLE_MAP_VOTING" ) )
 		FSCC_RegisterCommand( "nextmap", command )
+
 	command.m_UsageUser = "skip"
 	command.m_UsageAdmin = "skip <force>"
 	command.m_Description = "Allows you to vote to skip the current map"
@@ -43,6 +48,7 @@ void function FSV_Init() {
 	command.Callback = FSV_CommandCallback_Skip
 	if( GetConVarBool( "FSV_ENABLE_MAP_SKIPPING" ) )
 		FSCC_RegisterCommand( "skip", command )
+
 	command.m_UsageUser = "extend"
 	command.m_UsageAdmin = "extend <minutes>"
 	command.m_Description = "Allows you to vote to extend the current match"
@@ -51,6 +57,7 @@ void function FSV_Init() {
 	command.Callback = FSV_CommandCallback_Extend
 	if( GetConVarBool( "FSV_ENABLE_MAP_EXTENDING" ) )
 		FSCC_RegisterCommand( "extend", command )
+
 	command.m_UsageUser = "maps <page>"
 	command.m_UsageAdmin = ""
 	command.m_Description = "Lists maps in the voting pool."
@@ -59,6 +66,14 @@ void function FSV_Init() {
 	command.Callback = FSV_CommandCallback_Maps
 	if( GetConVarBool( "FSV_ENABLE_MAP_VOTING" ) )
 		FSCC_RegisterCommand( "maps", command )
+
+	command.m_UsageUser = "kick <player-name>"
+	command.m_UsageAdmin = ""
+	command.m_Description = "Starts a vote to kick a player"
+	command.m_Group = "VOTE"
+	command.m_Abbreviations = []
+	command.Callback = FSV_CommandCallback_Kick
+	FSCC_RegisterCommand( "kick", command)
 }
 
 /**
@@ -171,6 +186,52 @@ void function FSV_ExtendMatch( float minutes ) {
 	float newEndTime = currentEndTime + ( 60 * minutes )
 	SetServerVar( "gameEndTime", newEndTime )
 }
+/**
+ * returns if a player has started to mamy kick votes
+ * @param player The player to check 
+*/
+bool function FSV_CanPlayerStartKick(entity player) 
+{
+  if(player.GetPlayerName() in canVote.kickVote && canVote.kickVote[player.GetPlayerName()]>3)
+    return false
+  return true
+}
+
+void function FSV_PlayerKickVote(entity player)
+{
+	array<string> options = ["Yes, kick", "No, stay", "No opinion"]
+	foreach(entity p in GetPlayerArray())
+	NSCreatePollOnPlayer(p, "Should "+player.GetPlayerName() + " be kicked?", options, 30)
+	wait 30
+	int YesVotes = 0
+	int NoVotes = 0
+	foreach(entity p in GetPlayerArray()){
+		if(NSGetPlayerResponse(p) == 0)
+			YesVotes++
+		if(NSGetPlayerResponse(p) == 1)
+			NoVotes++
+	}
+	if(YesVotes > NoVotes){
+		ServerCommand("kick "+player.GetPlayerName())
+		foreach(entity p in GetPlayerArray()){
+			NSSendInfoMessageToPlayer(p, "Player "+player.GetPlayerName()+ " was kicked from the match")
+		}
+	}
+	else{
+		foreach(entity p in GetPlayerArray()){
+			NSSendInfoMessageToPlayer(p, "Player "+player.GetPlayerName()+ " was NOT kicked from the match")
+		}
+	}
+}
+
+void function FSV_increaseVoteForPlayer(entity player){
+	if( player.GetPlayerName() in canVote.kickVote)
+		canVote.kickVote[player.GetPlayerName()] += 1 
+	else
+		canVote.kickVote[player.GetPlayerName()] <- 1
+	Chat_ServerBroadcast(canVote.kickVote[player.GetPlayerName()].tostring())
+}
+
 #else
 void function FSV_Init() {
 	print( "[FSV][ERRR] FSU and FSCC Need to be enabled for FSV to work!!!" )
