@@ -41,7 +41,7 @@ void function FSCC_Init() {
 	FSCC_CommandStruct command
 	command.m_UsageUser = "help <page/command>"
 	command.m_UsageAdmin = ""
-	command.m_Description = "Lists avalible commands."
+	command.m_Description = "Lists available commands."
 	command.m_Group = "CORE"
 	command.m_Abbreviations = [ "h" ]
 	command.Callback = FSCC_CommandCallback_Help
