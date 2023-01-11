@@ -225,3 +225,87 @@ string function FSU_FmtBegin() {
 string function FSU_FmtAdmin() {
 	return adminHeader
 }
+
+/**
+ * Saves a string array into a convar, as "," is used as the divider it should NEVER be present in the items of the array
+ * @param convar Which convar
+ * @param input The array that is to be saved
+*/
+void function FSU_SaveArrayToConVar(string convar, array <string> input){
+	if(GetConVarString(convar) == "0")
+		return
+
+	string newContent = split(GetConVarString(convar), ",")[0]
+	foreach(string item in input){
+		newContent += "," + item
+	}
+	SetConVarString(convar, newContent)
+}
+
+/**
+ * Saves an array of string arrays into a convar, as "," and "-" are used as the dividers, they should NEVER be present in the items of the array
+ * @param convar Which convar
+ * @param input An array of the arrays to be saved
+*/
+void function FSU_SaveArrayArrayToConVar(string convar, array <array> input){
+	if(GetConVarString(convar) == "0")
+		return
+
+	array newArray <string>
+
+	for(int arrayArrayIndex = 0; arrayArrayIndex < input.len(); arrayArrayIndex++){
+		string newContent = ""
+		for(int arrayIndex = 0; arrayIndex < input[arrayArrayIndex].len(); arrayIndex++){
+			if(newContent = ""){
+				newContent = input[arrayArrayIndex][arrayIndex]
+			}
+			else{
+				newContent += "-" + input[arrayArrayIndex][arrayIndex]
+			}
+		}
+		newArray.append(newContent)
+	}
+	FSU_SaveArrayToConVar(convar, newArray)
+}
+
+/**
+ * Returns just the setting value of a convar if it is also used to store data
+ * @param convar Which convar
+*/
+int function FSU_GetSettingIntFromConVar(string convar){
+	return split(GetConVarString(convar), ",")[0].tointeger()
+}
+
+/**
+ * Returns an array that has been stored in a convar using FSU_SaveArrayToConVar
+ * @param convar Which convar
+*/
+array <string> function FSU_GetArrayFromConVar(string convar){
+	array <string> convarArray = split(GetConVarString(convar), ",")
+	convarArray.remove(0)
+	return convarArray
+}
+
+/**
+ * Returns the selected array from a convar that is storing more than one
+ * @param convar Which convar
+ * @param whichArray Which array to pull, provide an index number
+*/
+array <string> function FSU_GetSelectedArrayFromConVar(string convar, int whichArray){
+	return split(FSU_GetArrayFromConVar(convar)[whichArray], "-")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
