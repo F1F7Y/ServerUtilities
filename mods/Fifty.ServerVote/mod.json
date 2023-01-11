@@ -1,7 +1,7 @@
 {
 	"Name" : "Fifty.ServerVote [FSV]",
 	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements voting functionality\n\nDependencies:\n  - Northstar\n  - Fifty.ServerUtilities\n  - Fifty.ServerChatCommands",
-	"Version": "2.2.1",
+	"Version": "2.3.1",
 	"LoadPriority": 2,
 	"Dependencies": {
 		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
@@ -11,32 +11,32 @@
 		{
 			"Name": "FSV_ENABLE_MAP_VOTING",
 			"DefaultValue": "1",
-			"Description": "Enables/Disables the !nextmap and !maps commands."
+			"HelpString": "Enables/Disables the !nextmap and !maps commands."
 		},
 		{
 			"Name": "FSV_ENABLE_MAP_SKIPPING",
 			"DefaultValue": "1",
-			"Description": "Enables/Disables the !skip command."
+			"HelpString": "Enables/Disables the !skip command."
 		},
 		{
 			"Name": "FSV_ENABLE_MAP_EXTENDING",
 			"DefaultValue": "1",
-			"Description": "Enables/Disables the !extend command."
+			"HelpString": "Enables/Disables the !extend command."
 		},
 		{
 			"Name": "FSV_CUSTOM_MAP_ROTATION",
 			"DefaultValue": "1",
-			"Description": "Whether to use FSV_MAP_ROTATION for a custom map rotation."
+			"HelpString": "Whether to use FSV_MAP_ROTATION for a custom map rotation."
 		},
 		{
 			"Name": "FSV_MAP_ROTATION",
 			"DefaultValue": "mp_angel_city,mp_black_water_canal,mp_grave,mp_colony02,mp_drydock,mp_eden,mp_thaw,mp_forwardbase_kodai,mp_glitch,mp_relic02,mp_wargames",
-			"Description": "A list of maps in the map rotation which can also be voted for. ( run 'maps *' in the console to get a list of maps loaded )"
+			"HelpString": "A list of maps in the map rotation which can also be voted for. ( run 'maps *' in the console to get a list of maps loaded )"
 		},
 		{
 			"Name": "FSV_MAP_VOTE_ONLY",
 			"DefaultValue": "mp_crashsite3,mp_complex3,mp_homestead,mp_rise",
-			"Description": "A list of maps which arent in the map rotation, but can be voted for."
+			"HelpString": "A list of maps which arent in the map rotation, but can be voted for."
 		}
 	],
 	"Scripts": [

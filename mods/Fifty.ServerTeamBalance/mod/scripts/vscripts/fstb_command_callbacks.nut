@@ -7,7 +7,7 @@ globalize_all_functions
  * @param args The arguments passed by the player
 */
 void function FSTM_CommandCallback_Switch( entity player, array< string > args ) {
-	if( GetGameState() != eGameState.Playing ) {
+	if( GetGameState() != eGameState.Playing || !IsAlive( player ) ) {
 		FSU_PrivateChatMessage( player, "Can't switch teams currently." )
 		return
 	}

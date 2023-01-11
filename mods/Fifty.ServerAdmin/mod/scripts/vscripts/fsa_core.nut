@@ -122,15 +122,32 @@ ClServer_MessageStruct function FSA_CheckMessageForPrivilegedUser( ClServer_Mess
 		return message
 	}
 
+	array< string > tagsList = split( GetConVarString( "FSA_USER_TAGS" ), "," )
+	array< string > uidList = split( GetConVarString( "FSA_USER_TAG_UIDS" ), "," )
+	array< string > colorList = split( GetConVarString( "FSA_USER_TAG_COLORS" ), "," )
+
+	array< string > tags
+	if( tagsList.len() == uidList.len() && uidList.len() == colorList.len() ) {
+		for( int i = 0; i < tagsList.len(); i++ ) {
+			if( message.player.GetUID() == uidList[i] )
+				tags.append( colorList[i] + "[" + tagsList[i] + "]" )
+		}
+	} else {
+		FSU_Error( "FSA_TAG convar length mismatch!" )
+	}
+
+
 	if( FSA_IsOwner( message.player ) && GetConVarBool( "FSA_PREFIX_OWNERS_IN_CHAT" ) ) {
 		message.shouldBlock = true
-		FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam, "OWNER", "%O" )
+		tags.append( "%O[OWNER]")
+		FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam,  tags )
 		return message
 	}
 
 	if( FSA_IsAdmin( message.player ) && GetConVarBool( "FSA_PREFIX_ADMINS_IN_CHAT" ) ) {
 		message.shouldBlock = true
-		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, "ADMIN", "%A" )
+		tags.append( "%A[ADMIN]" )
+		FSA_SendMessageWithPrefix(message.player, message.message, message.isTeam, tags )
 		return message
 	}
 
@@ -143,13 +160,17 @@ ClServer_MessageStruct function FSA_CheckMessageForPrivilegedUser( ClServer_Mess
  * @param message The message string
  * @param isTeamMessage Whether it was sent in team or grobal chat
  * @param prefix The prefix to add
- * @param code The color code to use
 */
-void function FSA_SendMessageWithPrefix( entity from, string message, bool isTeamMessage, string prefix, string code ){
+void function FSA_SendMessageWithPrefix( entity from, string message, bool isTeamMessage, array< string > prefix ){
 	foreach( entity p in GetPlayerArray() ) {
 		if( isTeamMessage && p.GetTeam() != from.GetTeam())
 			continue
-		Chat_ServerPrivateMessage( p, FSU_FormatString( code + "["+ prefix +"]" + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m" : "\x1b[112m" ) + from.GetPlayerName() + "%0: " + message ), isTeamMessage, false )
+
+		string tags
+		foreach( string tag in prefix )
+			tags += tag
+
+		Chat_ServerPrivateMessage( p, FSU_FormatString( tags + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m " : "\x1b[112m " ) + from.GetPlayerName() + ( isTeamMessage ? "(Team)" : "") + "%0: " )  + message, false, false )
 	}
 }
 
@@ -332,15 +353,15 @@ void function FSCC_CommandCallback_Kick(entity player, array<string> args){
 			toBan = p.GetPlayerName()
 
 	if( toBan == "" ){
-		//check for numbers in playerlist 
+		//check for numbers in playerlist
 		if( args[0] == "0" || ( args[0].tointeger() > 0 && args[0].tointeger() < GetPlayerArray().len()-1 ) ){
 			entity p = FSA_GetPlayerEntityByName(args[0])
 			if( p != null ){
 				toBan = p.GetPlayerName()
-			
+
 			}
 		}
-		//2nd check if its still not found 
+		//2nd check if its still not found
 		if(toBan == ""){
 			FSU_PrivateChatMessage (player, "Player not found" )
 			return
@@ -374,7 +395,7 @@ void function FSCC_CommandCallback_CommandFor(entity player, array<string> args)
 	string command = args[1].tolower()
 	args.remove(1)
 
-	
+
 	FSCC_CommandStruct commandInfo
 	bool foundCommand = false
 	table <string, FSCC_CommandStruct > commandsList = FSCC_GetCommandList()

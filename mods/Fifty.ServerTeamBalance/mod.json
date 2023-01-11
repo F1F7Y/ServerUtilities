@@ -1,7 +1,7 @@
 {
 	"Name" : "Fifty.ServerTeamBalance [FSTB]",
 	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements helper functions used by other mods.\n\nDependencies:\n  - Northstar",
-	"Version": "2.2.1",
+	"Version": "2.3.1",
 	"LoadPriority": 2,
 	"Dependencies": {
 		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
@@ -11,7 +11,7 @@
 		{
 			"Name": "FSTB_TEAM_BALANCE_ENABLED",
 			"DefaultValue": "1",
-			"Description": "Whether the teams should be balanced at the start of a match. ( In reality its at the end, but fells like its at the begining )"
+			"HelpString": "Whether the teams should be balanced at the start of a match. ( In reality its at the end, but fells like its at the begining )"
 		}
 	],
 	"Scripts": [

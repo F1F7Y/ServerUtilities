@@ -38,7 +38,7 @@ void function FSM_PrintPrematchMessage_Threaded() {
 		for( int i = 0; i < 5; i++ ) {
 			string message = GetConVarString( "FSM_LIST_" + i )
 			if( message.len() != 0 )
-				FSU_ChatBroadcast( "  %H" + i + ".%T " + message )
+				FSU_ChatBroadcast( "  %H" + ( i + 1 ) + ".%T " + message )
 		}
 	}
 }

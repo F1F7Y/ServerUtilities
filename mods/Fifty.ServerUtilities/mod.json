@@ -1,7 +1,7 @@
 {
 	"Name" : "Fifty.ServerUtilities [FSU]",
 	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements helper functions used by other mods.\n\nDependencies:\n  - Northstar",
-	"Version": "2.2.1",
+	"Version": "2.3.1",
 	"LoadPriority": 2,
 	"Dependencies": {
 		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
@@ -14,7 +14,7 @@
 		{
 			"Name": "FSU_PREFIX_SYSTEM_MESSAGES",
 			"DefaultValue": "1",
-			"Description": "Whether system messages should be prefixed with '[FSU]'."
+			"HelpString": "Whether system messages should be prefixed with '[FSU]'."
 		}
 	],
 	"Scripts": [

@@ -21,7 +21,7 @@ struct {
 struct {
 	// List of kick votes per player
 	table < string, int> kickVote
-} canVote
+} kickVote
 
 /**
  * Gets called after the map is loaded
@@ -188,48 +188,52 @@ void function FSV_ExtendMatch( float minutes ) {
 }
 /**
  * returns if a player has started to mamy kick votes
- * @param player The player to check 
+ * @param player The player to check
 */
-bool function FSV_CanPlayerStartKick(entity player) 
+bool function FSV_CanPlayerStartKick(entity player)
 {
-  if(player.GetPlayerName() in canVote.kickVote && canVote.kickVote[player.GetPlayerName()]>3)
+  if(player.GetPlayerName() in kickVote.kickVote && kickVote.kickVote[player.GetPlayerName()]>3)
     return false
   return true
 }
 
-void function FSV_PlayerKickVote(entity player)
+void function FSV_PlayerKickVote_Threaded(entity player)
 {
-	array<string> options = ["Yes, kick", "No, stay", "No opinion"]
-	foreach(entity p in GetPlayerArray())
-	NSCreatePollOnPlayer(p, "Should "+player.GetPlayerName() + " be kicked?", options, 30)
+	array<string> options = [ "Yes, kick", "No, stay", "No opinion" ]
+
+	foreach( entity p in GetPlayerArray() )
+		NSCreatePollOnPlayer( p, "Should " + player.GetPlayerName() + " be kicked?", options, 30 )
+
 	wait 30
+
 	int YesVotes = 0
 	int NoVotes = 0
-	foreach(entity p in GetPlayerArray()){
-		if(NSGetPlayerResponse(p) == 0)
+	foreach( entity p in GetPlayerArray() ) {
+		if( NSGetPlayerResponse( p ) == 0 )
 			YesVotes++
-		if(NSGetPlayerResponse(p) == 1)
+		if( NSGetPlayerResponse( p ) == 1 )
 			NoVotes++
 	}
-	if(YesVotes > NoVotes){
-		ServerCommand("kick "+player.GetPlayerName())
-		foreach(entity p in GetPlayerArray()){
-			NSSendInfoMessageToPlayer(p, "Player "+player.GetPlayerName()+ " was kicked from the match")
+
+	if( YesVotes > NoVotes ) {
+		ServerCommand( "kick " + player.GetPlayerName() )
+
+		foreach( entity p in GetPlayerArray() ) {
+			NSSendInfoMessageToPlayer( p, "Player " + player.GetPlayerName() + " was kicked from the match." )
 		}
-	}
-	else{
-		foreach(entity p in GetPlayerArray()){
-			NSSendInfoMessageToPlayer(p, "Player "+player.GetPlayerName()+ " was NOT kicked from the match")
+	} else {
+		foreach( entity p in GetPlayerArray() ) {
+			NSSendInfoMessageToPlayer( p, "Player " + player.GetPlayerName()+ " was NOT kicked from the match." )
 		}
 	}
 }
 
-void function FSV_increaseVoteForPlayer(entity player){
-	if( player.GetPlayerName() in canVote.kickVote)
-		canVote.kickVote[player.GetPlayerName()] += 1 
+void function FSV_IncreaseVoteForPlayer( entity player ) {
+	if( player.GetPlayerName() in kickVote.kickVote )
+		kickVote.kickVote[ player.GetPlayerName() ] += 1
 	else
-		canVote.kickVote[player.GetPlayerName()] <- 1
-	Chat_ServerBroadcast(canVote.kickVote[player.GetPlayerName()].tostring())
+		kickVote.kickVote[ player.GetPlayerName() ] <- 1
+
 }
 
 #else

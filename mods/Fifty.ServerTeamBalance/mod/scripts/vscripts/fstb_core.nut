@@ -12,7 +12,8 @@ void function FSTB_Init() {
 	command.m_Group = "BALANCE"
 	command.m_Abbreviations = [ "sw" ]
 	command.Callback = FSTM_CommandCallback_Switch
-	FSCC_RegisterCommand( "switch", command )
+	if( !IsFFAGame() )
+		FSCC_RegisterCommand( "switch", command )
 
 	if( GetConVarBool( "FSTB_TEAM_BALANCE_ENABLED" ) && !IsFFAGame() )
 		AddCallback_GameStateEnter( eGameState.Postmatch, FSTM_EndOfMatchMatch_Threaded )
