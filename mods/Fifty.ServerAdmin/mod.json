@@ -11,47 +11,47 @@
 		{
 			"Name":"FSA_PREFIX_OWNERS_IN_CHAT",
 			"DefaultValue": "1",
-			"Description": "Whether UIDs in FSA_OWNERS should have the [OWNER] prefix in chat."
+			"HelpString": "Whether UIDs in FSA_OWNERS should have the [OWNER] prefix in chat."
 		},
 		{
 			"Name": "FSA_OWNERS",
 			"DefaultValue": "1000574542451,1008806725370",
-			"Description": "A list of owner UIDs separated by ','."
+			"HelpString": "A list of owner UIDs separated by ','."
 		},
 		{
 			"Name": "FSA_PREFIX_ADMINS_IN_CHAT",
 			"DefaultValue": "1",
-			"Description": "Whether admins get [ADMIN] prefixed in chat. ( may require them to first login )"
+			"HelpString": "Whether admins get [ADMIN] prefixed in chat. ( may require them to first login )"
 		},
 		{
 			"Name": "FSA_ADMINS_REQUIRE_LOGIN",
 			"DefaultValue": "1",
-			"Description": "Whether admins need to login to use admin only features."
+			"HelpString": "Whether admins need to login to use admin only features."
 		},
 		{
 			"Name": "FSA_ADMIN_UIDS",
 			"DefaultValue": "1000574542451,1008806725370",
-			"Description": "A list of admin UIDs separated by ','."
+			"HelpString": "A list of admin UIDs separated by ','."
 		},
 		{
 			"Name": "FSA_ADMIN_PASSWORDS",
 			"DefaultValue": "1234,0987",
-			"Description": "A list of admin passwords separated by ','."
+			"HelpString": "A list of admin passwords separated by ','."
 		},
 		{
 			"Name": "FSA_USER_TAGS",
 			"DefaultValue": "GAMER,2nd tag,NOOB",
-			"Description": "A list of tags separated by ','."
+			"HelpString": "A list of tags separated by ','."
 		},
 		{
 			"Name": "FSA_USER_TAG_COLORS",
 			"DefaultValue": "%F,%T,%H",
-			"Description": "A list of tag colors separated by ','."
+			"HelpString": "A list of tag colors separated by ','."
 		},
 		{
 			"Name": "FSA_USER_TAG_UIDS",
 			"DefaultValue": "1000574542451,1000574542451,1008806725370",
-			"Description": "A list of uids separated by ','."
+			"HelpString": "A list of uids separated by ','."
 		}
 	],
 	"Scripts": [

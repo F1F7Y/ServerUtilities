@@ -11,7 +11,7 @@
 		{
 			"Name": "FSTB_TEAM_BALANCE_ENABLED",
 			"DefaultValue": "1",
-			"Description": "Whether the teams should be balanced at the start of a match. ( In reality its at the end, but fells like its at the begining )"
+			"HelpString": "Whether the teams should be balanced at the start of a match. ( In reality its at the end, but fells like its at the begining )"
 		}
 	],
 	"Scripts": [

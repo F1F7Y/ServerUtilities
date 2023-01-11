@@ -10,32 +10,32 @@
 		{
 			"Name": "FSCC_PREFIX",
 			"DefaultValue": "!",
-			"Description": "The prefix used for commands. Should only be one character."
+			"HelpString": "The prefix used for commands. Should only be one character."
 		},
 		{
 			"Name": "FSCC_OWNER",
 			"DefaultValue": "???",
-			"Description": "The contact owner of the owner ( discord, ... ). gets printed by the owner command."
+			"HelpString": "The contact owner of the owner ( discord, ... ). gets printed by the owner command."
 		},
 		{
 			"Name": "FSCC_RULES",
 			"DefaultValue": "Don't cheat,Don't act funny,vim > nano",
-			"Description": "A list of rules. These get printed by the rules command."
+			"HelpString": "A list of rules. These get printed by the rules command."
 		},
 		{
 			"Name": "FSCC_DISCORD",
 			"DefaultValue": "northstar.tf",
-			"Description": "A link to discord. Gets printed by the discord command."
+			"HelpString": "A link to discord. Gets printed by the discord command."
 		},
 		{
 			"Name": "FSCC_MODE_HIDE_MESSAGES_GLOBAL",
 			"DefaultValue": "1",
-			"Description": "Whether to hide the player messages which are identified as possible commands."
+			"HelpString": "Whether to hide the player messages which are identified as possible commands."
 		},
 		{
 			"Name": "FSCC_MODE_SECURE",
 			"DefaultValue": "1",
-			"Description": "Whether to empty the message struct. This may break other chat command mods."
+			"HelpString": "Whether to empty the message struct. This may break other chat command mods."
 		}
 	],
 	"Scripts": [
