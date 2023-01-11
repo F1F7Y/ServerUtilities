@@ -170,7 +170,7 @@ void function FSA_SendMessageWithPrefix( entity from, string message, bool isTea
 		foreach( string tag in prefix )
 			tags += tag
 
-		Chat_ServerPrivateMessage( p, FSU_FormatString( tags + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m " : "\x1b[112m " ) + from.GetPlayerName() + (isTeamMessage ? "(Team)" : "") + "%0: " + message ), false, false )
+		Chat_ServerPrivateMessage( p, FSU_FormatString( tags + ((p.GetTeam() == from.GetTeam()) ? "\x1b[111m " : "\x1b[112m " ) + from.GetPlayerName() + ( isTeamMessage ? "(Team)" : "") + "%0: " )  + message, false, false )
 	}
 }
 
