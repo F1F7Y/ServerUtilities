@@ -299,16 +299,16 @@ void function FSU_SaveArrayToConVar(string convar, array <string> input){
  * @param convar Which convar
  * @param input An array of the arrays to be saved
 */
-void function FSU_SaveArrayArrayToConVar(string convar, array <array> input){
+void function FSU_SaveArrayArrayToConVar(string convar, array <array <string> > input){
 	if(GetConVarString(convar) == "0")
 		return
 
-	array newArray <string>
+	array <string> newArray
 
 	for(int arrayArrayIndex = 0; arrayArrayIndex < input.len(); arrayArrayIndex++){
 		string newContent = ""
 		for(int arrayIndex = 0; arrayIndex < input[arrayArrayIndex].len(); arrayIndex++){
-			if(newContent = ""){
+			if(newContent == ""){
 				newContent = input[arrayArrayIndex][arrayIndex]
 			}
 			else{
@@ -346,18 +346,3 @@ array <string> function FSU_GetArrayFromConVar(string convar){
 array <string> function FSU_GetSelectedArrayFromConVar(string convar, int whichArray){
 	return split(FSU_GetArrayFromConVar(convar)[whichArray], "-")
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
