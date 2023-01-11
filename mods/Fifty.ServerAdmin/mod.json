@@ -37,6 +37,21 @@
 			"Name": "FSA_ADMIN_PASSWORDS",
 			"DefaultValue": "1234,0987",
 			"Description": "A list of admin passwords separated by ','."
+		},
+		{
+			"Name": "FSA_USER_TAGS",
+			"DefaultValue": "GAMER,2nd tag,NOOB",
+			"Description": "A list of tags separated by ','."
+		},
+		{
+			"Name": "FSA_USER_TAG_COLORS",
+			"DefaultValue": "%F,%T,%H",
+			"Description": "A list of tag colors separated by ','."
+		},
+		{
+			"Name": "FSA_USER_TAG_UIDS",
+			"DefaultValue": "1000574542451,1000574542451,1008806725370",
+			"Description": "A list of uids separated by ','."
 		}
 	],
 	"Scripts": [
