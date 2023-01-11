@@ -147,6 +147,6 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_Discord( entity player, array< string > args ) {
-	FSU_PrivateChatMessage( player, "Owner: %H\"" + GetConVarString( "FSCC_DISCORD" ) + "\"")
+	FSU_PrivateChatMessage( player, "Discord: %H\"" + GetConVarString( "FSCC_DISCORD" ) + "\"")
 }
 #endif
