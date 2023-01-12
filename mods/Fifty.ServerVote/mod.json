@@ -9,9 +9,14 @@
 	},
 	"ConVars": [
 		{
+			"Name": "FSV_ENABLE_RUI",
+			"DefaultValue": "1",
+			"HelpString": "Enables/Disables displaying notifications and statuses of votes in progress using RUI."
+		},
+		{
 			"Name": "FSV_ENABLE_MAP_VOTING",
 			"DefaultValue": "1",
-			"HelpString": "Enables/Disables the !nextmap and !maps commands."
+			"HelpString": "Enables/Disables the !nextmap command."
 		},
 		{
 			"Name": "FSV_ENABLE_MAP_SKIPPING",
@@ -22,6 +27,36 @@
 			"Name": "FSV_ENABLE_MAP_EXTENDING",
 			"DefaultValue": "1",
 			"HelpString": "Enables/Disables the !extend command."
+		},
+		{
+			"Name": "FSV_MAP_EXTENDING_DURATION",
+			"DefaultValue": "120",
+			"HelpString": "The duration of extend votes in seconds."
+		},
+		{
+			"Name": "FSV_ENABLE_KICK_VOTING",
+			"DefaultValue": "1",
+			"HelpString": "Enables/Disables the !kick command. Remains enabled for admins."
+		},
+		{
+			"Name": "FSV_KICK_MIN_PLAYERS",
+			"DefaultValue": "4",
+			"HelpString": "Number of players that have to be on before kick voting someone is possible."
+		},
+		{
+			"Name": "FSV_KICK_PERCENTAGE",
+			"DefaultValue": "0.3",
+			"HelpString": "Percentage of players needed for a vote kick to succeed."
+		},
+		{
+			"Name": "FSV_KICK_BLOCK",
+			"DefaultValue": "3",
+			"HelpString": "Number of matches a kicked player is blocked from re-joining. Setting this to zero would allow immediate re-join."
+		},
+		{
+			"Name": "FSV_KICK_DURATION",
+			"DefaultValue": "240",
+			"HelpString": "The duration of kick votes in seconds."
 		},
 		{
 			"Name": "FSV_CUSTOM_MAP_ROTATION",

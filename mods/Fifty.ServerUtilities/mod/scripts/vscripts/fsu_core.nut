@@ -180,7 +180,7 @@ string function FSU_FormatString( string str ) {
 	formatted = StringReplace( formatted, "%O", ownerHeader, true, false )
 	formatted = StringReplace( formatted, "%E", error, true, false )
 	formatted = StringReplace( formatted, "%E", success, true, false )
-	formatted = StringReplace( formatted, "%E", announce, true, false )
+	formatted = StringReplace( formatted, "%N", announce, true, false )
 	formatted = StringReplace( formatted, "%0", "\x1b[0m", true, false )
 #if FSCC_ENABLED
 	formatted = StringReplace( formatted, "%P", GetConVarString( "FSCC_PREFIX" ), true, false )
@@ -344,5 +344,7 @@ array <string> function FSU_GetArrayFromConVar(string convar){
  * @param whichArray Which array to pull, provide an index number
 */
 array <string> function FSU_GetSelectedArrayFromConVar(string convar, int whichArray){
-	return split(FSU_GetArrayFromConVar(convar)[whichArray], "-")
+	if(FSU_GetArrayFromConVar(convar).len() != 0)
+		return split(FSU_GetArrayFromConVar(convar)[whichArray], "-")
+	return FSU_GetArrayFromConVar(convar)
 }
