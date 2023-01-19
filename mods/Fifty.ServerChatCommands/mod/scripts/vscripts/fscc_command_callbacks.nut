@@ -87,7 +87,6 @@ void function FSCC_CommandCallback_Mods( entity player, array< string > args ) {
 		return
 	}
 
-
 	FSU_PrivateChatMessage( player, "List of mods installed on this server:" )
 	FSU_PrintFormattedList( player, mods, page, 2 )
 	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
@@ -135,7 +134,6 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
 		return
 	}
 
-
 	FSU_PrivateChatMessage( player, "List of rules:" )
 	FSU_PrintFormattedList( player, rules, page )
 	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
@@ -147,6 +145,6 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_Discord( entity player, array< string > args ) {
-	FSU_PrivateChatMessage( player, "Owner: %H\"" + GetConVarString( "FSCC_DISCORD" ) + "\"")
+	FSU_PrivateChatMessage( player, "Discord: %H\"" + GetConVarString( "FSCC_DISCORD" ) + "\"")
 }
 #endif
