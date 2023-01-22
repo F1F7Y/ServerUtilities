@@ -26,7 +26,7 @@ void function FSU_Init() {
 */
 void function FSU_PrintPrematchMessage() {
 	FSU_Print( "Checking enabled modules!" )
-	FSU_ChatBroadcast( "%TFifty.ServerUtilities is active!" )
+	//FSU_ChatBroadcast( "Fifty.ServerUtilities is active!" )
 
 #if FSCC_ENABLED
 	FSU_Print( "FSCC is enabled!")
@@ -101,9 +101,9 @@ void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
 			NSSendPopUpMessageToPlayer( player, message )
 	} else {
 		if( GetConVarBool( "FSU_PREFIX_SYSTEM_MESSAGES" ) )
-			Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%T " + message ), false )
+			Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%N " + message ), false )
 		else
-			Chat_ServerBroadcast( FSU_FormatString( "%T" + message ), false )
+			Chat_ServerBroadcast( FSU_FormatString( "%N" + message ), false )
 	}
 }
 
@@ -179,7 +179,7 @@ string function FSU_FormatString( string str ) {
 	formatted = StringReplace( formatted, "%A", adminHeader, true, false )
 	formatted = StringReplace( formatted, "%O", ownerHeader, true, false )
 	formatted = StringReplace( formatted, "%E", error, true, false )
-	formatted = StringReplace( formatted, "%E", success, true, false )
+	formatted = StringReplace( formatted, "%S", success, true, false )
 	formatted = StringReplace( formatted, "%N", announce, true, false )
 	formatted = StringReplace( formatted, "%0", "\x1b[0m", true, false )
 #if FSCC_ENABLED

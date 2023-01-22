@@ -51,7 +51,7 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 	}
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
+		FSU_PrivateChatMessage( player, "%EMaximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
@@ -83,7 +83,7 @@ void function FSCC_CommandCallback_Mods( entity player, array< string > args ) {
 		page = 1
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
+		FSU_PrivateChatMessage( player, "%EMaximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
@@ -131,7 +131,7 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
 		page = 1
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
+		FSU_PrivateChatMessage( player, "%EMaximum number of pages is: %H" + string( pages ) )
 		return
 	}
 

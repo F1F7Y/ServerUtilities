@@ -49,7 +49,7 @@ void function FSM_PrintPrematchMessage_Threaded() {
 void function FSM_OnNPCKilled( entity npc, entity attacker, var damageInfo ) {
 	if( GetConVarBool( "FSM_MARVIN_DEATH_NOTIFICATION" ) )
 		if( attacker.IsPlayer() && npc.IsNPC() && npc.GetAIClass() == AIC_MARVIN )
-			FSU_ChatBroadcast( "%H" + attacker.GetPlayerName() + "%T killed a marvin." )
+			FSU_ChatBroadcast( "%H" + attacker.GetPlayerName() + "%N killed a marvin." )
 }
 
 /**
@@ -59,14 +59,14 @@ void function FSM_OnPlayerKilled( entity victim, entity attacker, var damageInfo
 	if( GetConVarBool( "FSM_PLAYER_FALL_DEATH_NOTIFICATION" ) ) {
 		if( victim.IsPlayer() && DamageInfo_GetDamageSourceIdentifier( damageInfo ) == eDamageSourceId.fall ) {
 			if( GetMapName() == "mp_relic02" ) {
-				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T fell off the cliff." )
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell off the cliff." )
 			} else {
-				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T fell into the pit." )
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell into the pit." )
 			}
 		}
 
 		if( victim.IsPlayer() && DamageInfo_GetDamageSourceIdentifier( damageInfo ) == eDamageSourceId.outOfBounds ) {
-			FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T tried to flee from battle." )
+			FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N tried to flee from battle." )
 		}
 	}
 

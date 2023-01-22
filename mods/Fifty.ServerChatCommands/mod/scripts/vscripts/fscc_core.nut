@@ -116,12 +116,12 @@ ClServer_MessageStruct function FSCC_CheckForCommand( ClServer_MessageStruct mes
 
 	// Didnt find command
 	if( !foundCommand ) {
-		FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%T wasn't found!" )
+		FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%E wasn't found!" )
 	}
 	// Did find command
 	else {
 		if( commandInfo.PlayerCanUse != null && !commandInfo.PlayerCanUse( message.player ) ){
-			FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%T wasn't found!" )
+			FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%E wasn't found!" )
 		} else {
 			thread commandInfo.Callback( message.player, args )
 		}

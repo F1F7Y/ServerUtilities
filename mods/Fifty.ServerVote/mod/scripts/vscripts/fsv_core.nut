@@ -22,13 +22,14 @@ struct {
  * Gets called after the map is loaded
 */
 void function FSV_Init() {
+	if (FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0)
 	if( GetConVarBool( "FSV_CUSTOM_MAP_ROTATION" ) )
 		AddCallback_GameStateEnter( eGameState.Postmatch, FSV_EndOfMatchMatch_Threaded )
 
 	FSCC_CommandStruct command
 	command.m_UsageUser = "nextmap <map>"
-	command.m_UsageAdmin = "nextmap <map> <force>"
 	command.m_Description = "Allows you to vote for the next map"
+	command.m_UsageAdmin = "nextmap <map> force"
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = [ "nm", "maps", "map" ]
 	command.Callback = FSV_CommandCallback_NextMap
@@ -38,8 +39,8 @@ void function FSV_Init() {
 	command.PlayerCanUse = null
 
 	command.m_UsageUser = "skip"
-	command.m_UsageAdmin = "skip <force>"
-	command.m_Description = "Allows you to vote to skip the current map"
+	command.m_UsageAdmin = "skip force"
+	command.m_Description = "Allows you to vote to skip the current map."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = []
 	command.Callback = FSV_CommandCallback_Skip
@@ -50,7 +51,7 @@ void function FSV_Init() {
 
 	command.m_UsageUser = "extend"
 	command.m_UsageAdmin = "extend <minutes>"
-	command.m_Description = "Allows you to vote to extend the current match"
+	command.m_Description = "Allows you to vote to extend the current match."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = [ "ex" ]
 	command.Callback = FSV_CommandCallback_Extend
@@ -61,7 +62,7 @@ void function FSV_Init() {
 
 	command.m_UsageUser = "kick <player-name>"
 	command.m_UsageAdmin = "kick <player-name> force"
-	command.m_Description = "Starts a vote to kick a player"
+	command.m_Description = "Starts a vote to kick a player."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = []
 	command.Callback = FSV_CommandCallback_Kick
