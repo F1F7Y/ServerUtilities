@@ -8,9 +8,7 @@ string adminHeader = "\x1b[94m"
 string ownerHeader = "\x1b[92m"
 string error       = "\x1b[38;5;203m"
 string success     = "\x1b[38;5;192m"
-string announce    = "\x1b[38;5;189m"
-
-const FSU_LIST_ROWS = 5
+string announce    = "\x1b[38;5;177m"
 
 /**
  * Gets called after the map is loaded
@@ -123,9 +121,27 @@ void function FSU_PrivateChatMessage( entity player, string message ) {
  * Returns the maximum number of pages for FSU_PrintFormattedList
  * @param list The list to be printed
  * @param columns The nubre of columns per row
+ * @param separator The list item separator, inconsquential as long as charachter count is the same
 */
-int function FSU_GetListPages( array< string > list, int columns = 1 ) {
-	return int( ceil( list.len() / ( columns * 5.0 ) ) )
+int function FSU_GetListPages( array< string > list, int rows = 5, string separator = "%T, " ) {
+	string row = ""
+	array <string> rowList
+	foreach(string item in list){
+		if( row == ""){
+			row = "  " + item
+		}
+		else{
+			row += separator + "  " + item
+		}
+
+		if( row.len() > 75){
+			rowList.append(row)
+			row = ""
+		}
+	}
+	rowList.append(row)
+
+	return int( ceil( rowList.len() / ( rows * 1.0 ) ) ) // For some reason this does not use floats without the * 1.0 and as such would sometimes return zero when it shouldn't
 }
 
 /**
@@ -133,25 +149,58 @@ int function FSU_GetListPages( array< string > list, int columns = 1 ) {
  * @param player The player to send the list to
  * @param list The list to be printed
  * @param page The page to display
- * @param columns The nubre of columns per row
  * @param separator The list item separator
+ * @param rows The number of rows to print per page
+ * @param color The color of list items
 */
-void function FSU_PrintFormattedList( entity player, array< string > list, int page, int columns = 1, string separator = ", " ) {
-	for( int r = ( page - 1 ) * FSU_LIST_ROWS * columns; r < page * FSU_LIST_ROWS * columns; r += columns ) {
-		string row = "  "
-		for( int c = 0; c < columns; c++ ) {
-			if( r + c >= list.len() )
-				break
-
-			row += FSU_Highlight( list[r + c] )
-
-			if( r + c < list.len() - 1 )
-				row += separator
+void function FSU_PrintFormattedList( entity player, array< string > list, int page, string separator = "%T, ", int rows = 5, string color = "%H" ) {
+	string row = ""
+	array <string> rowList
+	foreach(string item in list){
+		if( row == ""){
+			row = "    " + color + item
 		}
-		if( row != "  ")
-			FSU_PrivateChatMessage( player, row )
+		else{
+			row += separator + color + item
+		}
 
+		if( row.len() > 75){
+			rowList.append(row)
+			row = ""
+		}
 	}
+	rowList.append(row)
+
+	for(int rowToPrint = (page * rows) - rows ; rowToPrint < page * rows; rowToPrint++ )
+		if(rowToPrint < rowList.len() )
+			FSU_PrivateChatMessage( player, rowList[rowToPrint] )
+}
+
+/**
+ * Prints a full list without pagination, as densely as possible
+ * @param player The player to send the list to
+ * @param list The list to be printed
+ * @param separator The list item separator
+ * @param color The color of list items
+*/
+void function FSU_PrintFormattedListWithoutPagination( entity player, array< string > list, string separator = "%T, ", string color = "%H" ) {
+	string row = ""
+	array <string> rowList
+	foreach(string item in list){
+		if( row == ""){
+			row = "    " + color + item
+		}
+		else{
+			row += separator + color + item
+		}
+
+		if( row.len() > 75){
+			FSU_PrivateChatMessage( player, row )
+			rowList.append(row)
+			row = ""
+		}
+	}
+	FSU_PrivateChatMessage( player, row )
 }
 
 /**
@@ -162,7 +211,10 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 string function FSU_ArrayToString( array< string > args, string separator = " " ) {
 	string result = ""
 	foreach( string s in args )
-		result += ( s + separator )
+		if ( result == "" )
+			result = s
+		else
+			result += ( separator + s )
 	return result
 }
 

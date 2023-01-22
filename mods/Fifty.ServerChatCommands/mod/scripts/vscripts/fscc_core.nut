@@ -39,7 +39,7 @@ void function FSCC_Init() {
 	// Register base commands
 	// !help
 	FSCC_CommandStruct command
-	command.m_UsageUser = "help <page/command>"
+	command.m_UsageUser = "help <page#/all/command>"
 	command.m_UsageAdmin = ""
 	command.m_Description = "Lists available commands."
 	command.m_Group = "CORE"
@@ -48,7 +48,7 @@ void function FSCC_Init() {
 	FSCC_RegisterCommand( "help", command )
 
 	// !mods
-	command.m_UsageUser = "mods <page>"
+	command.m_UsageUser = "mods <page#/all>"
 	command.m_Description = "Lists mods installed on the server."
 	command.m_Abbreviations = []
 	command.Callback = FSCC_CommandCallback_Mods
@@ -67,7 +67,7 @@ void function FSCC_Init() {
 	FSCC_RegisterCommand( "owner", command )
 
 	// !rules
-	command.m_UsageUser = "rules <page>"
+	command.m_UsageUser = "rules <page#/all>"
 	command.m_Description = "Lists server rules."
 	command.Callback = FSCC_CommandCallback_Rules
 	FSCC_RegisterCommand( "rules", command )

@@ -237,8 +237,7 @@ void function FSCC_CommandCallback_Playerlist( entity player, array< string > ar
 		printList.append( p.GetPlayerName() )
 		printList.append( index.tostring() )
 	}
-	int columns = 2
-	int pages = FSU_GetListPages(printList, columns) +1
+	int pages = FSU_GetListPages(printList) +1
 	for( int page = 1; page< pages; page++ )
 		FSU_PrintFormattedList(player, printList, page)
 }

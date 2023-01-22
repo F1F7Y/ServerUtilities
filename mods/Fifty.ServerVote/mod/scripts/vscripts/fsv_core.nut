@@ -8,28 +8,20 @@ struct {
 	table< string, int > votes
 } mapVote
 
-struct {
-	// List of players who already voted
-	array< entity > playerBlacklist
-} skipVote
-
-struct {
-	// List of players who already voted
-	array< entity > playerBlacklist
-} extendVote
-
 /**
  * Gets called after the map is loaded
 */
 void function FSV_Init() {
 	if (FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0)
+		UpdatePlayedMaps()
+
 	if( GetConVarBool( "FSV_CUSTOM_MAP_ROTATION" ) )
 		AddCallback_GameStateEnter( eGameState.Postmatch, FSV_EndOfMatchMatch_Threaded )
 
 	FSCC_CommandStruct command
 	command.m_UsageUser = "nextmap <map>"
-	command.m_Description = "Allows you to vote for the next map"
 	command.m_UsageAdmin = "nextmap <map> force"
+	command.m_Description = "Allows you to vote for the next map, or view map rotation information."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = [ "nm", "maps", "map" ]
 	command.Callback = FSV_CommandCallback_NextMap
@@ -60,6 +52,14 @@ void function FSV_Init() {
 	FSCC_RegisterCommand( "extend", command )
 	command.PlayerCanUse = null
 
+// 	command.m_UsageUser = "testvote"
+// 	command.m_UsageUser = "testvote <player-name>"
+// 	command.m_Description = "Test MentalEdge's style of votes."
+// 	command.m_Group = "VOTE"
+// 	command.m_Abbreviations = ["tv"]
+// 	command.Callback = FSV_CommandCallback_TestVote
+// 	FSCC_RegisterCommand( "testvote", command)
+
 	command.m_UsageUser = "kick <player-name>"
 	command.m_UsageAdmin = "kick <player-name> force"
 	command.m_Description = "Starts a vote to kick a player."
@@ -78,27 +78,6 @@ void function FSV_Init() {
 }
 
 /**
- * Returns a reference to an array of players who have voted to extend the match
-*/
-array< entity > function FSV_GetPlayerArrayReference_Extend() {
-	return extendVote.playerBlacklist
-}
-
-/**
- * Returns a reference to an array of players who have voted to skip the map
-*/
-array< entity > function FSV_GetPlayerArrayReference_Skip() {
-	return skipVote.playerBlacklist
-}
-
-/**
- * Returns a reference to an array of players who have voted for the next map
-*/
-array< entity > function FSV_GetPlayerArrayReference_NextMap() {
-	return mapVote.playerBlacklist
-}
-
-/**
  * Adds a vote to a map
  * @param player The player who voted
  * @param map The map to vote for
@@ -113,41 +92,95 @@ void function FSV_VoteForNextMap( entity player, string map ) {
 	}
 }
 
+// Updates last played (vote blocked) maps
+void function UpdatePlayedMaps(){
+    if(GetMapName() != "mp_lobby"){
+        array <string> playedMaps = FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")
+        playedMaps.append(GetMapName())
+        while (playedMaps.len() > FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT")){
+            playedMaps.remove(0)
+        }
+
+        FSU_SaveArrayToConVar("FSV_MAP_REPLAY_LIMIT", playedMaps)
+    }
+}
+
+/**
+ * Runs on player connected, preventing any previously kicked players from re-joining
+*/
+void function FSV_JoiningPlayerKickCheck(entity player) {
+    if (FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0).contains(player.GetUID())) {
+        FSU_Print("previously kicked " + player.GetPlayerName() + " tried to rejoin")
+        ServerCommand("kick " + player.GetPlayerName())
+    }
+}
+
+/**
+ * Updates the kicked player re-join block list, removing any expired blocks and incrementing existing ones
+*/
+void function FSV_UpdateKicked(){
+    array <string> kicked = FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0)
+    array <string> kickedfor = FSU_GetSelectedArrayFromConVar	("FSV_KICK_BLOCK", 1)
+    int kickDuration = FSU_GetSettingIntFromConVar("FSV_KICK_BLOCK")
+
+    for(int i = kickedfor.len()-1; i > -1; i--){
+        kickedfor.insert(i, (kickedfor[i].tointeger()+1).tostring())
+        kickedfor.remove(i+1)
+        if(kickedfor[i].tointeger() > kickDuration){
+            kickedfor.remove(i)
+            kicked.remove(i)
+        }
+    }
+
+    array <array <string> > newKickedArray = [kicked, kickedfor]
+	FSU_SaveArrayArrayToConVar("FSV_KICK_BLOCK", newKickedArray)
+}
+
+/**
+ * Gets the map to be played next
+*/
+string function FSV_GetNextMap(){
+	array< string > maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
+
+	// Remove any recently and the current maps so they don't immediately come up again when randomizing
+    foreach (string blockedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
+		if(maps.find(blockedMap) > -1){
+			maps.remove(maps.find(blockedMap))
+        }
+    }
+
+    // Get either a random next map, or the one next on the plalist
+	if(GetConVarInt("FSV_RANDOM_MAP_ROTATION") == 1){
+        return maps[RandomInt(maps.len()-1)]
+	}
+
+	if(maps.find(GetMapName()) > -1) {
+		int nextMap = maps.find(GetMapName()) + 1
+		if( nextMap >= maps.len() )
+			nextMap = 0
+		return maps[nextMap]
+	}
+
+	// pick a random playlist map if for example currently on a vote-only map
+	return maps[RandomInt(maps.len()-1)]
+}
+
 /**
  * Gets called when the game enters Postmatch
 */
 void function FSV_EndOfMatchMatch_Threaded() {
 	wait GAME_POSTMATCH_LENGTH - 1
 
-	string map = ""
 	int votes = 0
 	foreach( string m, int v in mapVote.votes ) {
 		if( v > votes ) {
 			votes = v
-			map = FSV_UnLocalize( m )
+			GameRules_ChangeMap( FSV_UnLocalize( m ), GAMETYPE )
+			return
 		}
 	}
 
-	array< string > maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
-
-	// Noone voted, get the map next in line
-	if( map == "" ) {
-		int index = 1
-		foreach( string m in maps ) {
-			if( GetMapName() == m )
-				break
-
-			index++
-		}
-
-		if( index >= maps.len() )
-			index = 0
-
-		map = maps[index]
-	}
-
-	// Change map
-	GameRules_ChangeMap( map, GAMETYPE )
+	GameRules_ChangeMap( FSV_GetNextMap(), GAMETYPE )
 }
 
 
@@ -155,24 +188,6 @@ void function FSV_EndOfMatchMatch_Threaded() {
  * Skips the current map
 */
 void function FSV_SkipMatch() {
-	string map = ""
-	int votes = 0
-
-	array< string > maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
-
-	int index = 1
-	foreach( string m in maps ) {
-		if( GetMapName() == m )
-			break
-
-		index++
-	}
-
-	if( index >= maps.len() )
-		index = 0
-
-	map = maps[index]
-
 	SetServerVar( "gameEndTime", Time() )
 }
 
@@ -187,7 +202,6 @@ void function FSV_ExtendMatch( float minutes ) {
 	float newEndTime = currentEndTime + ( 60 * minutes )
 	SetServerVar( "gameEndTime", newEndTime )
 }
-
 
 #else
 void function FSV_Init() {
