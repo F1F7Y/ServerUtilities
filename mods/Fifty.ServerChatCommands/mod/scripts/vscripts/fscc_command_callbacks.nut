@@ -101,7 +101,6 @@ void function FSCC_CommandCallback_Mods( entity player, array< string > args ) {
 		return
 	}
 
-
 	FSU_PrivateChatMessage( player, "List of mods installed on this server:" )
 	FSU_PrintFormattedList( player, mods, page)
 	if(pages > 1)
@@ -156,7 +155,6 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
 		FSU_PrivateChatMessage( player, "%EMaximum number of pages is: %H" + string( pages ) )
 		return
 	}
-
 
 	FSU_PrivateChatMessage( player, "List of rules:" )
 	FSU_PrintFormattedList( player, rules, page )
