@@ -1,7 +1,5 @@
 globalize_all_functions
 
-table <entity, string> mapVoteTable = {}
-
 array <entity> extendVoters
 int extendThreshold
 
@@ -32,17 +30,14 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 
     if (args.len() == 0){
         FSU_PrivateChatMessage(player, "Maps in rotation:")
-        //FSU_PrivateChatMessage(player, "     %S" + FSU_ArrayToString(mapsInRotation, " - "))
         FSU_PrintFormattedListWithoutPagination( player, mapsInRotation, ", ", "%S")
 
         if (voteOnlyMaps.len() > 0) {
             FSU_PrivateChatMessage(player, "Maps by vote only:")
-            //FSU_PrivateChatMessage(player, "     %F" + FSU_ArrayToString(voteOnlyMaps, " - "))
             FSU_PrintFormattedListWithoutPagination( player, voteOnlyMaps, ", ", "%H")
         }
         if (blockedMaps.len() > 0) {
-            FSU_PrivateChatMessage(player, "Last maps played (not vote-able):")
-            //FSU_PrivateChatMessage(player, "     %E" + FSU_ArrayToString(blockedMaps, " - "))
+            FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
             FSU_PrintFormattedListWithoutPagination( player, blockedMaps, ", ", "%E")
         }
         FSU_PrivateChatMessage(player, "Use %H%Pnextmap <map> %Tto vote for a certain map to be next.")
@@ -63,6 +58,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 		return
 	}
 
+    string mapVoteName = maps[index]
 	string mapArg = FSV_UnLocalize(maps[index])
 
 	if( FSA_IsAdmin( player ) && args.len() >= 2 ) {
@@ -83,19 +79,28 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
     foreach(string playedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
         if (mapArg == playedMap){
             FSU_PrivateChatMessage(player, "%EYou can't vote for a recently played map!")
+            FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
+            FSU_PrintFormattedListWithoutPagination( player, blockedMaps, ", ", "%E")
             return
         }
     }
 
-    if (player in mapVoteTable) {
-
+    if (player in FSV_GetMapVoteTable()) {
+        if( mapArg == FSV_GetMapVoteTable()[player] ){
+            FSU_PrivateChatMessage(player, "%EYou've already voted for %H" + mapVoteName + "%E!")
+            return
+        }
+        else{
+            FSU_PrivateChatMessage(player, "%SYour vote has been changed to: %H" + mapVoteName)
+        }
+    }
+    else{
+        FSU_PrivateChatMessage(player, "%SYou voted for: %H" + mapVoteName)
     }
 
-	FSU_ChatBroadcast( "A player has voted for %H" + maps[index] + "%N to be the next map, %H" + GetConVarString("FSCC_PREFIX")+"nm <map>" + "%N." )
-
-	// TODO display current next map candidates
-
-	FSV_VoteForNextMap( player, maps[index] )
+	FSU_ChatBroadcast( "A player has voted for %H" + mapVoteName + "%N to be the next map, %H" + GetConVarString("FSCC_PREFIX")+"nm <map>" + "%N." )
+	FSV_VoteForNextMap( player, mapArg )
+	FSV_PrintNextMapChances()
 }
 
 /**
@@ -198,7 +203,7 @@ void function FSV_SkipThread(){
     }
     if (GetConVarBool("FSV_ENABLE_CHATUI") ){
         if(skipVoters.len() >= skipThreshold){
-            FSU_ChatBroadcast("Map will be skipped!")
+            FSU_ChatBroadcast("Final vote received! %SMap will be skipped!")
         }
         else{
             FSU_ChatBroadcast("%EThe vote to skip this map has failed! %NNot enough votes.")
@@ -317,7 +322,7 @@ void function FSV_ExtendThread(){
 
     if (GetConVarBool("FSV_ENABLE_CHATUI") ){
         if(extendVoters.len() >= extendThreshold){
-            FSU_ChatBroadcast("%SMap time has been extended!")
+            FSU_ChatBroadcast("Final vote received! %SMap time has been extended!")
         }
         else{
             FSU_ChatBroadcast("%EThe vote to exend map time has failed! %NNot enough votes.")
@@ -531,7 +536,7 @@ void function FSV_KickThread(string targetName, string targetUid){
     }
     if (GetConVarBool("FSV_ENABLE_CHATUI") ){
         if (kickInfo.voters.len() >= kickInfo.threshold){
-            FSU_ChatBroadcast("%H"+ targetName + " %Shas been kicked!")
+            FSU_ChatBroadcast("Final vote received! %H"+ targetName + " %Shas been kicked!")
         }
         else{
             FSU_ChatBroadcast("%EThe vote to kick "+ targetName +" has failed! %NNot enough votes to kick.")

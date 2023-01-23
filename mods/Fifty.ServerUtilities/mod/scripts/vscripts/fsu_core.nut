@@ -8,7 +8,7 @@ string adminHeader = "\x1b[94m"
 string ownerHeader = "\x1b[92m"
 string error       = "\x1b[38;5;203m"
 string success     = "\x1b[38;5;192m"
-string announce    = "\x1b[38;5;177m"
+string announce    = "\x1b[38;5;183m"
 
 /**
  * Gets called after the map is loaded

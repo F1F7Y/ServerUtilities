@@ -2,11 +2,7 @@ globalize_all_functions
 
 #if FSCC_ENABLED && FSU_ENABLED
 
-struct {
-	// List of player who already voted
-	array< entity > playerBlacklist
-	table< string, int > votes
-} mapVote
+table <entity, string> mapVoteTable = {}
 
 /**
  * Gets called after the map is loaded
@@ -77,21 +73,6 @@ void function FSV_Init() {
 	}
 }
 
-/**
- * Adds a vote to a map
- * @param player The player who voted
- * @param map The map to vote for
-*/
-void function FSV_VoteForNextMap( entity player, string map ) {
-	mapVote.playerBlacklist.append( player )
-
-	if( map in mapVote.votes ) {
-		mapVote.votes[map]++
-	} else {
-		mapVote.votes[map] <- 1
-	}
-}
-
 // Updates last played (vote blocked) maps
 void function UpdatePlayedMaps(){
     if(GetMapName() != "mp_lobby"){
@@ -137,23 +118,70 @@ void function FSV_UpdateKicked(){
 }
 
 /**
+ * Adds a vote to a map
+ * @param player The player who voted
+ * @param map The map to vote for
+*/
+void function FSV_VoteForNextMap( entity player, string map ) {
+	mapVoteTable[player] <- map;
+}
+
+/**
+ * Grab a reference to the mvt
+*/
+table <entity, string> function FSV_GetMapVoteTable() {
+	return mapVoteTable
+}
+
+/**
+ * Print current next map chances
+*/
+void function FSV_PrintNextMapChances() {
+	table <string, float> mapChances
+	foreach(entity player, string map in mapVoteTable){
+		if((map in mapChances))
+			mapChances[map] += 100.0 / mapVoteTable.len()
+		else
+			mapChances[map] <- 100.0 / mapVoteTable.len()
+	}
+	string message = ""
+	foreach(string map, float chance in mapChances){
+		if (message == "")
+			message += FSV_Localize(map) + " %T" + chance + "%"
+		else
+			message += ", %H" + FSV_Localize(map) + " %T" + chance + "%"
+	}
+	FSU_ChatBroadcast("Next map pool: %H" + message)
+}
+
+/**
  * Gets the map to be played next
 */
 string function FSV_GetNextMap(){
-	array< string > maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
+	array <string> maps
 
-	// Remove any recently and the current maps so they don't immediately come up again when randomizing
+	// If there have been votes, choose one from the vote-pool
+	if(mapVoteTable.len() > 0){
+		foreach(entity player, string map in mapVoteTable){
+			maps.append(map)
+		}
+		if(maps.len() > 1)
+			return maps[RandomInt(maps.len()-1)]
+		return maps[0]
+	}
+
+	// Create array of valid next maps
+	maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
     foreach (string blockedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
 		if(maps.find(blockedMap) > -1){
 			maps.remove(maps.find(blockedMap))
         }
     }
 
-    // Get either a random next map, or the one next on the plalist
+    // Return either a random next map, or the one next in the playlist
 	if(GetConVarInt("FSV_RANDOM_MAP_ROTATION") == 1){
         return maps[RandomInt(maps.len()-1)]
 	}
-
 	if(maps.find(GetMapName()) > -1) {
 		int nextMap = maps.find(GetMapName()) + 1
 		if( nextMap >= maps.len() )
@@ -161,7 +189,7 @@ string function FSV_GetNextMap(){
 		return maps[nextMap]
 	}
 
-	// pick a random playlist map if for example currently on a vote-only map
+	// If there is no valid next map, pick a random one
 	return maps[RandomInt(maps.len()-1)]
 }
 
@@ -170,15 +198,6 @@ string function FSV_GetNextMap(){
 */
 void function FSV_EndOfMatchMatch_Threaded() {
 	wait GAME_POSTMATCH_LENGTH - 1
-
-	int votes = 0
-	foreach( string m, int v in mapVote.votes ) {
-		if( v > votes ) {
-			votes = v
-			GameRules_ChangeMap( FSV_UnLocalize( m ), GAMETYPE )
-			return
-		}
-	}
 
 	GameRules_ChangeMap( FSV_GetNextMap(), GAMETYPE )
 }
