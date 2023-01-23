@@ -169,7 +169,8 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 			row = ""
 		}
 	}
-	rowList.append(row)
+	if( row != "")
+		rowList.append(row)
 
 	for(int rowToPrint = (page * rows) - rows ; rowToPrint < page * rows; rowToPrint++ )
 		if(rowToPrint < rowList.len() )
