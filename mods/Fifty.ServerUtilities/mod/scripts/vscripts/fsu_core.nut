@@ -141,7 +141,7 @@ int function FSU_GetListPages( array< string > list, int rows = 5, string separa
 	}
 	rowList.append(row)
 
-	return int( ceil( rowList.len() / ( rows * 1.0 ) ) ) // For some reason this does not use floats without the * 1.0 and as such would sometimes return zero when it shouldn't
+	return int( ceil( rowList.len() / float( rows ) ) )
 }
 
 /**
