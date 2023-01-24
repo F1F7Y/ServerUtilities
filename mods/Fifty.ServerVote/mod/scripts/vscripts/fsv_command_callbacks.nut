@@ -7,8 +7,8 @@ array<entity> skipVoters
 int skipThreshold
 
 struct KickInfo {
-    array<string> voters
-    int threshold
+	array<string> voters
+	int threshold
 }
 table <string, KickInfo> kickTable = {}
 array <string> playersWithActiveVotes
@@ -20,29 +20,29 @@ array <string> playersWithActiveVotes
  * @param args The arguments passed by the player
 */
 void function FSV_CommandCallback_NextMap( entity player, array< string > args ) {
-    array <string> mapsInRotation = FSV_LocalizeArray( split( GetConVarString( "FSV_MAP_ROTATION" ), "," ))
-    array <string> voteOnlyMaps = FSV_LocalizeArray( split( GetConVarString( "FSV_MAP_VOTE_ONLY" ), "," ))
-    array <string> blockedMaps = FSV_LocalizeArray( FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ))
+	array <string> mapsInRotation = FSV_LocalizeArray( split( GetConVarString( "FSV_MAP_ROTATION" ), "," ))
+	array <string> voteOnlyMaps = FSV_LocalizeArray( split( GetConVarString( "FSV_MAP_VOTE_ONLY" ), "," ))
+	array <string> blockedMaps = FSV_LocalizeArray( FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ))
 
-    array <string> maps
+	array <string> maps
 	maps.extend( mapsInRotation )
 	maps.extend( voteOnlyMaps )
 
-    if (args.len() == 0){
-        FSU_PrivateChatMessage(player, "Maps in rotation:")
-        FSU_PrintFormattedListWithoutPagination( player, mapsInRotation, "%T, ", "%S")
+	if (args.len() == 0){
+		FSU_PrivateChatMessage(player, "Maps in rotation:")
+		FSU_PrintFormattedListWithoutPagination( player, mapsInRotation, "%T, ", "%S")
 
-        if (voteOnlyMaps.len() > 0) {
-            FSU_PrivateChatMessage(player, "Maps by vote only:")
-            FSU_PrintFormattedListWithoutPagination( player, voteOnlyMaps, "%T, ", "%H")
-        }
-        if (blockedMaps.len() > 0) {
-            FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
-            FSU_PrintFormattedListWithoutPagination( player, blockedMaps, "%T, ", "%E")
-        }
-        FSU_PrivateChatMessage(player, "Use %H%Pnextmap <map> %Tto vote for a certain map to be next.")
-        return
-    }
+		if (voteOnlyMaps.len() > 0) {
+			FSU_PrivateChatMessage(player, "Maps by vote only:")
+			FSU_PrintFormattedListWithoutPagination( player, voteOnlyMaps, "%T, ", "%H")
+		}
+		if (blockedMaps.len() > 0) {
+			FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
+			FSU_PrintFormattedListWithoutPagination( player, blockedMaps, "%T, ", "%E")
+		}
+		FSU_PrivateChatMessage(player, "Use %H%Pnextmap <map> %Tto vote for a certain map to be next.")
+		return
+	}
 
 	int index = 0
 	foreach( string map in maps ) {
@@ -58,7 +58,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 		return
 	}
 
-    string mapVoteName = maps[index]
+	string mapVoteName = maps[index]
 	string mapArg = FSV_UnLocalize(maps[index])
 
 	if( FSA_IsAdmin( player ) && args.len() >= 2 ) {
@@ -71,32 +71,32 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 		}
 	}
 
-    if ( mapArg == GetMapName() && FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0 ) {
-        FSU_PrivateChatMessage(player, "%EYou can't vote for the current map!")
-        return
-    }
+	if ( mapArg == GetMapName() && FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0 ) {
+		FSU_PrivateChatMessage(player, "%EYou can't vote for the current map!")
+		return
+	}
 
-    foreach(string playedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
-        if (mapArg == playedMap){
-            FSU_PrivateChatMessage(player, "%EYou can't vote for a recently played map!")
-            FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
-            FSU_PrintFormattedListWithoutPagination( player, blockedMaps, ", ", "%E")
-            return
-        }
-    }
+	foreach(string playedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
+		if (mapArg == playedMap){
+			FSU_PrivateChatMessage(player, "%EYou can't vote for a recently played map!")
+			FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
+			FSU_PrintFormattedListWithoutPagination( player, blockedMaps, ", ", "%E")
+			return
+		}
+	}
 
-    if (player in FSV_GetMapVoteTable()) {
-        if( mapArg == FSV_GetMapVoteTable()[player] ){
-            FSU_PrivateChatMessage(player, "%EYou've already voted for %H" + mapVoteName + "%E!")
-            return
-        }
-        else{
-            FSU_PrivateChatMessage(player, "%SYour vote has been changed to: %H" + mapVoteName)
-        }
-    }
-    else{
-        FSU_PrivateChatMessage(player, "%SYou voted for: %H" + mapVoteName)
-    }
+	if (player in FSV_GetMapVoteTable()) {
+		if( mapArg == FSV_GetMapVoteTable()[player] ){
+			FSU_PrivateChatMessage(player, "%EYou've already voted for %H" + mapVoteName + "%E!")
+			return
+		}
+		else{
+			FSU_PrivateChatMessage(player, "%SYour vote has been changed to: %H" + mapVoteName)
+		}
+	}
+	else{
+		FSU_PrivateChatMessage(player, "%SYou voted for: %H" + mapVoteName)
+	}
 
 	FSU_ChatBroadcast( "A player has voted for %H" + mapVoteName + "%N to be the next map, %H" + GetConVarString("FSCC_PREFIX")+"nm <map>" + "%N." )
 	FSV_VoteForNextMap( player, mapArg )
@@ -118,19 +118,19 @@ void function FSV_CommandCallback_Skip( entity player, array< string > args ) {
 		}
 	}
 
-    if (skipVoters.len() == 0) {
-        skipThreshold = int(ceil(GetPlayerArray().len() * GetConVarFloat("FSV_MAP_SKIP_PERCENTAGE")))
-        thread FSV_SkipThread()
-    }
+	if (skipVoters.len() == 0) {
+		skipThreshold = int(ceil(GetPlayerArray().len() * GetConVarFloat("FSV_MAP_SKIP_PERCENTAGE")))
+		thread FSV_SkipThread()
+	}
 
-    if (!skipVoters.contains(player)) {
-        skipVoters.append(player)
-        FSU_PrivateChatMessage( player, "%SYou voted to skip this map!" )
-    }
-    else {
-        FSU_PrivateChatMessage( player, "%EYou have already voted to skip this map!" )
-        return
-    }
+	if (!skipVoters.contains(player)) {
+		skipVoters.append(player)
+		FSU_PrivateChatMessage( player, "%SYou voted to skip this map!" )
+	}
+	else {
+		FSU_PrivateChatMessage( player, "%EYou have already voted to skip this map!" )
+		return
+	}
 
 	if ( skipThreshold > skipVoters.len() )
 		return
@@ -143,81 +143,81 @@ void function FSV_CommandCallback_Skip( entity player, array< string > args ) {
 */
 void function FSV_SkipThread(){
 
-    // Announce the starting of a vote
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        foreach ( entity player in GetPlayerArray() ){
-            NSSendAnnouncementMessageToPlayer( player, "VOTE TO SKIP MAP STARTED", "Use '!skip' in chat to add your vote", <1,0,0>, 0, 1 )
-        }
-        wait 1
-        foreach ( entity player in GetPlayerArray() ){
-            NSCreateStatusMessageOnPlayer( player, "", skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip"  )
-        }
-    }
-    if(GetConVarBool("FSV_ENABLE_CHATUI")){
-        FSU_ChatBroadcast( "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
-    }
+	// Announce the starting of a vote
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		foreach ( entity player in GetPlayerArray() ){
+			NSSendAnnouncementMessageToPlayer( player, "VOTE TO SKIP MAP STARTED", "Use '!skip' in chat to add your vote", <1,0,0>, 0, 1 )
+		}
+		wait 1
+		foreach ( entity player in GetPlayerArray() ){
+			NSCreateStatusMessageOnPlayer( player, "", skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip"  )
+		}
+	}
+	if(GetConVarBool("FSV_ENABLE_CHATUI")){
+		FSU_ChatBroadcast( "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
+	}
 
-    int timer = GetConVarInt("FSV_MAP_SKIP_DURATION")
-    int nextUpdate = timer
-    int lastVotes = skipVoters.len()
+	int timer = GetConVarInt("FSV_MAP_SKIP_DURATION")
+	int nextUpdate = timer
+	int lastVotes = skipVoters.len()
 
-    // Timer and UI update loop
-    while(timer > 0 && skipVoters.len() < skipThreshold){
-        if(timer == nextUpdate){
-            int minutes = int(floor(timer / 60))
-            string seconds = string(timer - (minutes * 60))
-            if (timer - (minutes * 60) < 10){
-                seconds = "0"+seconds
-            }
-            if(GetConVarBool("FSV_ENABLE_RUI")){
-                foreach (entity player in GetPlayerArray()) {
-                    NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip" )
-                }
-            }
-            if(GetConVarBool("FSV_ENABLE_CHATUI") && skipVoters.len() != lastVotes){
-                FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ skipVoters.len() + "/" + skipThreshold + "%N have voted to skip this map. %TUse %H%Pskip %Tto vote." )
-                lastVotes = skipVoters.len()
-            }
-            nextUpdate -= 5
-        }
-        timer -= 1
-        wait 1
-    }
+	// Timer and UI update loop
+	while(timer > 0 && skipVoters.len() < skipThreshold){
+		if(timer == nextUpdate){
+			int minutes = int(floor(timer / 60))
+			string seconds = string(timer - (minutes * 60))
+			if (timer - (minutes * 60) < 10){
+				seconds = "0"+seconds
+			}
+			if(GetConVarBool("FSV_ENABLE_RUI")){
+				foreach (entity player in GetPlayerArray()) {
+					NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip" )
+				}
+			}
+			if(GetConVarBool("FSV_ENABLE_CHATUI") && skipVoters.len() != lastVotes){
+				FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ skipVoters.len() + "/" + skipThreshold + "%N have voted to skip this map. %TUse %H%Pskip %Tto vote." )
+				lastVotes = skipVoters.len()
+			}
+			nextUpdate -= 5
+		}
+		timer -= 1
+		wait 1
+	}
 
-    // Announce results of vote
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        if(skipVoters.len() >= skipThreshold){
-            foreach ( entity player in GetPlayerArray() ){
-                NSSendAnnouncementMessageToPlayer( player, "MAP WILL BE SKIPPED", "Next map loading in 5 seconds", <1,0,0>, 0, 1 )
-            }
-            wait 1
-            foreach ( entity player in GetPlayerArray() ){
-                NSEditStatusMessageOnPlayer( player, "PASS", "Map will be skipped!", "skip" )
-            }
-        }
-        else{
-            foreach (entity player in GetPlayerArray()) {
-                NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to skip!", "skip" )
-            }
-        }
-    }
-    if (GetConVarBool("FSV_ENABLE_CHATUI") ){
-        if(skipVoters.len() >= skipThreshold){
-            FSU_ChatBroadcast("Final vote received! %SMap will be skipped!")
-        }
-        else{
-            FSU_ChatBroadcast("%EThe vote to skip this map has failed! %NNot enough votes.")
-        }
-    }
+	// Announce results of vote
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		if(skipVoters.len() >= skipThreshold){
+			foreach ( entity player in GetPlayerArray() ){
+				NSSendAnnouncementMessageToPlayer( player, "MAP WILL BE SKIPPED", "Next map loading in 5 seconds", <1,0,0>, 0, 1 )
+			}
+			wait 1
+			foreach ( entity player in GetPlayerArray() ){
+				NSEditStatusMessageOnPlayer( player, "PASS", "Map will be skipped!", "skip" )
+			}
+		}
+		else{
+			foreach (entity player in GetPlayerArray()) {
+				NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to skip!", "skip" )
+			}
+		}
+	}
+	if (GetConVarBool("FSV_ENABLE_CHATUI") ){
+		if(skipVoters.len() >= skipThreshold){
+			FSU_ChatBroadcast("Final vote received! %SMap will be skipped!")
+		}
+		else{
+			FSU_ChatBroadcast("%EThe vote to skip this map has failed! %NNot enough votes.")
+		}
+	}
 
-    // Reset everything
-    skipVoters.clear()
-    wait 10
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        foreach ( entity player in GetPlayerArray() ){
-            NSDeleteStatusMessageOnPlayer( player, "skip" )
-        }
-    }
+	// Reset everything
+	skipVoters.clear()
+	wait 10
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		foreach ( entity player in GetPlayerArray() ){
+			NSDeleteStatusMessageOnPlayer( player, "skip" )
+		}
+	}
 }
 
 
@@ -241,19 +241,19 @@ void function FSV_CommandCallback_Extend( entity player, array< string > args ) 
 		}
 	}
 
-    if (extendVoters.len() == 0) {
-        extendThreshold = int(ceil(GetPlayerArray().len() * GetConVarFloat("FSV_MAP_EXTENDING_PERCENTAGE")))
-        thread FSV_ExtendThread()
-    }
+	if (extendVoters.len() == 0) {
+		extendThreshold = int(ceil(GetPlayerArray().len() * GetConVarFloat("FSV_MAP_EXTENDING_PERCENTAGE")))
+		thread FSV_ExtendThread()
+	}
 
-    if (!extendVoters.contains(player)) {
-        extendVoters.append(player)
-        FSU_PrivateChatMessage(player, "%SYou voted to extend map time!" )
-    }
+	if (!extendVoters.contains(player)) {
+		extendVoters.append(player)
+		FSU_PrivateChatMessage(player, "%SYou voted to extend map time!" )
+	}
 
-    if (extendVoters.len() >= extendThreshold) {
-        FSV_ExtendMatch( 20.0 )
-    }
+	if (extendVoters.len() >= extendThreshold) {
+		FSV_ExtendMatch( 20.0 )
+	}
 }
 
 /**
@@ -261,82 +261,82 @@ void function FSV_CommandCallback_Extend( entity player, array< string > args ) 
 */
 void function FSV_ExtendThread(){
 
-    // Announce the starting of a vote
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        foreach (entity player in GetPlayerArray()) {
-            NSSendAnnouncementMessageToPlayer( player, "VOTE TO EXTEND MAP TIME STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"extend' in chat to add your vote", <1,0,0>, 0, 1 )
-        }
-        wait 1
-        foreach (entity player in GetPlayerArray()) {
-            NSCreateStatusMessageOnPlayer( player, "",  extendVoters.len() + "/" + extendThreshold + "have voted to extend map time", "extend" )
-        }
-    }
-    if(GetConVarBool("FSV_ENABLE_CHATUI")){
-        FSU_ChatBroadcast(  "A vote to extend map time has been started! Use %H%Pextend %Nto vote. %T" + extendThreshold + " votes will be needed." )
-    }
+	// Announce the starting of a vote
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		foreach (entity player in GetPlayerArray()) {
+			NSSendAnnouncementMessageToPlayer( player, "VOTE TO EXTEND MAP TIME STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"extend' in chat to add your vote", <1,0,0>, 0, 1 )
+		}
+		wait 1
+		foreach (entity player in GetPlayerArray()) {
+			NSCreateStatusMessageOnPlayer( player, "",  extendVoters.len() + "/" + extendThreshold + "have voted to extend map time", "extend" )
+		}
+	}
+	if(GetConVarBool("FSV_ENABLE_CHATUI")){
+		FSU_ChatBroadcast(  "A vote to extend map time has been started! Use %H%Pextend %Nto vote. %T" + extendThreshold + " votes will be needed." )
+	}
 
-    int timer = GetConVarInt("FSV_MAP_EXTENDING_DURATION")
-    int nextUpdate = timer
-    int lastVotes = extendVoters.len()
+	int timer = GetConVarInt("FSV_MAP_EXTENDING_DURATION")
+	int nextUpdate = timer
+	int lastVotes = extendVoters.len()
 
-    // Timer and UI update loop
-    while(timer > 0 && extendVoters.len() < extendThreshold){
-        if(timer == nextUpdate){
-            int minutes = int(floor(timer / 60))
-            string seconds = string(timer - (minutes * 60))
-            if (timer - (minutes * 60) < 10){
-                seconds = "0"+seconds
-            }
-            if(GetConVarBool("FSV_ENABLE_RUI")){
-                foreach (entity player in GetPlayerArray()) {
-                    NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, extendVoters.len() + "/" + extendThreshold + " have voted to extend map time", "extend" )
-                }
-            }
-            if(GetConVarBool("FSV_ENABLE_CHATUI") && extendVoters.len() != lastVotes){
-                FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ extendVoters.len() + "/" + extendThreshold + "%N have voted to extend map time. %TUse %H%Pextend %Tto vote." )
-                lastVotes = extendVoters.len()
-            }
-            nextUpdate -= 5
-        }
-        timer -= 1
-        wait 1
-    }
+	// Timer and UI update loop
+	while(timer > 0 && extendVoters.len() < extendThreshold){
+		if(timer == nextUpdate){
+			int minutes = int(floor(timer / 60))
+			string seconds = string(timer - (minutes * 60))
+			if (timer - (minutes * 60) < 10){
+				seconds = "0"+seconds
+			}
+			if(GetConVarBool("FSV_ENABLE_RUI")){
+				foreach (entity player in GetPlayerArray()) {
+					NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, extendVoters.len() + "/" + extendThreshold + " have voted to extend map time", "extend" )
+				}
+			}
+			if(GetConVarBool("FSV_ENABLE_CHATUI") && extendVoters.len() != lastVotes){
+				FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ extendVoters.len() + "/" + extendThreshold + "%N have voted to extend map time. %TUse %H%Pextend %Tto vote." )
+				lastVotes = extendVoters.len()
+			}
+			nextUpdate -= 5
+		}
+		timer -= 1
+		wait 1
+	}
 
-    // Announce results of vote
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        if(extendVoters.len() >= extendThreshold){
-            foreach ( entity player in GetPlayerArray() ){
-                NSSendAnnouncementMessageToPlayer( player, "Map time has been extended", "", <1,0,0>, 0, 1 )
-            }
-            wait 1
-            foreach (entity player in GetPlayerArray()) {
-                NSEditStatusMessageOnPlayer( player, "PASS", "Map time has been extended!", "extend" )
-            }
-        }
-        else{
-            foreach (entity player in GetPlayerArray()) {
-                NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to extend map!", "extend" )
-            }
-        }
-    }
+	// Announce results of vote
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		if(extendVoters.len() >= extendThreshold){
+			foreach ( entity player in GetPlayerArray() ){
+				NSSendAnnouncementMessageToPlayer( player, "Map time has been extended", "", <1,0,0>, 0, 1 )
+			}
+			wait 1
+			foreach (entity player in GetPlayerArray()) {
+				NSEditStatusMessageOnPlayer( player, "PASS", "Map time has been extended!", "extend" )
+			}
+		}
+		else{
+			foreach (entity player in GetPlayerArray()) {
+				NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to extend map!", "extend" )
+			}
+		}
+	}
 
-    if (GetConVarBool("FSV_ENABLE_CHATUI") ){
-        if(extendVoters.len() >= extendThreshold){
-            FSU_ChatBroadcast("Final vote received! %SMap time has been extended!")
-        }
-        else{
-            FSU_ChatBroadcast("%EThe vote to exend map time has failed! %NNot enough votes.")
-        }
-    }
+	if (GetConVarBool("FSV_ENABLE_CHATUI") ){
+		if(extendVoters.len() >= extendThreshold){
+			FSU_ChatBroadcast("Final vote received! %SMap time has been extended!")
+		}
+		else{
+			FSU_ChatBroadcast("%EThe vote to exend map time has failed! %NNot enough votes.")
+		}
+	}
 
-    // Reset everything
-    extendVoters.clear()
-    wait 10
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        foreach ( entity player in GetPlayerArray() ){
-            NSDeleteStatusMessageOnPlayer( player, "extend" )
-        }
-    }
+	// Reset everything
+	extendVoters.clear()
+	wait 10
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		foreach ( entity player in GetPlayerArray() ){
+			NSDeleteStatusMessageOnPlayer( player, "extend" )
+		}
+	}
 }
 
 /**
@@ -346,17 +346,17 @@ void function FSV_ExtendThread(){
 */
 void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 
-    if (args.len() == 0){
-        FSU_PrivateChatMessage(player, "%ENo argument! %TWho is it you want to kick?")
-        return
-    }
+	if (args.len() == 0){
+		FSU_PrivateChatMessage(player, "%ENo argument! %TWho is it you want to kick?")
+		return
+	}
 
-    foreach(string uid in playersWithActiveVotes){
-        if (uid == player.GetUID() && !(FSA_IsAdmin(player)) ){
-            FSU_PrivateChatMessage(player, "%EYou can only have one kickvote active at a time! %TWait for the current one to expire or succeed before starting another.")
-            return
-        }
-    }
+	foreach(string uid in playersWithActiveVotes){
+		if (uid == player.GetUID() && !(FSA_IsAdmin(player)) ){
+			FSU_PrivateChatMessage(player, "%EYou can only have one kickvote active at a time! %TWait for the current one to expire or succeed before starting another.")
+			return
+		}
+	}
 
 	entity target
 	foreach( entity p in GetPlayerArray() )
@@ -377,69 +377,69 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 		}
 	}
 
-    string targetUid = target.GetUID()
-    string targetName = target.GetPlayerName()
+	string targetUid = target.GetUID()
+	string targetName = target.GetPlayerName()
 
-    if (player == target) {
-        FSU_PrivateChatMessage(player, "%EYou can't kick yourself!")
-        return
-    }
+	if (player == target) {
+		FSU_PrivateChatMessage(player, "%EYou can't kick yourself!")
+		return
+	}
 
-    if (FSA_IsAdmin(player) && args.len() == 2 && args[1] == "force") {
-        // allow admins to force kick spoofed admins
-        if (FSA_IsAdmin(target)) {
-            FSU_PrivateChatMessage(player, "%EYou can't kick an authenticated admin!")
-            return
-        }
+	if (FSA_IsAdmin(player) && args.len() == 2 && args[1] == "force") {
+		// allow admins to force kick spoofed admins
+		if (FSA_IsAdmin(target)) {
+			FSU_PrivateChatMessage(player, "%EYou can't kick an authenticated admin!")
+			return
+		}
 
-        FSU_Print( targetName + " kicked by admin:" + player.GetPlayerName())
-        ServerCommand("kick " + target.GetPlayerName())
-        FSU_ChatBroadcast("%H"+player.GetPlayerName() + " %Nwas kicked by an admin.")
-        return
-    }
+		FSU_Print( targetName + " kicked by admin:" + player.GetPlayerName())
+		ServerCommand("kick " + target.GetPlayerName())
+		FSU_ChatBroadcast("%H"+player.GetPlayerName() + " %Nwas kicked by an admin.")
+		return
+	}
 
-    if (FSA_IsAdmin(target)) {
-        FSU_PrivateChatMessage(player, "%EYou can't kick an admin.")
-        return
-    }
+	if (FSA_IsAdmin(target)) {
+		FSU_PrivateChatMessage(player, "%EYou can't kick an admin.")
+		return
+	}
 
-    // check if admin
-    if (FSA_IsAdmin(player)){
-        FSU_PrivateChatMessage(player, "%AYou are admin, you can force kick: %H%Pkick " + args[0] + " force")
-    }
+	// check if admin
+	if (FSA_IsAdmin(player)){
+		FSU_PrivateChatMessage(player, "%AYou are admin, you can force kick: %H%Pkick " + args[0] + " force")
+	}
 
 	int kickMinPlayers = GetConVarInt("FSV_KICK_MIN_PLAYERS")
-    if (GetPlayerArray().len() < kickMinPlayers) {
-        FSU_PrivateChatMessage(player, "%ENot enough players for vote kick! %TAt least " + kickMinPlayers + " are needed!")
-        return
-    }
+	if (GetPlayerArray().len() < kickMinPlayers) {
+		FSU_PrivateChatMessage(player, "%ENot enough players for vote kick! %TAt least " + kickMinPlayers + " are needed!")
+		return
+	}
 
-    // ensure kicked player is in kickTable
-    if (targetUid in kickTable) {
-        KickInfo kickInfo = kickTable[targetUid]
-        if (!kickInfo.voters.contains(player.GetUID())){
-            kickInfo.voters.append(player.GetUID())
-            playersWithActiveVotes.append(player.GetUID())
-        }
-        else{
+	// ensure kicked player is in kickTable
+	if (targetUid in kickTable) {
+		KickInfo kickInfo = kickTable[targetUid]
+		if (!kickInfo.voters.contains(player.GetUID())){
+			kickInfo.voters.append(player.GetUID())
+			playersWithActiveVotes.append(player.GetUID())
+		}
+		else{
 			FSU_PrivateChatMessage( player, "%EYou have already voted to kick %H" + targetName + "%E!" )
 			return
-        }
-    }
-    else {
-        KickInfo kickInfo
-        kickInfo.voters = []
-        kickInfo.voters.append(player.GetUID())
-        kickInfo.threshold = int(ceil(GetPlayerArray().len() * GetConVarFloat("FSV_KICK_PERCENTAGE")))
-        kickTable[targetUid] <- kickInfo
-        thread FSV_KickThread(targetName, targetUid)
-    }
-    FSU_PrivateChatMessage(player, "%SYou voted to kick %H" + targetName + "%S!" )
+		}
+	}
+	else {
+		KickInfo kickInfo
+		kickInfo.voters = []
+		kickInfo.voters.append(player.GetUID())
+		kickInfo.threshold = int(ceil(GetPlayerArray().len() * GetConVarFloat("FSV_KICK_PERCENTAGE")))
+		kickTable[targetUid] <- kickInfo
+		thread FSV_KickThread(targetName, targetUid)
+	}
+	FSU_PrivateChatMessage(player, "%SYou voted to kick %H" + targetName + "%S!" )
 
 	array <string> kickedPlayers = FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0)
-    KickInfo kickInfo = kickTable[targetUid]
-    if (kickInfo.voters.len() >= kickInfo.threshold) {
-        FSU_Print( targetName + " was kicked by player vote!" )
+	KickInfo kickInfo = kickTable[targetUid]
+	if (kickInfo.voters.len() >= kickInfo.threshold) {
+		FSU_Print( targetName + " was kicked by player vote!" )
 		string playerUid = target.GetUID()
 		if (kickedPlayers.contains(playerUid)) {
 			kickedPlayers.append(playerUid)
@@ -453,12 +453,12 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 		}
 
 		ServerCommand("kick " + player.GetPlayerName())
-        playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
-        if (targetUid in kickTable) {
-            delete kickTable[targetUid]
-        }
-    }
-    return
+		playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
+		if (targetUid in kickTable) {
+			delete kickTable[targetUid]
+		}
+	}
+	return
 }
 
 /**
@@ -467,165 +467,165 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 void function FSV_KickThread(string targetName, string targetUid){
 
 	// Announce the starting of a vote
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        foreach (entity player in GetPlayerArray()) {
-            if( player.GetUID() != targetUid ){
-                NSSendAnnouncementMessageToPlayer( player, "VOTE TO KICK "+targetName+" STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"kick "+targetName+"' in chat to contribute your vote.", <1,0,0>, 0, 1 )
-            }
-        }
-        wait 1
-        foreach (entity player in GetPlayerArray()) {
-            if( player.GetUID() != targetUid){
-                NSCreateStatusMessageOnPlayer( player, "",  kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
-            }
-        }
-    }
-    if(GetConVarBool("FSV_ENABLE_CHATUI")){
-        FSU_ChatBroadcast(  "A vote to kick %H" + targetName + "%N has been started! Use %H%Pkick " + targetName + "%N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
-    }
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		foreach (entity player in GetPlayerArray()) {
+			if( player.GetUID() != targetUid ){
+				NSSendAnnouncementMessageToPlayer( player, "VOTE TO KICK "+targetName+" STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"kick "+targetName+"' in chat to contribute your vote.", <1,0,0>, 0, 1 )
+			}
+		}
+		wait 1
+		foreach (entity player in GetPlayerArray()) {
+			if( player.GetUID() != targetUid){
+				NSCreateStatusMessageOnPlayer( player, "",  kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
+			}
+		}
+	}
+	if(GetConVarBool("FSV_ENABLE_CHATUI")){
+		FSU_ChatBroadcast(  "A vote to kick %H" + targetName + "%N has been started! Use %H%Pkick " + targetName + "%N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
+	}
 
-    int timer = GetConVarInt("FSV_KICK_DURATION")
-    int nextUpdate = timer
-    int lastVotes = kickTable[targetUid].voters.len()
+	int timer = GetConVarInt("FSV_KICK_DURATION")
+	int nextUpdate = timer
+	int lastVotes = kickTable[targetUid].voters.len()
 
 	// Timer and UI update loop
-    while(timer > 0 && kickTable[targetUid].voters.len() < kickTable[targetUid].threshold){
-        if(timer == nextUpdate){
-            int minutes = int(floor(timer / 60))
-            string seconds = string(timer - (minutes * 60))
-            if (timer - (minutes * 60) < 10){
-                seconds = "0"+seconds
-            }
-            if(GetConVarBool("FSV_ENABLE_RUI")){
-                foreach (entity player in GetPlayerArray()) {
-                    if( player.GetUID() != targetUid ){
-                        NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
-                    }
-                }
-            }
-            if(GetConVarBool("FSV_ENABLE_CHATUI") && kickTable[targetUid].voters.len() != lastVotes){
-                FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + "%N have voted to kick %H" + targetName + "%N. %TUse %H%Pkick  " + targetName + "%T to vote." )
-                lastVotes = kickTable[targetUid].voters.len()
-            }
+	while(timer > 0 && kickTable[targetUid].voters.len() < kickTable[targetUid].threshold){
+		if(timer == nextUpdate){
+			int minutes = int(floor(timer / 60))
+			string seconds = string(timer - (minutes * 60))
+			if (timer - (minutes * 60) < 10){
+				seconds = "0"+seconds
+			}
+			if(GetConVarBool("FSV_ENABLE_RUI")){
+				foreach (entity player in GetPlayerArray()) {
+					if( player.GetUID() != targetUid ){
+						NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
+					}
+				}
+			}
+			if(GetConVarBool("FSV_ENABLE_CHATUI") && kickTable[targetUid].voters.len() != lastVotes){
+				FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + "%N have voted to kick %H" + targetName + "%N. %TUse %H%Pkick  " + targetName + "%T to vote." )
+				lastVotes = kickTable[targetUid].voters.len()
+			}
 
-            nextUpdate -= 5
-        }
-        timer -= 1
-        wait 1
-    }
+			nextUpdate -= 5
+		}
+		timer -= 1
+		wait 1
+	}
 
 	// Announce results of vote
 	KickInfo kickInfo = kickTable[targetUid]
 	if(GetConVarBool("FSV_ENABLE_RUI")){
-        if (kickInfo.voters.len() >= kickInfo.threshold){
-            foreach ( entity player in GetPlayerArray() ){
-                NSSendAnnouncementMessageToPlayer( player, targetName + " has been kicked", "", <1,0,0>, 0, 1 )
-            }
-            wait 1
-            foreach (entity player in GetPlayerArray()) {
-                NSEditStatusMessageOnPlayer( player, "PASS", targetName + " has been kicked!", "kick" + targetName )
-            }
-        }
-        else{
-            foreach (entity player in GetPlayerArray()) {
-                if( player.GetUID() != targetUid ){
-                    NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to kick " + targetName + "!", "kick" + targetName )
-                }
-            }
-        }
-    }
-    if (GetConVarBool("FSV_ENABLE_CHATUI") ){
-        if (kickInfo.voters.len() >= kickInfo.threshold){
-            FSU_ChatBroadcast("Final vote received! %H"+ targetName + " %Shas been kicked!")
-        }
-        else{
-            FSU_ChatBroadcast("%EThe vote to kick "+ targetName +" has failed! %NNot enough votes to kick.")
-        }
-    }
+		if (kickInfo.voters.len() >= kickInfo.threshold){
+			foreach ( entity player in GetPlayerArray() ){
+				NSSendAnnouncementMessageToPlayer( player, targetName + " has been kicked", "", <1,0,0>, 0, 1 )
+			}
+			wait 1
+			foreach (entity player in GetPlayerArray()) {
+				NSEditStatusMessageOnPlayer( player, "PASS", targetName + " has been kicked!", "kick" + targetName )
+			}
+		}
+		else{
+			foreach (entity player in GetPlayerArray()) {
+				if( player.GetUID() != targetUid ){
+					NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to kick " + targetName + "!", "kick" + targetName )
+				}
+			}
+		}
+	}
+	if (GetConVarBool("FSV_ENABLE_CHATUI") ){
+		if (kickInfo.voters.len() >= kickInfo.threshold){
+			FSU_ChatBroadcast("Final vote received! %H"+ targetName + " %Shas been kicked!")
+		}
+		else{
+			FSU_ChatBroadcast("%EThe vote to kick "+ targetName +" has failed! %NNot enough votes to kick.")
+		}
+	}
 
 	// Reset everything
-    if (targetUid in kickTable){
-        delete kickTable[targetUid]
-    }
-    wait 10
-    if(GetConVarBool("FSV_ENABLE_RUI")){
-        foreach ( entity player in GetPlayerArray() ){
-            NSDeleteStatusMessageOnPlayer( player, "kick" + targetName )
-        }
-    }
+	if (targetUid in kickTable){
+		delete kickTable[targetUid]
+	}
+	wait 10
+	if(GetConVarBool("FSV_ENABLE_RUI")){
+		foreach ( entity player in GetPlayerArray() ){
+			NSDeleteStatusMessageOnPlayer( player, "kick" + targetName )
+		}
+	}
 }
 
 // //TestVote
 // int testVoters = 0
 //
 // void function TestVoteHUD(){
-//     int threshold = RandomIntRange( 5, 9)
+//	 int threshold = RandomIntRange( 5, 9)
 //
-//     foreach (entity player in GetPlayerArray()) {
-//         NSSendAnnouncementMessageToPlayer( player, "VOTE TO TEST STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"test' in chat to add your vote.", <1,0,0>, 0, 1 )
-//     }
-//     wait 1
-//     foreach (entity player in GetPlayerArray()) {
-//         NSCreateStatusMessageOnPlayer( player, "", testVoters + "/" + threshold + " have voted to test", "test" )
-//     }
-//     FSU_ChatBroadcast(  "A vote to test has been started! Use %H%Ptv %Nto vote! %T" + threshold + " votes will be needed." )
+//	 foreach (entity player in GetPlayerArray()) {
+//		 NSSendAnnouncementMessageToPlayer( player, "VOTE TO TEST STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"test' in chat to add your vote.", <1,0,0>, 0, 1 )
+//	 }
+//	 wait 1
+//	 foreach (entity player in GetPlayerArray()) {
+//		 NSCreateStatusMessageOnPlayer( player, "", testVoters + "/" + threshold + " have voted to test", "test" )
+//	 }
+//	 FSU_ChatBroadcast(  "A vote to test has been started! Use %H%Ptv %Nto vote! %T" + threshold + " votes will be needed." )
 //
-//     int timer = 90
-//     int nextUpdate = timer
-//     int lastVotes = testVoters
+//	 int timer = 90
+//	 int nextUpdate = timer
+//	 int lastVotes = testVoters
 //
-//     while(timer > 0 && testVoters < threshold){
+//	 while(timer > 0 && testVoters < threshold){
 //
-//         if(timer == nextUpdate){
-//             int minutes = int(floor(timer / 60))
-//             string seconds = string(timer - (minutes * 60))
-//             if (timer - (minutes * 60) < 10){
-//                 seconds = "0"+seconds
-//             }
+//		 if(timer == nextUpdate){
+//			 int minutes = int(floor(timer / 60))
+//			 string seconds = string(timer - (minutes * 60))
+//			 if (timer - (minutes * 60) < 10){
+//				 seconds = "0"+seconds
+//			 }
 //
-//             foreach (entity player in GetPlayerArray()) {
-//                 NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, testVoters + "/" + threshold + " have voted to test", "test" )
-//             }
-//             if(testVoters != lastVotes){
-//                 FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ testVoters + "/" + threshold + "%N have voted to test. %TUse %H%Ptv %Tto vote." )
-//                 lastVotes = testVoters
-//             }
+//			 foreach (entity player in GetPlayerArray()) {
+//				 NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, testVoters + "/" + threshold + " have voted to test", "test" )
+//			 }
+//			 if(testVoters != lastVotes){
+//				 FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ testVoters + "/" + threshold + "%N have voted to test. %TUse %H%Ptv %Tto vote." )
+//				 lastVotes = testVoters
+//			 }
 //
-//             nextUpdate -= 5
-//         }
-//         timer -= 1
-//         wait 1
-//     }
+//			 nextUpdate -= 5
+//		 }
+//		 timer -= 1
+//		 wait 1
+//	 }
 //
-//     if(testVoters >= threshold)
-//         foreach (entity player in GetPlayerArray()) {
-//             NSEditStatusMessageOnPlayer( player, "PASS", "Vote to test successful!", "test" )
-//             NSSendAnnouncementMessageToPlayer( player, "VOTE TO TEST SUCCESSFUL", "The thing you voted for will now happen!", <1,0,0>, 0, 1 )
-//         }
-//     else{
-//         foreach (entity player in GetPlayerArray()) {
-//             NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to test!", "test" )
-//         }
-//     }
-//     if (testVoters >= threshold){
-//         FSU_ChatBroadcast("%SVote to test successful!")
-//     }
-//     else{
-//         FSU_ChatBroadcast("%ENot enough votes to test!")
-//     }
+//	 if(testVoters >= threshold)
+//		 foreach (entity player in GetPlayerArray()) {
+//			 NSEditStatusMessageOnPlayer( player, "PASS", "Vote to test successful!", "test" )
+//			 NSSendAnnouncementMessageToPlayer( player, "VOTE TO TEST SUCCESSFUL", "The thing you voted for will now happen!", <1,0,0>, 0, 1 )
+//		 }
+//	 else{
+//		 foreach (entity player in GetPlayerArray()) {
+//			 NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to test!", "test" )
+//		 }
+//	 }
+//	 if (testVoters >= threshold){
+//		 FSU_ChatBroadcast("%SVote to test successful!")
+//	 }
+//	 else{
+//		 FSU_ChatBroadcast("%ENot enough votes to test!")
+//	 }
 //
-//     wait 10
+//	 wait 10
 //
-//     foreach ( entity player in GetPlayerArray() ){
-//         NSDeleteStatusMessageOnPlayer( player, "test" )
-//     }
+//	 foreach ( entity player in GetPlayerArray() ){
+//		 NSDeleteStatusMessageOnPlayer( player, "test" )
+//	 }
 //
-//     testVoters = 0
+//	 testVoters = 0
 // }
 //
 // void function FSV_CommandCallback_TestVote(entity player, array<string> args) {
-//     if( testVoters == 0 ){
-//         thread TestVoteHUD()
-//     }
-//     testVoters += 1
+//	 if( testVoters == 0 ){
+//		 thread TestVoteHUD()
+//	 }
+//	 testVoters += 1
 // }

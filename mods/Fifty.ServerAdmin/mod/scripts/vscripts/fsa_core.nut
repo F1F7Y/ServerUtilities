@@ -207,23 +207,22 @@ bool function FSA_IsAdmin( entity player ) {
  * @ param name The name of the player you want the entity of
 */
 entity function FSA_GetPlayerEntityByName(string name){
-
 	if(name == "")
-    	return null
+		return null
 
 
-  foreach(entity p in GetPlayerArray())
-    if(p.GetPlayerName().tolower() == name.tolower())
-      return p
+	foreach(entity p in GetPlayerArray())
+		if(p.GetPlayerName().tolower() == name.tolower())
+			return p
 
 
-  if(name.len() <= 2){
-    int PlayerIndex = name.tointeger()
-    if(GetPlayerArray().len()-1>= PlayerIndex && PlayerIndex > -1) // check if the index exits
-      return GetPlayerArray()[PlayerIndex]
-  }
+	if(name.len() <= 2){
+		int PlayerIndex = name.tointeger()
+		if(GetPlayerArray().len()-1>= PlayerIndex && PlayerIndex > -1) // check if the index exits
+			return GetPlayerArray()[PlayerIndex]
+	}
 
-  return null
+	return null
 }
 
 /**
@@ -249,18 +248,18 @@ void function FSCC_CommandCallback_Playerlist( entity player, array< string > ar
 */
 void function FSCC_CommandCallback_Script(entity player, array<string> args){
   if(args.len() == 0){
-    FSU_PrivateChatMessage(player, "%EMissing arguments: !script <code here>")
-    return
+	FSU_PrivateChatMessage(player, "%EMissing arguments: !script <code here>")
+	return
   }
   try{
-    compilestring( FSU_ArrayToString(args) )()
-    FSU_PrivateChatMessage(player, "%SYour code seems to have compiled")
-    return
+	compilestring( FSU_ArrayToString(args) )()
+	FSU_PrivateChatMessage(player, "%SYour code seems to have compiled")
+	return
   }
   catch ( ex ){
-    printt(ex)
-    FSU_PrivateChatMessage(player, "%EThe code has caused an exception, the error can be found in the server log")
-    return
+	printt(ex)
+	FSU_PrivateChatMessage(player, "%EThe code has caused an exception, the error can be found in the server log")
+	return
   }
 }
 
@@ -270,18 +269,18 @@ void function FSCC_CommandCallback_Script(entity player, array<string> args){
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_ServerCommand(entity player, array<string> args){
-  if(args.len()==0)
-  {
-    FSU_PrivateChatMessage(player, "%EMissing arguments")
-    return
-  }
-  try{
-    ServerCommand(FSU_ArrayToString(args))
-  }
-  catch(ex){
-    FSU_PrivateChatMessage(player,"%EThe command has caused an exception")
-  }
-  FSU_PrivateChatMessage(player, "%SCommand executed")
+	if(args.len()==0)
+	{
+		FSU_PrivateChatMessage(player, "%EMissing arguments")
+		return
+	}
+	try{
+		ServerCommand(FSU_ArrayToString(args))
+	}
+	catch(ex){
+		FSU_PrivateChatMessage(player,"%EThe command has caused an exception")
+	}
+	FSU_PrivateChatMessage(player, "%SCommand executed")
 
 }
 
@@ -292,19 +291,19 @@ void function FSCC_CommandCallback_ServerCommand(entity player, array<string> ar
 */
 void function FSCC_CommandCallback_Reload(entity player, array<string> args){
 
-  if(args.len() <= 0)
-    thread FSU_C_Reload_thread(5.0)
-  else
-    thread FSU_C_Reload_thread(args[0].tofloat())
+	if(args.len() <= 0)
+		thread FSU_C_Reload_thread(5.0)
+	else
+		thread FSU_C_Reload_thread(args[0].tofloat())
 }
 
 void function FSU_C_Reload_thread(float time){
-  while(time > 0){
-    FSU_ChatBroadcast("The server will reload in "+ time)
-    wait 1.0
-    time = time - 1.0
-  }
-  ServerCommand("reload")
+	while(time > 0){
+		FSU_ChatBroadcast("The server will reload in "+ time)
+		wait 1.0
+		time = time - 1.0
+	}
+	ServerCommand("reload")
 }
 
 /**

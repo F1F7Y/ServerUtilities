@@ -74,45 +74,45 @@ void function FSV_Init() {
 
 // Updates last played (vote blocked) maps
 void function UpdatePlayedMaps(){
-    if(GetMapName() != "mp_lobby"){
-        array <string> playedMaps = FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")
-        playedMaps.append(GetMapName())
-        while (playedMaps.len() > FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT")){
-            playedMaps.remove(0)
-        }
+	if(GetMapName() != "mp_lobby"){
+		array <string> playedMaps = FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")
+		playedMaps.append(GetMapName())
+		while (playedMaps.len() > FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT")){
+			playedMaps.remove(0)
+		}
 
-        FSU_SaveArrayToConVar("FSV_MAP_REPLAY_LIMIT", playedMaps)
-    }
+		FSU_SaveArrayToConVar("FSV_MAP_REPLAY_LIMIT", playedMaps)
+	}
 }
 
 /**
  * Runs on player connected, preventing any previously kicked players from re-joining
 */
 void function FSV_JoiningPlayerKickCheck(entity player) {
-    if (FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0).contains(player.GetUID())) {
-        FSU_Print("previously kicked " + player.GetPlayerName() + " tried to rejoin")
-        ServerCommand("kick " + player.GetPlayerName())
-    }
+	if (FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0).contains(player.GetUID())) {
+		FSU_Print("previously kicked " + player.GetPlayerName() + " tried to rejoin")
+		ServerCommand("kick " + player.GetPlayerName())
+	}
 }
 
 /**
  * Updates the kicked player re-join block list, removing any expired blocks and incrementing existing ones
 */
 void function FSV_UpdateKicked(){
-    array <string> kicked = FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0)
-    array <string> kickedfor = FSU_GetSelectedArrayFromConVar	("FSV_KICK_BLOCK", 1)
-    int kickDuration = FSU_GetSettingIntFromConVar("FSV_KICK_BLOCK")
+	array <string> kicked = FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0)
+	array <string> kickedfor = FSU_GetSelectedArrayFromConVar	("FSV_KICK_BLOCK", 1)
+	int kickDuration = FSU_GetSettingIntFromConVar("FSV_KICK_BLOCK")
 
-    for(int i = kickedfor.len()-1; i > -1; i--){
-        kickedfor.insert(i, (kickedfor[i].tointeger()+1).tostring())
-        kickedfor.remove(i+1)
-        if(kickedfor[i].tointeger() > kickDuration){
-            kickedfor.remove(i)
-            kicked.remove(i)
-        }
-    }
+	for(int i = kickedfor.len()-1; i > -1; i--){
+		kickedfor.insert(i, (kickedfor[i].tointeger()+1).tostring())
+		kickedfor.remove(i+1)
+		if(kickedfor[i].tointeger() > kickDuration){
+			kickedfor.remove(i)
+			kicked.remove(i)
+		}
+	}
 
-    array <array <string> > newKickedArray = [kicked, kickedfor]
+	array <array <string> > newKickedArray = [kicked, kickedfor]
 	FSU_SaveArrayArrayToConVar("FSV_KICK_BLOCK", newKickedArray)
 }
 
@@ -171,15 +171,15 @@ string function FSV_GetNextMap(){
 
 	// Create array of valid next maps
 	maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
-    foreach (string blockedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
+	foreach (string blockedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
 		if(maps.find(blockedMap) > -1){
 			maps.remove(maps.find(blockedMap))
-        }
-    }
+		}
+	}
 
-    // Return either a random next map, or the one next in the playlist
+	// Return either a random next map, or the one next in the playlist
 	if(GetConVarInt("FSV_RANDOM_MAP_ROTATION") == 1){
-        return maps[RandomInt(maps.len()-1)]
+		return maps[RandomInt(maps.len()-1)]
 	}
 	if(maps.find(GetMapName()) > -1) {
 		int nextMap = maps.find(GetMapName()) + 1
