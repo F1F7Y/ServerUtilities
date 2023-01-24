@@ -186,7 +186,6 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 */
 void function FSU_PrintFormattedListWithoutPagination( entity player, array< string > list, string separator = "%T, ", string color = "%H" ) {
 	string row = ""
-	array <string> rowList
 	foreach(string item in list){
 		if( row == ""){
 			row = "    " + color + item
@@ -197,7 +196,6 @@ void function FSU_PrintFormattedListWithoutPagination( entity player, array< str
 
 		if( row.len() > 75){
 			FSU_PrivateChatMessage( player, row )
-			rowList.append(row)
 			row = ""
 		}
 	}
