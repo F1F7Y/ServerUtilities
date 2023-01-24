@@ -43,7 +43,7 @@ void function FSCC_Init() {
 	command.m_UsageAdmin = ""
 	command.m_Description = "Lists available commands."
 	command.m_Group = "CORE"
-	command.m_Abbreviations = [ "h" ]
+	command.m_Abbreviations = [ "h", "commands" ]
 	command.Callback = FSCC_CommandCallback_Help
 	FSCC_RegisterCommand( "help", command )
 
