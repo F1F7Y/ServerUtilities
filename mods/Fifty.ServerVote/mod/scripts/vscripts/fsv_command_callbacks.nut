@@ -30,15 +30,15 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 
     if (args.len() == 0){
         FSU_PrivateChatMessage(player, "Maps in rotation:")
-        FSU_PrintFormattedListWithoutPagination( player, mapsInRotation, ", ", "%S")
+        FSU_PrintFormattedListWithoutPagination( player, mapsInRotation, "%T, ", "%S")
 
         if (voteOnlyMaps.len() > 0) {
             FSU_PrivateChatMessage(player, "Maps by vote only:")
-            FSU_PrintFormattedListWithoutPagination( player, voteOnlyMaps, ", ", "%H")
+            FSU_PrintFormattedListWithoutPagination( player, voteOnlyMaps, "%T, ", "%H")
         }
         if (blockedMaps.len() > 0) {
             FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
-            FSU_PrintFormattedListWithoutPagination( player, blockedMaps, ", ", "%E")
+            FSU_PrintFormattedListWithoutPagination( player, blockedMaps, "%T, ", "%E")
         }
         FSU_PrivateChatMessage(player, "Use %H%Pnextmap <map> %Tto vote for a certain map to be next.")
         return
@@ -154,7 +154,7 @@ void function FSV_SkipThread(){
         }
     }
     if(GetConVarBool("FSV_ENABLE_CHATUI")){
-        FSU_ChatBroadcast(  "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
+        FSU_ChatBroadcast( "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
     }
 
     int timer = GetConVarInt("FSV_MAP_SKIP_DURATION")
@@ -555,10 +555,7 @@ void function FSV_KickThread(string targetName, string targetUid){
     }
 }
 
-
-
-
-//TestVote
+// //TestVote
 // int testVoters = 0
 //
 // void function TestVoteHUD(){
@@ -590,7 +587,7 @@ void function FSV_KickThread(string targetName, string targetUid){
 //                 NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, testVoters + "/" + threshold + " have voted to test", "test" )
 //             }
 //             if(testVoters != lastVotes){
-//                 FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ testVoters + "/" + threshold + "%N have voted to test. %TUse %H%Ptv %Nto vote." )
+//                 FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ testVoters + "/" + threshold + "%N have voted to test. %TUse %H%Ptv %Tto vote." )
 //                 lastVotes = testVoters
 //             }
 //

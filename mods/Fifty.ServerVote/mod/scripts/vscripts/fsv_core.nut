@@ -49,7 +49,6 @@ void function FSV_Init() {
 	command.PlayerCanUse = null
 
 // 	command.m_UsageUser = "testvote"
-// 	command.m_UsageUser = "testvote <player-name>"
 // 	command.m_Description = "Test MentalEdge's style of votes."
 // 	command.m_Group = "VOTE"
 // 	command.m_Abbreviations = ["tv"]
