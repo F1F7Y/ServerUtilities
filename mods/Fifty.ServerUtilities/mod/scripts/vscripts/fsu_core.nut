@@ -132,18 +132,18 @@ int function FSU_GetListPages( array< string > list, int rows = 5, string separa
 	array <string> rowList
 	foreach(string item in list){
 		if( row == ""){
-			row = "  " + item
+			row = "    " + "  " + item
+		}
+		else if( (row+separator+"  "+item).len() > 85 || FSU_FormatString(row+separator+"  "+item).len() > 200 ){
+			rowList.append(row)
+			row = "    " + "  " + item
 		}
 		else{
 			row += separator + "  " + item
 		}
-
-		if( row.len() > 75){
-			rowList.append(row)
-			row = ""
-		}
 	}
-	rowList.append(row)
+	if( row != "")
+		rowList.append(row)
 
 	return int( ceil( rowList.len() / float( rows ) ) )
 }
@@ -164,13 +164,12 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 		if( row == ""){
 			row = "    " + color + item
 		}
+		else if( (row+separator+color+item).len() > 85 || FSU_FormatString(row+separator+color+item).len() > 200 ){
+			rowList.append(row)
+			row = "    " + color + item
+		}
 		else{
 			row += separator + color + item
-		}
-
-		if( row.len() > 75){
-			rowList.append(row)
-			row = ""
 		}
 	}
 	if( row != "")
@@ -194,16 +193,16 @@ void function FSU_PrintFormattedListWithoutPagination( entity player, array< str
 		if( row == ""){
 			row = "    " + color + item
 		}
+		else if( (row+separator+color+item).len() > 85 || FSU_FormatString(row+separator+color+item).len() > 200 ){
+			FSU_PrivateChatMessage( player, row )
+			row = "    " + color + item
+		}
 		else{
 			row += separator + color + item
 		}
-
-		if( row.len() > 75){
-			FSU_PrivateChatMessage( player, row )
-			row = ""
-		}
 	}
-	FSU_PrivateChatMessage( player, row )
+	if( row != "")
+		FSU_PrivateChatMessage( player, row )
 }
 
 /**
