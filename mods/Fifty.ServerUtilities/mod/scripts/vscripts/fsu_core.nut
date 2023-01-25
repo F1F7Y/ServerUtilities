@@ -1,19 +1,42 @@
 untyped
 globalize_all_functions
 
-string header      = "\x1b[38:5:214m"
-string highlight   = "\x1b[36m"
-string text        = "\x1b[38:5:152m"
-string adminHeader = "\x1b[94m"
-string ownerHeader = "\x1b[92m"
-string error       = "\x1b[38;5;203m"
-string success     = "\x1b[38;5;192m"
-string announce    = "\x1b[38;5;183m"
+table <string, string> colorTable
+string header
+string highlight
+string text
+string adminHeader
+string ownerHeader
+string error
+string success
+string announce
 
 /**
  * Gets called after the map is loaded
 */
 void function FSU_Init() {
+	colorTable["header"]    <- "\x1b[38:5:214m"
+	colorTable["highlight"] <- "\x1b[36m"
+	colorTable["text"]      <- "\x1b[38:5:152m"
+	colorTable["admin"]     <- "\x1b[94m"
+	colorTable["owner"]     <- "\x1b[92m"
+	colorTable["error"]     <- "\x1b[38;5;203m"
+	colorTable["success"]   <- "\x1b[38;5;192m"
+	colorTable["announce"]  <- "\x1b[38;5;183m"
+
+	foreach(string item in split(GetConVarString( "FSU_COLOR_THEME" ), "," )){
+		colorTable[split(item, "=")[0]] = "\x1b" + split(item, "=")[1]
+	}
+
+	header      = colorTable["header"]
+	highlight   = colorTable["highlight"]
+	text        = colorTable["text"]
+	adminHeader = colorTable["admin"]
+	ownerHeader = colorTable["owner"]
+	error       = colorTable["error"]
+	success     = colorTable["success"]
+	announce    = colorTable["announce"]
+
 	AddCallback_GameStateEnter( eGameState.Prematch, FSU_PrintPrematchMessage )
 }
 
@@ -43,25 +66,6 @@ void function FSU_PrintPrematchMessage() {
 #endif
 
 	FSU_Print( "Finished! Thanks for using FSU :)" )
-}
-
-/**
- * Sets the ANSI codes used for formatting
- * @param headerCode The ANSI code to be used for the message header ( "[FSU]" )
- * @param highlightCode The ANSI code to be used for highlighted text
- * @param textCode The ANSI code to be used for normal text
- * @param adminHeaderCode The ANSI code to be used for the admin header ( "[ADMIN]" )
- * @param ownerHeaderCode The ANSI code to be used for the owner prefix ( "[OWNER]" )
-*/
-void function FSU_SetTheme( string headerCode, string highlightCode, string textCode, string adminHeaderCode, string ownerHeaderCode, string errorCode, string successCode, string announceCode ) {
-	header = headerCode
-	highlight = highlightCode
-	text = textCode
-	adminHeader = adminHeaderCode
-	ownerHeader = ownerHeaderCode
-	error = errorCode
-	success = successCode
-	announce = announceCode
 }
 
 /**
