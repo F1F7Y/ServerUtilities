@@ -25,7 +25,7 @@ void function FSU_Init() {
 	colorTable["announce"]  <- "\x1b[38;5;183m"
 
 	foreach(string item in split(GetConVarString( "FSU_COLOR_THEME" ), "," )){
-		colorTable[split(item, "=")[0]] = "\x1b" + split(item, "=")[1]
+		colorTable[split(item, "=")[0]] = split(item, "=")[1]
 	}
 
 	header      = colorTable["header"]
@@ -242,7 +242,7 @@ string function FSU_FormatString( string str ) {
 #endif
 
 	// Hex code
-	var hexColorCode = regexp("#[0-9A-F]{6}").search( formatted )
+	var hexColorCode = regexp("#[0-9A-Fa-f]{6}").search( formatted )
 	while( hexColorCode != null ) {
 		// "rrggbb" in 0-9 A-F
 		string strColor = formatted.slice( hexColorCode.begin + 1, hexColorCode.end )
@@ -258,7 +258,7 @@ string function FSU_FormatString( string str ) {
 
 		formatted = formatted.slice( 0, hexColorCode.begin ) + format( "\x1b[38;2;%i;%i;%im", red, green, blue )  + formatted.slice( hexColorCode.end, formatted.len() )
 
-		hexColorCode = regexp("#[0-9A-F]{6}").search( formatted )
+		hexColorCode = regexp("#[0-9A-Fa-f]{6}").search( formatted )
 	}
 
 	return formatted
@@ -272,7 +272,7 @@ int function FSU_GetIntegerFromHexString( string hex ) {
 	int number
 
 	for( int i = 0; i < hex.len(); i++ ) {
-		string char = hex.slice( i, i + 1 )
+		string char = hex.toupper().slice( i, i + 1 )
 		int weight = int( pow( 16, hex.len() - i - 1 ) )
 
 		if( char == "F" )
