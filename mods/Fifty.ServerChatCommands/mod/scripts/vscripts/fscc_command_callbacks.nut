@@ -43,6 +43,7 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 	if (args.len() != 0 && args[0] == "all"){
 		FSU_PrivateChatMessage( player, "List of ALL available commands:" )
 		FSU_PrintFormattedListWithoutPagination(player, commands)
+		FSU_PrivateChatMessage( player, "To find out more about a command, use %H!help <command>%T." )
 		return
 	}
 
@@ -68,6 +69,7 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 	FSU_PrintFormattedList( player, commands, page)
 	if(pages > 1)
 		FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
+	FSU_PrivateChatMessage( player, "To find out more about a command, use %H!help <command>%T." )
 }
 
 /**
