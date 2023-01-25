@@ -142,6 +142,9 @@ void function FSV_CommandCallback_Skip( entity player, array< string > args ) {
  * Thread for skip votes
 */
 void function FSV_SkipThread(){
+	int timer = GetConVarInt("FSV_MAP_SKIP_DURATION")
+	int nextUpdate = timer
+	int lastVotes = skipVoters.len()
 
 	// Announce the starting of a vote
 	if(GetConVarBool("FSV_ENABLE_RUI")){
@@ -150,32 +153,25 @@ void function FSV_SkipThread(){
 		}
 		wait 1
 		foreach ( entity player in GetPlayerArray() ){
-			NSCreateStatusMessageOnPlayer( player, "", skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip"  )
+			NSCreateStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer), skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip"  )
 		}
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
-		FSU_ChatBroadcast( "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
+		FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H " + "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
 	}
 
-	int timer = GetConVarInt("FSV_MAP_SKIP_DURATION")
-	int nextUpdate = timer
-	int lastVotes = skipVoters.len()
+	wait 5
 
 	// Timer and UI update loop
 	while(timer > 0 && skipVoters.len() < skipThreshold){
 		if(timer == nextUpdate){
-			int minutes = int(floor(timer / 60))
-			string seconds = string(timer - (minutes * 60))
-			if (timer - (minutes * 60) < 10){
-				seconds = "0"+seconds
-			}
 			if(GetConVarBool("FSV_ENABLE_RUI")){
 				foreach (entity player in GetPlayerArray()) {
-					NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip" )
+					NSEditStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer), skipVoters.len() + "/" + skipThreshold + " have voted to skip", "skip" )
 				}
 			}
 			if(GetConVarBool("FSV_ENABLE_CHATUI") && skipVoters.len() != lastVotes){
-				FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ skipVoters.len() + "/" + skipThreshold + "%N have voted to skip this map. %TUse %H%Pskip %Tto vote." )
+				FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H "+ skipVoters.len() + "/" + skipThreshold + "%N have voted to skip this map. %TUse %H%Pskip %Tto vote." )
 				lastVotes = skipVoters.len()
 			}
 			nextUpdate -= 5
@@ -260,6 +256,9 @@ void function FSV_CommandCallback_Extend( entity player, array< string > args ) 
  * Thread for extend votes
 */
 void function FSV_ExtendThread(){
+	int timer = GetConVarInt("FSV_MAP_EXTENDING_DURATION")
+	int nextUpdate = timer
+	int lastVotes = extendVoters.len()
 
 	// Announce the starting of a vote
 	if(GetConVarBool("FSV_ENABLE_RUI")){
@@ -268,32 +267,25 @@ void function FSV_ExtendThread(){
 		}
 		wait 1
 		foreach (entity player in GetPlayerArray()) {
-			NSCreateStatusMessageOnPlayer( player, "",  extendVoters.len() + "/" + extendThreshold + "have voted to extend map time", "extend" )
+			NSCreateStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer),  extendVoters.len() + "/" + extendThreshold + "have voted to extend map time", "extend" )
 		}
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
-		FSU_ChatBroadcast(  "A vote to extend map time has been started! Use %H%Pextend %Nto vote. %T" + extendThreshold + " votes will be needed." )
+		FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H " + "A vote to extend map time has been started! Use %H%Pextend %Nto vote. %T" + extendThreshold + " votes will be needed." )
 	}
 
-	int timer = GetConVarInt("FSV_MAP_EXTENDING_DURATION")
-	int nextUpdate = timer
-	int lastVotes = extendVoters.len()
+	wait 5
 
 	// Timer and UI update loop
 	while(timer > 0 && extendVoters.len() < extendThreshold){
 		if(timer == nextUpdate){
-			int minutes = int(floor(timer / 60))
-			string seconds = string(timer - (minutes * 60))
-			if (timer - (minutes * 60) < 10){
-				seconds = "0"+seconds
-			}
 			if(GetConVarBool("FSV_ENABLE_RUI")){
 				foreach (entity player in GetPlayerArray()) {
-					NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, extendVoters.len() + "/" + extendThreshold + " have voted to extend map time", "extend" )
+					NSEditStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer), extendVoters.len() + "/" + extendThreshold + " have voted to extend map time", "extend" )
 				}
 			}
 			if(GetConVarBool("FSV_ENABLE_CHATUI") && extendVoters.len() != lastVotes){
-				FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ extendVoters.len() + "/" + extendThreshold + "%N have voted to extend map time. %TUse %H%Pextend %Tto vote." )
+				FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H "+ extendVoters.len() + "/" + extendThreshold + "%N have voted to extend map time. %TUse %H%Pextend %Tto vote." )
 				lastVotes = extendVoters.len()
 			}
 			nextUpdate -= 5
@@ -465,6 +457,9 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
  * Thread for kick votes
 */
 void function FSV_KickThread(string targetName, string targetUid){
+	int timer = GetConVarInt("FSV_KICK_DURATION")
+	int nextUpdate = timer
+	int lastVotes = kickTable[targetUid].voters.len()
 
 	// Announce the starting of a vote
 	if(GetConVarBool("FSV_ENABLE_RUI")){
@@ -476,35 +471,28 @@ void function FSV_KickThread(string targetName, string targetUid){
 		wait 1
 		foreach (entity player in GetPlayerArray()) {
 			if( player.GetUID() != targetUid){
-				NSCreateStatusMessageOnPlayer( player, "",  kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
+				NSCreateStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer),  kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
 			}
 		}
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
-		FSU_ChatBroadcast(  "A vote to kick %H" + targetName + "%N has been started! Use %H%Pkick " + targetName + "%N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
+		FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H " + "A vote to kick %H" + targetName + "%N has been started! Use %H%Pkick " + targetName + "%N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
 	}
 
-	int timer = GetConVarInt("FSV_KICK_DURATION")
-	int nextUpdate = timer
-	int lastVotes = kickTable[targetUid].voters.len()
+	wait 5
 
 	// Timer and UI update loop
 	while(timer > 0 && kickTable[targetUid].voters.len() < kickTable[targetUid].threshold){
 		if(timer == nextUpdate){
-			int minutes = int(floor(timer / 60))
-			string seconds = string(timer - (minutes * 60))
-			if (timer - (minutes * 60) < 10){
-				seconds = "0"+seconds
-			}
 			if(GetConVarBool("FSV_ENABLE_RUI")){
 				foreach (entity player in GetPlayerArray()) {
 					if( player.GetUID() != targetUid ){
-						NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
+						NSEditStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer), kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
 					}
 				}
 			}
 			if(GetConVarBool("FSV_ENABLE_CHATUI") && kickTable[targetUid].voters.len() != lastVotes){
-				FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + "%N have voted to kick %H" + targetName + "%N. %TUse %H%Pkick  " + targetName + "%T to vote." )
+				FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H "+ kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + "%N have voted to kick %H" + targetName + "%N. %TUse %H%Pkick  " + targetName + "%T to vote." )
 				lastVotes = kickTable[targetUid].voters.len()
 			}
 
@@ -584,10 +572,10 @@ void function FSV_KickThread(string targetName, string targetUid){
 //			 }
 //
 //			 foreach (entity player in GetPlayerArray()) {
-//				 NSEditStatusMessageOnPlayer( player, minutes + ":" + seconds, testVoters + "/" + threshold + " have voted to test", "test" )
+//				 NSEditStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer), testVoters + "/" + threshold + " have voted to test", "test" )
 //			 }
 //			 if(testVoters != lastVotes){
-//				 FSU_ChatBroadcast( "%F[%T"+minutes + ":" + seconds+" %FREMAINING]%H "+ testVoters + "/" + threshold + "%N have voted to test. %TUse %H%Ptv %Tto vote." )
+//				 FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H "+ testVoters + "/" + threshold + "%N have voted to test. %TUse %H%Ptv %Tto vote." )
 //				 lastVotes = testVoters
 //			 }
 //

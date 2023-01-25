@@ -72,7 +72,9 @@ void function FSV_Init() {
 	}
 }
 
-// Updates last played (vote blocked) maps
+/**
+ * Updates last played (vote blocked) maps
+*/
 void function UpdatePlayedMaps(){
 	if(GetMapName() != "mp_lobby"){
 		array <string> playedMaps = FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")
@@ -83,6 +85,18 @@ void function UpdatePlayedMaps(){
 
 		FSU_SaveArrayToConVar("FSV_MAP_REPLAY_LIMIT", playedMaps)
 	}
+}
+
+/**
+ * Convert seconds to minutes and seconds
+*/
+string function FSV_TimerToMinutesAndSeconds(int timer){
+	int minutes = int(floor(timer / 60))
+	string seconds = string(timer - (minutes * 60))
+	if (timer - (minutes * 60) < 10){
+		seconds = "0"+seconds
+	}
+	return minutes + ":" + seconds
 }
 
 /**
