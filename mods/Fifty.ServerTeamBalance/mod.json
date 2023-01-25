@@ -17,14 +17,14 @@
 	"Scripts": [
 		{
 			"Path": "fstb_core.nut",
-			"RunOn": "SERVER",
+			"RunOn": "SERVER && MP",
 			"ServerCallback": {
 				"After": "FSTB_Init"
 			}
 		},
 		{
 			"Path": "fstb_command_callbacks.nut",
-			"RunOn": "SERVER"
+			"RunOn": "SERVER && MP"
 		}
 	]
 }

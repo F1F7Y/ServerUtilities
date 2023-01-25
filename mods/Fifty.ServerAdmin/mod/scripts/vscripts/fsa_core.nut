@@ -151,6 +151,11 @@ ClServer_MessageStruct function FSA_CheckMessageForPrivilegedUser( ClServer_Mess
 		return message
 	}
 
+	if( tags.len() ) {
+		message.shouldBlock = true
+		FSA_SendMessageWithPrefix( message.player, message.message, message.isTeam,  tags )
+	}
+
 	return message
 }
 

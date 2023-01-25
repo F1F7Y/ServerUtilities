@@ -107,18 +107,18 @@
 	"Scripts": [
 		{
 			"Path": "fsv_command_callbacks.nut",
-			"RunOn": "SERVER"
+			"RunOn": "SERVER && MP"
 		},
 		{
 			"Path": "fsv_core.nut",
-			"RunOn": "SERVER",
+			"RunOn": "SERVER && MP",
 			"ServerCallback": {
 				"After": "FSV_Init"
 			}
 		},
 		{
 			"Path": "fsv_localization.nut",
-			"RunOn": "SERVER",
+			"RunOn": "SERVER && MP",
 			"ServerCallback": {
 				"After": "FSV_Localization_Init"
 			}

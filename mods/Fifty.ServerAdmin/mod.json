@@ -57,14 +57,14 @@
 	"Scripts": [
 		{
 			"Path": "fsa_core.nut",
-			"RunOn": "SERVER",
+			"RunOn": "SERVER && MP",
 			"ServerCallback": {
 				"After": "FSA_Init"
 			}
 		},
 		{
 			"Path": "fsa_command_callbacks.nut",
-			"RunOn": "SERVER"
+			"RunOn": "SERVER && MP"
 		}
 	]
 }

@@ -60,6 +60,10 @@ void function FSM_OnPlayerKilled( entity victim, entity attacker, var damageInfo
 		if( victim.IsPlayer() && DamageInfo_GetDamageSourceIdentifier( damageInfo ) == eDamageSourceId.fall ) {
 			if( GetMapName() == "mp_relic02" ) {
 				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell off the cliff." )
+			} else if( GetMapName() == "mp_complex3" ) {
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell into the pit." )
+			} else if( GetMapName() == "mp_crashsite3" ) {
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N disappeared in the cave." )
 			} else {
 				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell into the pit." )
 			}
