@@ -160,9 +160,9 @@ void function FSV_PrintNextMapChances() {
 	string message = ""
 	foreach(string map, float chance in mapChances){
 		if (message == "")
-			message += FSV_Localize(map) + " %T" + chance + "%"
+			message += FSV_Localize(map) + " %T" + floor(chance) + "%"
 		else
-			message += ", %H" + FSV_Localize(map) + " %T" + chance + "%"
+			message += ", %H" + FSV_Localize(map) + " %T" + floor(chance) + "%"
 	}
 	FSU_ChatBroadcast("Next map pool: %H" + message)
 }
