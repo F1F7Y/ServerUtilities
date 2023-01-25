@@ -20,14 +20,14 @@
 	"Scripts": [
 		{
 			"Path": "fsu_core.nut",
-			"RunOn": "SERVER",
+			"RunOn": "SERVER && MP",
 			"ServerCallback": {
 				"After": "FSU_Init"
 			}
 		},
 		{
 			"Path": "fsu_deprecated.nut",
-			"RunOn": "SERVER"
+			"RunOn": "SERVER && MP"
 		}
 	]
 }

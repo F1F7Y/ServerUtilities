@@ -117,14 +117,14 @@
 	"Scripts": [
 		{
 			"Path": "fsm_core.nut",
-			"RunOn": "SERVER",
+			"RunOn": "SERVER && MP",
 			"ServerCallback": {
 				"After": "FSM_Init"
 			}
 		},
 		{
 			"Path": "fsm_killstreak.nut",
-			"RunOn": "SERVER"
+			"RunOn": "SERVER && MP"
 		}
 	]
 }
