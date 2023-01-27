@@ -7,7 +7,7 @@ globalize_all_functions
  * @param args The arguments passed by the player
 */
 void function FSTM_CommandCallback_Switch( entity player, array< string > args ) {
-	if( GetGameState() != eGameState.Playing || !IsAlive( player ) ) {
+	if( GetGameState() != eGameState.Playing ) {
 		FSU_PrivateChatMessage( player, "Can't switch teams currently." )
 		return
 	}
@@ -16,9 +16,9 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 
 	if( FSA_IsAdmin( player ) && args.len() != 0 ) {
 		bool foundTarget = false
-		foreach( entity player in GetPlayerArray() ) {
-			if( player.GetPlayerName().tolower().find( args[0].tolower() ) != -1 ) {
-				target = player
+		foreach( entity p in GetPlayerArray() ) {
+			if( p.GetPlayerName().tolower().find( args[0].tolower() ) != -1 ) {
+				target = p
 				foundTarget = true
 				break
 			}
@@ -30,7 +30,14 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 		}
 	}
 
+	if( !IsValid( target ) ) {
+		FSU_PrivateChatMessage( player, "Player entity isn't valid!" )
+		return
+	}
+
+	if( IsAlive( player ) )
+		player.Die()
+
 	SetTeam( target, GetOtherTeam( target.GetTeam() ) )
-	target.Die()
 	FSU_PrivateChatMessage( player, "Your team has been switched!" )
 }
