@@ -68,8 +68,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 	}
 
 	if( mapVoteId == "" ) {
-		FSU_PrivateChatMessage( player, "%EMap %H\"" + args[0] + "\"%E isn't in the voting pool!" )
-		FSU_PrivateChatMessage(player, "You can run %H%Pmaps%T to view the maps in rotation.")
+		FSU_PrivateChatMessage( player, "%EMap %H\"" + args[0] + "\"%E isn't in the voting pool! %TUse %H%Pmaps%T to see maps in rotation." )
 		return
 	}
 
