@@ -95,13 +95,13 @@
 		},
 		{
 			"Name": "FSV_MAP_ROTATION",
-			"DefaultValue": "mp_angel_city,mp_black_water_canal,mp_grave,mp_colony02,mp_drydock,mp_eden,mp_thaw,mp_forwardbase_kodai,mp_glitch,mp_relic02,mp_wargames",
-			"HelpString": "A list of maps in the map rotation which can also be voted for. ( run 'maps *' in the console to get a list of maps loaded )"
+			"DefaultValue": "angelcity,black_water canal,Boomtown,mp_colony02,mp_drydock,mp_eden,exoplanet,kodai,mp_glitch,mp_relic02,wargame",
+			"HelpString": "A list of maps in the map rotation which can also be voted for. You can write the map IDs, names, or partial names. Separated by commas. ( run 'maps *' in the console to check maps loaded )"
 		},
 		{
 			"Name": "FSV_MAP_VOTE_ONLY",
 			"DefaultValue": "mp_crashsite3,mp_complex3,mp_homestead,mp_rise",
-			"HelpString": "A list of maps which arent in the map rotation, but can be voted for."
+			"HelpString": "A list of maps which arent in the map rotation, but can be voted for. You can write the map IDs, names, or partial names. Separated by commas."
 		}
 	],
 	"Scripts": [

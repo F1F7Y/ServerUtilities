@@ -20,13 +20,12 @@ array <string> playersWithActiveVotes
  * @param args The arguments passed by the player
 */
 void function FSV_CommandCallback_NextMap( entity player, array< string > args ) {
-	array <string> mapsInRotation = FSV_LocalizeArray( split( GetConVarString( "FSV_MAP_ROTATION" ), "," ))
-	array <string> voteOnlyMaps = FSV_LocalizeArray( split( GetConVarString( "FSV_MAP_VOTE_ONLY" ), "," ))
-	array <string> blockedMaps = FSV_LocalizeArray( FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ))
+	array <string> mapsInRotation = FSV_LocalizeArray( FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" ) )
+	array <string> voteOnlyMaps = FSV_LocalizeArray( FSV_GetMapArrayFromConVar( "FSV_MAP_VOTE_ONLY" ) )
+	array <string> blockedMaps = FSV_LocalizeArray( FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ) )
 	array <string> maps
 	maps.extend( mapsInRotation )
 	maps.extend( voteOnlyMaps )
-
 
 	if (args.len() == 0){
 		if (blockedMaps.len() > 0) {
@@ -55,26 +54,28 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 		return
 	}
 
-	int index = 0
-	foreach( string map in maps ) {
-		if( map.tolower().find( args[0].tolower() ) != null )
-			break
-
-		index++
+	string mapVoteName = ""
+	string mapVoteId = ""
+	foreach( string map in maps ){
+		if( StringReplace( map, " ", "", true, false ).tolower().find( args[0].tolower() ) != null){
+			if( mapVoteId != "" ){
+				FSU_PrivateChatMessage(player, "%EMore than one matching map! %TWrite a bit more of the name.")
+				return
+			}
+			mapVoteName = map
+			mapVoteId = FSV_UnLocalize(map)
+		}
 	}
 
-	if( index == maps.len() ) {
+	if( mapVoteId == "" ) {
 		FSU_PrivateChatMessage( player, "%EMap %H\"" + args[0] + "\"%E isn't in the voting pool!" )
 		FSV_CommandCallback_NextMap(player, [])
 		return
 	}
 
-	string mapVoteName = maps[index]
-	string mapArg = FSV_UnLocalize(maps[index])
-
 	if( FSA_IsAdmin( player ) && args.len() >= 2 ) {
 		if( args[1].tolower() == "force" ) {
-			GameRules_ChangeMap( mapArg, GAMETYPE )
+			GameRules_ChangeMap( mapVoteId, GAMETYPE )
 			return
 		} else {
 			FSU_PrivateChatMessage( player, "Use %H%Pnextmap <map> force%T to forcefully change the map.")
@@ -82,13 +83,13 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 		}
 	}
 
-	if ( mapArg == GetMapName() && FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0 ) {
+	if ( mapVoteId == GetMapName() && FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0 ) {
 		FSU_PrivateChatMessage(player, "%EYou can't vote for the current map!")
 		return
 	}
 
 	foreach(string playedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
-		if (mapArg == playedMap){
+		if (mapVoteId == playedMap){
 			FSU_PrivateChatMessage(player, "%EYou can't vote for a recently played map!")
 			FSU_PrivateChatMessage(player, "Recently played maps (not vote-able):")
 			FSU_PrintFormattedListWithoutPagination( player, blockedMaps, ", ", "%E")
@@ -97,7 +98,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 	}
 
 	if (player in FSV_GetMapVoteTable()) {
-		if( mapArg == FSV_GetMapVoteTable()[player] ){
+		if( mapVoteId == FSV_GetMapVoteTable()[player] ){
 			FSU_PrivateChatMessage(player, "%EYou've already voted for %H" + mapVoteName + "%E!")
 			return
 		}
@@ -110,7 +111,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 	}
 
 	FSU_ChatBroadcast( "A player has voted for %H" + mapVoteName + "%N to be the next map, %H" + GetConVarString("FSCC_PREFIX")+"nm <map>" + "%N." )
-	FSV_VoteForNextMap( player, mapArg )
+	FSV_VoteForNextMap( player, mapVoteId )
 	FSU_ChatBroadcast( "Next map pool: %H" + FSV_GetNextMapChances() )
 }
 
@@ -210,7 +211,7 @@ void function FSV_SkipThread(){
 	}
 	if (GetConVarBool("FSV_ENABLE_CHATUI") ){
 		if(skipVoters.len() >= skipThreshold){
-			FSU_ChatBroadcast("Final vote received! %SMap will be skipped!")
+			FSU_ChatBroadcast("Final vote received! %SMap will be skipped in 5 seconds!")
 		}
 		else{
 			FSU_ChatBroadcast("%EThe vote to skip this map has failed! %NNot enough votes.")
@@ -348,7 +349,6 @@ void function FSV_ExtendThread(){
  * @param args The arguments passed by the player
 */
 void function FSV_CommandCallback_Kick( entity player, array<string> args) {
-
 	if (args.len() == 0){
 		FSU_PrivateChatMessage(player, "%ENo argument! %TWho is it you want to kick?")
 		return

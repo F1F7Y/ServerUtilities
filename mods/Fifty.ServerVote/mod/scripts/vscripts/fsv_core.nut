@@ -9,7 +9,7 @@ table <entity, string> mapVoteTable = {}
 */
 void function FSV_Init() {
 	if (FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0)
-		UpdatePlayedMaps()
+		FSV_UpdatePlayedMaps()
 
 	if( GetConVarBool( "FSV_CUSTOM_MAP_ROTATION" ) )
 		AddCallback_GameStateEnter( eGameState.Postmatch, FSV_EndOfMatchMatch_Threaded )
@@ -75,7 +75,7 @@ void function FSV_Init() {
 /**
  * Updates last played (vote blocked) maps
 */
-void function UpdatePlayedMaps(){
+void function FSV_UpdatePlayedMaps(){
 	if(GetMapName() != "mp_lobby"){
 		array <string> playedMaps = FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")
 		playedMaps.append(GetMapName())
@@ -184,7 +184,7 @@ string function FSV_GetNextMap(){
 	}
 
 	// Create array of valid next maps
-	maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
+	maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	foreach (string blockedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
 		if(maps.find(blockedMap) > -1){
 			maps.remove(maps.find(blockedMap))
@@ -220,7 +220,7 @@ void function FSV_EndOfMatchMatch_Threaded() {
  * Skips the current map
 */
 void function FSV_SkipMatch() {
-	SetServerVar( "gameEndTime", Time() )
+	SetServerVar( "gameEndTime", Time()+4 )
 }
 
 /**
