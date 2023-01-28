@@ -89,9 +89,14 @@
 			"HelpString": "Whether to print the INFO page at the starting of a match, the contents of which are defined by the next five ConVars, and can be whatever you like"
 		},
 		{
+			"Name": "FSM_ENABLE_INFO_COMMAND",
+			"DefaultValue": "1",
+			"HelpString": "Enables/Disables the !info command for viewing the info page again."
+		},
+		{
 			"Name": "FSM_INFO_0",
 			"DefaultValue": "%HWelcome! This server is using FSU2!",
-			"HelpString": "First info value. Won't be printed if left empty, leaving this one empty also disables the !info command. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
+			"HelpString": "First info value. Won't be printed if left empty. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
 			"Name": "FSM_INFO_1",
@@ -110,7 +115,7 @@
 		},
 		{
 			"Name": "FSM_INFO_4",
-			"DefaultValue": "%TYou can us %H%Pinfo%T to see this message again.",
+			"DefaultValue": "%TYou can use %H%Pinfo%T to see this message again.",
 			"HelpString": "Fifth info value. Won't be printed if left empty. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		}
 	],

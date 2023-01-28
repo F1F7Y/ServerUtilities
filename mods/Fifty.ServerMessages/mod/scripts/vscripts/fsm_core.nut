@@ -16,7 +16,7 @@ void function FSM_Init() {
 	command.m_Description = "Display server information page."
 	command.m_Group = "MESSAGE"
 	command.Callback = FSV_CommandCallback_Info
-	if( GetConVarString( "FSM_INFO_0" ) != "" )
+	if( GetConVarBool( "FSM_ENABLE_INFO_COMMAND" ) )
 		FSCC_RegisterCommand( "info", command )
 
 	// Reaptedly broadcast messages
