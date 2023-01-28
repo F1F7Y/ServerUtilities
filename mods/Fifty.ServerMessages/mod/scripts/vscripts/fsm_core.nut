@@ -11,6 +11,14 @@ void function FSM_Init() {
 
 	AddCallback_OnClientConnected ( FSM_OnClientConnected )
 
+	FSCC_CommandStruct command
+	command.m_UsageUser = "info"
+	command.m_Description = "Display server information page."
+	command.m_Group = "MESSAGE"
+	command.Callback = FSV_CommandCallback_Info
+	if( GetConVarString( "FSM_INFO_0" ) != "" )
+		FSCC_RegisterCommand( "info", command )
+
 	// Reaptedly broadcast messages
 	if( GetConVarBool( "FSM_BROADCAST_ENABLE" ) )
 		thread FSM_BroadcastMessages_Threaded()
@@ -34,12 +42,21 @@ void function FSM_PrintPrematchMessage() {
 */
 void function FSM_PrintPrematchMessage_Threaded() {
 	wait 1
-	if( GetConVarBool( "FSM_LIST_PRINT_ON_MATCH_START" ) ) {
+	if( GetConVarBool( "FSM_INFO_PRINT_ON_MATCH_START" ) ) {
 		for( int i = 0; i < 5; i++ ) {
-			string message = GetConVarString( "FSM_LIST_" + i )
-			if( message.len() != 0 )
-				FSU_ChatBroadcast( "  %H" + ( i + 1 ) + ".%T " + message )
+			string message = GetConVarString( "FSM_INFO_" + i )
+			if( message.len() > 1 )
+				foreach(string row in split(message, "\n"))
+					FSU_ChatBroadcast( row )
 		}
+	}
+}
+void function FSV_CommandCallback_Info(entity player, array <string> args ) {
+	for( int i = 0; i < 5; i++ ) {
+		string message = GetConVarString( "FSM_INFO_" + i )
+		if( message.len() > 1 )
+			foreach(string row in split(message, "\n"))
+				FSU_PrivateChatMessage(player, row )
 	}
 }
 
