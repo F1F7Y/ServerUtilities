@@ -147,9 +147,9 @@ table <entity, string> function FSV_GetMapVoteTable() {
 }
 
 /**
- * Print current next map chances
+ * Get current next map chances
 */
-void function FSV_PrintNextMapChances() {
+string function FSV_GetNextMapChances() {
 	table <string, float> mapChances
 	foreach(entity player, string map in mapVoteTable){
 		if((map in mapChances))
@@ -164,7 +164,7 @@ void function FSV_PrintNextMapChances() {
 		else
 			message += ", %H" + FSV_Localize(map) + " %T" + floor(chance) + "%"
 	}
-	FSU_ChatBroadcast("Next map pool: %H" + message)
+	return message
 }
 
 /**

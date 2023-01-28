@@ -111,7 +111,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 
 	FSU_ChatBroadcast( "A player has voted for %H" + mapVoteName + "%N to be the next map, %H" + GetConVarString("FSCC_PREFIX")+"nm <map>" + "%N." )
 	FSV_VoteForNextMap( player, mapArg )
-	FSV_PrintNextMapChances()
+	FSU_ChatBroadcast( "Next map pool: %H" + FSV_GetNextMapChances() )
 }
 
 /**
@@ -168,7 +168,7 @@ void function FSV_SkipThread(){
 		}
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
-		FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%N " + "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
+		FSU_ChatBroadcast( "%H"+FSV_TimerToMinutesAndSeconds(timer)+"%N - " + "A vote to skip this map has been started! Use %H%Pskip %Nto vote. %T" + skipThreshold + " votes will be needed." )
 	}
 
 	wait 5
@@ -182,7 +182,7 @@ void function FSV_SkipThread(){
 				}
 			}
 			if(GetConVarBool("FSV_ENABLE_CHATUI") && skipVoters.len() != lastVotes){
-				FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H "+ skipVoters.len() + "/" + skipThreshold + "%N have voted to skip this map. %TUse %H%Pskip %Tto vote." )
+				FSU_ChatBroadcast( "%H"+FSV_TimerToMinutesAndSeconds(timer)+"%H - "+ skipVoters.len() + "/" + skipThreshold + "%N have voted to skip this map. %TUse %H%Pskip %Tto vote." )
 				lastVotes = skipVoters.len()
 			}
 			nextUpdate -= 5
@@ -282,7 +282,7 @@ void function FSV_ExtendThread(){
 		}
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
-		FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%N " + "A vote to extend map time has been started! Use %H%Pextend %Nto vote. %T" + extendThreshold + " votes will be needed." )
+		FSU_ChatBroadcast( "%H"+FSV_TimerToMinutesAndSeconds(timer)+"%N - " + "A vote to extend map time has been started! Use %H%Pextend %Nto vote. %T" + extendThreshold + " votes will be needed." )
 	}
 
 	wait 5
@@ -296,7 +296,7 @@ void function FSV_ExtendThread(){
 				}
 			}
 			if(GetConVarBool("FSV_ENABLE_CHATUI") && extendVoters.len() != lastVotes){
-				FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H "+ extendVoters.len() + "/" + extendThreshold + "%N have voted to extend map time. %TUse %H%Pextend %Tto vote." )
+				FSU_ChatBroadcast( "%H"+FSV_TimerToMinutesAndSeconds(timer)+"%N - %H "+ extendVoters.len() + "/" + extendThreshold + "%N have voted to extend map time. %TUse %H%Pextend %Tto vote." )
 				lastVotes = extendVoters.len()
 			}
 			nextUpdate -= 5
@@ -487,7 +487,8 @@ void function FSV_KickThread(string targetName, string targetUid){
 		}
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
-		FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%N " + "A vote to kick %H" + targetName + "%N has been started! Use %H%Pkick " + targetName + "%N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
+		FSU_ChatBroadcast( "%H"+FSV_TimerToMinutesAndSeconds(timer)+"%N - " + "A vote to kick %H" + targetName + "%N has been started!")
+		FSU_ChatBroadcast( "Use %H%Pkick " + targetName + "%N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
 	}
 
 	wait 5
@@ -503,7 +504,7 @@ void function FSV_KickThread(string targetName, string targetUid){
 				}
 			}
 			if(GetConVarBool("FSV_ENABLE_CHATUI") && kickTable[targetUid].voters.len() != lastVotes){
-				FSU_ChatBroadcast( "%F[%T"+FSV_TimerToMinutesAndSeconds(timer)+" %FREMAINING]%H "+ kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + "%N have voted to kick %H" + targetName + "%N. %TUse %H%Pkick  " + targetName + "%T to vote." )
+				FSU_ChatBroadcast( "%H"+FSV_TimerToMinutesAndSeconds(timer)+"%N - %H "+ kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + "%N have voted to kick %H" + targetName + "%N. %TUse %H%Pkick  " + targetName + "%T to vote." )
 				lastVotes = kickTable[targetUid].voters.len()
 			}
 

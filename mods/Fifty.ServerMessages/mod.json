@@ -80,7 +80,7 @@
 		},
 		{
 			"Name": "FSM_BROADCAST_4",
-			"DefaultValue": "Run %H%Pmaps <page>%N to get a list of maps in the voting pool.",
+			"DefaultValue": "Run %H%Pmaps%N to get a list of maps in the voting pool.",
 			"HelpString": "The fifth broadcast message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
