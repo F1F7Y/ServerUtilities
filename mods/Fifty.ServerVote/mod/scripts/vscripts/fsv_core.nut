@@ -55,8 +55,8 @@ void function FSV_Init() {
 // 	command.Callback = FSV_CommandCallback_TestVote
 // 	FSCC_RegisterCommand( "testvote", command)
 
-	command.m_UsageUser = "kick <player-name>"
-	command.m_UsageAdmin = "kick <player-name> force"
+	command.m_UsageUser = "kick <partial/full-name>"
+	command.m_UsageAdmin = "kick <partial/full-name> force"
 	command.m_Description = "Starts a vote to kick a player."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = []

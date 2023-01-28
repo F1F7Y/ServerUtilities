@@ -362,9 +362,15 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 	}
 
 	entity target
-	foreach( entity p in GetPlayerArray() )
-		if( p.GetPlayerName() == args[0] )
+	foreach( entity p in GetPlayerArray() ){
+		if( p.GetPlayerName().tolower().find( args[0].tolower() ) != null){
+			if( target != null ){
+				FSU_PrivateChatMessage(player, "%EMore than one matching player! %TWrite a bit more of their name.")
+				return
+			}
 			target = p
+		}
+	}
 	if( target == null ){
 		//check for numbers in playerlist
 		if( args[0] == "0" || ( args[0].tointeger() > 0 && args[0].tointeger() < GetPlayerArray().len()-1 ) ){
@@ -476,7 +482,7 @@ void function FSV_KickThread(string targetName, string targetUid){
 	if(GetConVarBool("FSV_ENABLE_RUI")){
 		foreach (entity player in GetPlayerArray()) {
 			if( player.GetUID() != targetUid ){
-				NSSendAnnouncementMessageToPlayer( player, "VOTE TO KICK "+targetName+" STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"kick "+targetName+"' in chat to contribute your vote.", <1,0,0>, 0, 1 )
+				NSSendAnnouncementMessageToPlayer( player, "VOTE TO KICK "+targetName+" STARTED", "Use '"+GetConVarString( "FSCC_PREFIX" )+"kick <part-of-their-name>' in chat to contribute your vote.", <1,0,0>, 0, 1 )
 			}
 		}
 		wait 1
@@ -488,7 +494,7 @@ void function FSV_KickThread(string targetName, string targetUid){
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
 		FSU_ChatBroadcast( "%H"+FSV_TimerToMinutesAndSeconds(timer)+"%N - " + "A vote to kick %H" + targetName + "%N has been started!")
-		FSU_ChatBroadcast( "Use %H%Pkick " + targetName + "%N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
+		FSU_ChatBroadcast( "Use %H%Pkick <part-of-their-name> %N to vote. %T" + kickTable[targetUid].threshold + " votes will be needed." )
 	}
 
 	wait 5
