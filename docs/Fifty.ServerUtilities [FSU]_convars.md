@@ -3,5 +3,7 @@
 
 #### `FSU_PREFIX_SYSTEM_MESSAGES`
 **DefaultValue:** `"1"`
-  Whether system messages should be prefixed with '[FSU]'.
+
+#### `FSU_COLOR_THEME`
+**DefaultValue:** `"text=#a3dbff,highlight=#29a3f0,announce=#f0b930"`
 

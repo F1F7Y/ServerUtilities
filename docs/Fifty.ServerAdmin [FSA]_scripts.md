@@ -18,7 +18,7 @@ Gets called when a player sends a chat message
 ##### Argumets:
 - `message` The message struct containing information about the chat message
 
-#### `void function FSA_SendMessageWithPrefix( entity from, string message, bool isTeamMessage, string prefix, string code )`
+#### `void function FSA_SendMessageWithPrefix( entity from, string message, bool isTeamMessage, array< string > prefix )`
 
 Sends a message with a prefix
 ##### Argumets:
@@ -26,7 +26,6 @@ Sends a message with a prefix
 - `message` The message string
 - `isTeamMessage` Whether it was sent in team or grobal chat
 - `prefix` The prefix to add
-- `code` The color code to use
 
 #### `bool function FSA_IsOwner( entity player )`
 
