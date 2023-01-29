@@ -1,7 +1,7 @@
 {
 	"Name" : "Fifty.ServerUtilities [FSU]",
 	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements helper functions used by other mods.\n\nDependencies:\n  - Northstar",
-	"Version": "2.3.1",
+	"Version": "2.4.0",
 	"LoadPriority": 2,
 	"Dependencies": {
 		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
