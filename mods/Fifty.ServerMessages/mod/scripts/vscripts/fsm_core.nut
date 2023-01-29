@@ -11,6 +11,14 @@ void function FSM_Init() {
 
 	AddCallback_OnClientConnected ( FSM_OnClientConnected )
 
+	FSCC_CommandStruct command
+	command.m_UsageUser = "info"
+	command.m_Description = "Display server information page."
+	command.m_Group = "MESSAGE"
+	command.Callback = FSV_CommandCallback_Info
+	if( GetConVarBool( "FSM_ENABLE_INFO_COMMAND" ) )
+		FSCC_RegisterCommand( "info", command )
+
 	// Reaptedly broadcast messages
 	if( GetConVarBool( "FSM_BROADCAST_ENABLE" ) )
 		thread FSM_BroadcastMessages_Threaded()
@@ -34,12 +42,21 @@ void function FSM_PrintPrematchMessage() {
 */
 void function FSM_PrintPrematchMessage_Threaded() {
 	wait 1
-	if( GetConVarBool( "FSM_LIST_PRINT_ON_MATCH_START" ) ) {
+	if( GetConVarBool( "FSM_INFO_PRINT_ON_MATCH_START" ) ) {
 		for( int i = 0; i < 5; i++ ) {
-			string message = GetConVarString( "FSM_LIST_" + i )
-			if( message.len() != 0 )
-				FSU_ChatBroadcast( "  %H" + ( i + 1 ) + ".%T " + message )
+			string message = GetConVarString( "FSM_INFO_" + i )
+			if( message.len() > 1 )
+				foreach(string row in split(message, "\n"))
+					FSU_ChatBroadcast( row )
 		}
+	}
+}
+void function FSV_CommandCallback_Info(entity player, array <string> args ) {
+	for( int i = 0; i < 5; i++ ) {
+		string message = GetConVarString( "FSM_INFO_" + i )
+		if( message.len() > 1 )
+			foreach(string row in split(message, "\n"))
+				FSU_PrivateChatMessage(player, row )
 	}
 }
 
@@ -49,7 +66,7 @@ void function FSM_PrintPrematchMessage_Threaded() {
 void function FSM_OnNPCKilled( entity npc, entity attacker, var damageInfo ) {
 	if( GetConVarBool( "FSM_MARVIN_DEATH_NOTIFICATION" ) )
 		if( attacker.IsPlayer() && npc.IsNPC() && npc.GetAIClass() == AIC_MARVIN )
-			FSU_ChatBroadcast( "%H" + attacker.GetPlayerName() + "%T killed a marvin." )
+			FSU_ChatBroadcast( "%H" + attacker.GetPlayerName() + "%N killed a marvin." )
 }
 
 /**
@@ -59,18 +76,18 @@ void function FSM_OnPlayerKilled( entity victim, entity attacker, var damageInfo
 	if( GetConVarBool( "FSM_PLAYER_FALL_DEATH_NOTIFICATION" ) ) {
 		if( victim.IsPlayer() && DamageInfo_GetDamageSourceIdentifier( damageInfo ) == eDamageSourceId.fall ) {
 			if( GetMapName() == "mp_relic02" ) {
-				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T fell off the cliff." )
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell off the cliff." )
 			} else if( GetMapName() == "mp_complex3" ) {
-				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T fell into the pit." )
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell into the pit." )
 			} else if( GetMapName() == "mp_crashsite3" ) {
-				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T disappeared in the cave." )
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N disappeared in the cave." )
 			} else {
-				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T fell into the pit." )
+				FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N fell into the pit." )
 			}
 		}
 
 		if( victim.IsPlayer() && DamageInfo_GetDamageSourceIdentifier( damageInfo ) == eDamageSourceId.outOfBounds ) {
-			FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%T tried to flee from battle." )
+			FSU_ChatBroadcast( "%H" + victim.GetPlayerName() + "%N tried to flee from battle." )
 		}
 	}
 

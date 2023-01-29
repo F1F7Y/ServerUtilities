@@ -9,9 +9,19 @@
 	},
 	"ConVars": [
 		{
+			"Name": "FSV_ENABLE_RUI",
+			"DefaultValue": "1",
+			"HelpString": "Enables/Disables displaying notifications and statuses of votes in progress using RUI."
+		},
+		{
+			"Name": "FSV_ENABLE_CHATUI",
+			"DefaultValue": "1",
+			"HelpString": "Enables/Disables displaying notifications and statuses of votes in progress using chat messages."
+		},
+		{
 			"Name": "FSV_ENABLE_MAP_VOTING",
 			"DefaultValue": "1",
-			"HelpString": "Enables/Disables the !nextmap and !maps commands."
+			"HelpString": "Enables/Disables the !nextmap command."
 		},
 		{
 			"Name": "FSV_ENABLE_MAP_SKIPPING",
@@ -19,9 +29,59 @@
 			"HelpString": "Enables/Disables the !skip command."
 		},
 		{
+			"Name": "FSV_MAP_SKIP_PERCENTAGE",
+			"DefaultValue": "1",
+			"HelpString": "Percentage of players needed for a vote to skip a map to succeed."
+		},
+		{
+			"Name": "FSV_MAP_SKIP_DURATION",
+			"DefaultValue": "120",
+			"HelpString": "The duration of skip votes in seconds."
+		},
+		{
 			"Name": "FSV_ENABLE_MAP_EXTENDING",
 			"DefaultValue": "1",
 			"HelpString": "Enables/Disables the !extend command."
+		},
+		{
+			"Name": "FSV_MAP_EXTENDING_PERCENTAGE",
+			"DefaultValue": "0.5",
+			"HelpString": "Percentage of players needed for a vote to extend map time to succeed."
+		},
+		{
+			"Name": "FSV_MAP_EXTENDING_DURATION",
+			"DefaultValue": "120",
+			"HelpString": "The duration of extend votes in seconds."
+		},
+		{
+			"Name": "FSV_ENABLE_KICK_VOTING",
+			"DefaultValue": "1",
+			"HelpString": "Enables/Disables the !kick command. Remains enabled for admins."
+		},
+		{
+			"Name": "FSV_KICK_MIN_PLAYERS",
+			"DefaultValue": "4",
+			"HelpString": "Number of players that have to be on before kick voting someone is possible."
+		},
+		{
+			"Name": "FSV_KICK_PERCENTAGE",
+			"DefaultValue": "0.3",
+			"HelpString": "Percentage of players needed for a vote kick to succeed."
+		},
+		{
+			"Name": "FSV_KICK_BLOCK",
+			"DefaultValue": "3",
+			"HelpString": "Number of matches a kicked player is blocked from re-joining. Setting this to zero would allow immediate re-join."
+		},
+		{
+			"Name": "FSV_KICK_DURATION",
+			"DefaultValue": "240",
+			"HelpString": "The duration of kick votes in seconds."
+		},
+		{
+			"Name": "FSV_MAP_REPLAY_LIMIT",
+			"DefaultValue": "3",
+			"HelpString": "How many before the same map can be played again. Set to one to only prevent current map from playing again"
 		},
 		{
 			"Name": "FSV_CUSTOM_MAP_ROTATION",
@@ -29,14 +89,19 @@
 			"HelpString": "Whether to use FSV_MAP_ROTATION for a custom map rotation."
 		},
 		{
+			"Name": "FSV_RANDOM_MAP_ROTATION",
+			"DefaultValue": "1",
+			"HelpString": "Whether to randomise the playlist, or to rotate through it in order."
+		},
+		{
 			"Name": "FSV_MAP_ROTATION",
-			"DefaultValue": "mp_angel_city,mp_black_water_canal,mp_grave,mp_colony02,mp_drydock,mp_eden,mp_thaw,mp_forwardbase_kodai,mp_glitch,mp_relic02,mp_wargames",
-			"HelpString": "A list of maps in the map rotation which can also be voted for. ( run 'maps *' in the console to get a list of maps loaded )"
+			"DefaultValue": "angelcity,black_water canal,Boomtown,mp_colony02,mp_drydock,mp_eden,exoplanet,kodai,mp_glitch,mp_relic02,wargame",
+			"HelpString": "A list of maps in the map rotation which can also be voted for. You can write the map IDs, names, or partial names. Separated by commas. ( run 'maps *' in the console to check maps loaded )"
 		},
 		{
 			"Name": "FSV_MAP_VOTE_ONLY",
 			"DefaultValue": "mp_crashsite3,mp_complex3,mp_homestead,mp_rise",
-			"HelpString": "A list of maps which arent in the map rotation, but can be voted for."
+			"HelpString": "A list of maps which arent in the map rotation, but can be voted for. You can write the map IDs, names, or partial names. Separated by commas."
 		}
 	],
 	"Scripts": [

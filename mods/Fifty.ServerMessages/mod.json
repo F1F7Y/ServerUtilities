@@ -16,12 +16,12 @@
 		{
 			"Name": "FSM_WELCOME_MESSAGE_TITLE",
 			"DefaultValue": "Welcome to SERVER",
-			"HelpString": "When using the rui message this is the title, otherwise this is the first message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"HelpString": "When using the rui message this is the title, otherwise this is the first message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
 			"Name": "FSM_WELCOME_MESSAGE_TEXT",
 			"DefaultValue": "Hope you have fun",
-			"HelpString": "When using the rui message this is the description, otherwise this is the second message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"HelpString": "When using the rui message this is the description, otherwise this is the second message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
 			"Name": "FSM_WELCOME_MESSAGE_IMAGE",
@@ -60,58 +60,63 @@
 		},
 		{
 			"Name": "FSM_BROADCAST_0",
-			"DefaultValue": "You can use the %H%Pnextmap <map>%T command to vote for the next map!",
-			"HelpString": "The first broadcast message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"DefaultValue": "You can use the %H%Pnextmap <map>%N command to vote for the next map!",
+			"HelpString": "The first broadcast message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
 			"Name": "FSM_BROADCAST_1",
-			"DefaultValue": "You can use the %H%Pskip%T command to vote to skip the map!",
-			"HelpString": "The second broadcast message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"DefaultValue": "You can use the %H%Pskip%N command to vote to skip the map!",
+			"HelpString": "The second broadcast message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
 			"Name": "FSM_BROADCAST_2",
-			"DefaultValue": "Run %H%Pextend%T to vote to extend the match.",
-			"HelpString": "The third broadcast message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"DefaultValue": "Run %H%Pextend%N to vote to extend the match.",
+			"HelpString": "The third broadcast message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
 			"Name": "FSM_BROADCAST_3",
-			"DefaultValue": "Run %H%Phelp <command>%T to get a detailed description of what it does.",
-			"HelpString": "The fourth broadcast message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"DefaultValue": "Run %H%Phelp <command>%N to get a detailed description of what it does.",
+			"HelpString": "The fourth broadcast message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
 			"Name": "FSM_BROADCAST_4",
-			"DefaultValue": "Run %H%Pmaps <page>%T to get a list of maps in the voting pool.",
-			"HelpString": "The fifth broadcast message. Can use formatting ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"DefaultValue": "Run %H%Pmaps%N to get a list of maps in the voting pool.",
+			"HelpString": "The fifth broadcast message. Can use formatting ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
-			"Name": "FSM_LIST_PRINT_ON_MATCH_START",
+			"Name": "FSM_INFO_PRINT_ON_MATCH_START",
 			"DefaultValue": "1",
-			"HelpString": "Whether to print a list when the match starts. ( Rules, How to play, etc... )"
+			"HelpString": "Whether to print the INFO page at the starting of a match, the contents of which are defined by the next five ConVars, and can be whatever you like"
 		},
 		{
-			"Name": "FSM_LIST_0",
-			"DefaultValue": "First %Hlist",
-			"HelpString": "First list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"Name": "FSM_ENABLE_INFO_COMMAND",
+			"DefaultValue": "1",
+			"HelpString": "Enables/Disables the !info command for viewing the info page again."
 		},
 		{
-			"Name": "FSM_LIST_1",
-			"DefaultValue": "%HSecond%T list",
-			"HelpString": "Second list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"Name": "FSM_INFO_0",
+			"DefaultValue": "%HWelcome! This server is using FSU2!",
+			"HelpString": "First info value. Won't be printed if left empty. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
-			"Name": "FSM_LIST_2",
-			"DefaultValue": "Third %Hlist",
-			"HelpString": "Third list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"Name": "FSM_INFO_1",
+			"DefaultValue": "%FRules:\n   %ENo cheats\n   %ENo cringe",
+			"HelpString": "Second info value. Won't be printed if left empty. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
-			"Name": "FSM_LIST_3",
-			"DefaultValue": "%HFourth%T list",
-			"HelpString": "Fourth list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"Name": "FSM_INFO_2",
+			"DefaultValue": "%FBasic commands:\n   %H%Phelp %T- see all commands\n   %H%Pkick %T- vote to kick someone\n   %H%Pswitch %T- change team\n   %H%Pskip %T- vote to skip map",
+			"HelpString": "Third info value. Won't be printed if left empty. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		},
 		{
-			"Name": "FSM_LIST_4",
-			"DefaultValue": "Fifth %Hlist",
-			"HelpString": "Fifth list value. Won't be printed if left empty. ( '%P' - prefix, '%H' - highlight, '%T' - normal text, '%0' - reset formatting )"
+			"Name": "FSM_INFO_3",
+			"DefaultValue": "",
+			"HelpString": "Fourth info value. Won't be printed if left empty. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
+		},
+		{
+			"Name": "FSM_INFO_4",
+			"DefaultValue": "%TYou can use %H%Pinfo%T to see this message again.",
+			"HelpString": "Fifth info value. Won't be printed if left empty. ( '%P' - command prefix, '%H' - highlight, '%T' - normal text, '%N' - Server announce color, '%0' - reset formatting )"
 		}
 	],
 	"Scripts": [

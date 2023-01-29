@@ -52,3 +52,16 @@ All commands are case insensitive ( e.g. `commandFor` and `comandfor` are the sa
 *`!kick <player>`* - Kicks the given player.
 
 *`!commandfor <player> <command>`* - Executes a command for a player
+
+## Other features
+*`Killstreaks`* - Display a message or RUI pop up when someone is on a Killstreak.
+
+*`Tomfoolery`* - Shame players in chat for killing MRVNs or falling off the map.
+
+*`Map playlist`* - Set a custom map playlist, and have in rotate in order, or randomly.
+
+*`Balance teams`* - Balance teams between rounds.
+
+*`User tags`* - Give owners, admins, or anyone else, a player tag. (appears before their name in chat)
+
+*`Custom colors`* - Use hex color codes to set your own colors for the chat command UI

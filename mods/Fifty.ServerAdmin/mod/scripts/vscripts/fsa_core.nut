@@ -212,23 +212,22 @@ bool function FSA_IsAdmin( entity player ) {
  * @ param name The name of the player you want the entity of
 */
 entity function FSA_GetPlayerEntityByName(string name){
-
 	if(name == "")
-    	return null
+		return null
 
 
-  foreach(entity p in GetPlayerArray())
-    if(p.GetPlayerName().tolower() == name.tolower())
-      return p
+	foreach(entity p in GetPlayerArray())
+		if(p.GetPlayerName().tolower() == name.tolower())
+			return p
 
 
-  if(name.len() <= 2){
-    int PlayerIndex = name.tointeger()
-    if(GetPlayerArray().len()-1>= PlayerIndex && PlayerIndex > -1) // check if the index exits
-      return GetPlayerArray()[PlayerIndex]
-  }
+	if(name.len() <= 2){
+		int PlayerIndex = name.tointeger()
+		if(GetPlayerArray().len()-1>= PlayerIndex && PlayerIndex > -1) // check if the index exits
+			return GetPlayerArray()[PlayerIndex]
+	}
 
-  return null
+	return null
 }
 
 /**
@@ -242,10 +241,9 @@ void function FSCC_CommandCallback_Playerlist( entity player, array< string > ar
 		printList.append( p.GetPlayerName() )
 		printList.append( index.tostring() )
 	}
-	int columns = 2
-	int pages = FSU_GetListPages(printList, columns) +1
+	int pages = FSU_GetListPages(printList) +1
 	for( int page = 1; page< pages; page++ )
-		FSU_PrintFormattedList(player, printList, page, columns)
+		FSU_PrintFormattedList(player, printList, page)
 }
 
 /**
@@ -255,18 +253,18 @@ void function FSCC_CommandCallback_Playerlist( entity player, array< string > ar
 */
 void function FSCC_CommandCallback_Script(entity player, array<string> args){
   if(args.len() == 0){
-    FSU_PrivateChatMessage(player, "Missing arguments: !script <code here>")
-    return
+	FSU_PrivateChatMessage(player, "%EMissing arguments: !script <code here>")
+	return
   }
   try{
-    compilestring( FSU_ArrayToString(args) )()
-    FSU_PrivateChatMessage(player, "Your code seems to have compiled")
-    return
+	compilestring( FSU_ArrayToString(args) )()
+	FSU_PrivateChatMessage(player, "%SYour code seems to have compiled")
+	return
   }
   catch ( ex ){
-    printt(ex)
-    FSU_PrivateChatMessage(player, "The code has caused an exception, the error can be found in the server log")
-    return
+	printt(ex)
+	FSU_PrivateChatMessage(player, "%EThe code has caused an exception, the error can be found in the server log")
+	return
   }
 }
 
@@ -276,18 +274,18 @@ void function FSCC_CommandCallback_Script(entity player, array<string> args){
  * @param args The arguments passed by the player
 */
 void function FSCC_CommandCallback_ServerCommand(entity player, array<string> args){
-  if(args.len()==0)
-  {
-    FSU_PrivateChatMessage(player, "Missing arguments")
-    return
-  }
-  try{
-    ServerCommand(FSU_ArrayToString(args))
-  }
-  catch(ex){
-    FSU_PrivateChatMessage(player,"The command has caused an exception")
-  }
-  FSU_PrivateChatMessage(player, "Command executed")
+	if(args.len()==0)
+	{
+		FSU_PrivateChatMessage(player, "%EMissing arguments")
+		return
+	}
+	try{
+		ServerCommand(FSU_ArrayToString(args))
+	}
+	catch(ex){
+		FSU_PrivateChatMessage(player,"%EThe command has caused an exception")
+	}
+	FSU_PrivateChatMessage(player, "%SCommand executed")
 
 }
 
@@ -298,19 +296,19 @@ void function FSCC_CommandCallback_ServerCommand(entity player, array<string> ar
 */
 void function FSCC_CommandCallback_Reload(entity player, array<string> args){
 
-  if(args.len() <= 0)
-    thread FSU_C_Reload_thread(5.0)
-  else
-    thread FSU_C_Reload_thread(args[0].tofloat())
+	if(args.len() <= 0)
+		thread FSU_C_Reload_thread(5.0)
+	else
+		thread FSU_C_Reload_thread(args[0].tofloat())
 }
 
 void function FSU_C_Reload_thread(float time){
-  while(time > 0){
-    FSU_ChatBroadcast("The server will reload in "+ time)
-    wait 1.0
-    time = time - 1.0
-  }
-  ServerCommand("reload")
+	while(time > 0){
+		FSU_ChatBroadcast("The server will reload in "+ time)
+		wait 1.0
+		time = time - 1.0
+	}
+	ServerCommand("reload")
 }
 
 /**
@@ -320,24 +318,24 @@ void function FSU_C_Reload_thread(float time){
 */
 void function FSCC_CommandCallback_Ban(entity player, array<string> args){
 	if(args.len() < 1){
-		FSU_PrivateChatMessage(player, "Wrong format, !ban <player name>")
+		FSU_PrivateChatMessage(player, "%EWrong format, !ban <player name>")
 		return
 	}
 
 	entity toBan = FSA_GetPlayerEntityByName(args[0])
 
 	if(toBan == null){
-		FSU_PrivateChatMessage(player, "Player not found")
+		FSU_PrivateChatMessage(player, "%EPlayer not found")
 		return
 	}
 
 	if( FSA_IsOwner(toBan)|| FSA_IsAdmin(toBan) ){
-		FSU_PrivateChatMessage(player, "Cannot ban admins")
+		FSU_PrivateChatMessage(player, "%ECannot ban admins")
 		return
 	}
 
 	ServerCommand("ban " + toBan.GetUID())
-  	FSU_PrivateChatMessage(player, "Sucessfully banned")
+  	FSU_PrivateChatMessage(player, "%SSucessfully banned")
 	return
 }
 
@@ -348,7 +346,7 @@ void function FSCC_CommandCallback_Ban(entity player, array<string> args){
 */
 void function FSCC_CommandCallback_Kick(entity player, array<string> args){
 	if( args.len()==0 ){
-		FSU_PrivateChatMessage(player, "Missing argument")
+		FSU_PrivateChatMessage(player, "%EMissing argument")
 		return
 	}
 
@@ -368,13 +366,13 @@ void function FSCC_CommandCallback_Kick(entity player, array<string> args){
 		}
 		//2nd check if its still not found
 		if(toBan == ""){
-			FSU_PrivateChatMessage (player, "Player not found" )
+			FSU_PrivateChatMessage (player, "%EPlayer not found" )
 			return
 		}
 	}
 
 	ServerCommand( "kick " + toBan )
-  	FSU_PrivateChatMessage( player, "Sucessfully kicked" )
+  	FSU_PrivateChatMessage( player, "%SSucessfully kicked" )
 	return
 }
 
@@ -385,7 +383,7 @@ void function FSCC_CommandCallback_Kick(entity player, array<string> args){
 */
 void function FSCC_CommandCallback_CommandFor(entity player, array<string> args){
 	if( args.len()<2 ){
-		FSU_PrivateChatMessage(player, "Missing arguments !cmdFor <player name> <command> <command arguments>")
+		FSU_PrivateChatMessage(player, "%EMissing arguments !cmdFor <player name> <command> <command arguments>")
 		return
 	}
 
@@ -393,7 +391,7 @@ void function FSCC_CommandCallback_CommandFor(entity player, array<string> args)
 	entity foundPlayer = FSA_GetPlayerEntityByName( args[0] )
 
 	if( foundPlayer == null ){
-		FSU_PrivateChatMessage( player, "Player not found" )
+		FSU_PrivateChatMessage( player, "%EPlayer not found" )
 		return
 	}
 	//copied from the REAL code
@@ -426,12 +424,12 @@ void function FSCC_CommandCallback_CommandFor(entity player, array<string> args)
 
 	// Didnt find command
 	if( !foundCommand ) {
-		FSU_PrivateChatMessage( player, "%H\"" + command + "\"%T wasn't found!" )
+		FSU_PrivateChatMessage( player, "%H\"" + command + "\"%E wasn't found!" )
 	}
 	// Did find command
 	else {
 		if( commandInfo.PlayerCanUse != null && !commandInfo.PlayerCanUse( foundPlayer ) ){
-			FSU_PrivateChatMessage( player, "%H\"" + command + "\"%T wasn't found!" )
+			FSU_PrivateChatMessage( player, "%H\"" + command + "\"%E wasn't found!" )
 		} else {
 			thread commandInfo.Callback( foundPlayer, args )
 		}

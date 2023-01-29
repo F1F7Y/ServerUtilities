@@ -39,16 +39,16 @@ void function FSCC_Init() {
 	// Register base commands
 	// !help
 	FSCC_CommandStruct command
-	command.m_UsageUser = "help <page/command>"
+	command.m_UsageUser = "help <page#/all/command>"
 	command.m_UsageAdmin = ""
-	command.m_Description = "Lists avalible commands."
+	command.m_Description = "Lists available commands."
 	command.m_Group = "CORE"
-	command.m_Abbreviations = [ "h" ]
+	command.m_Abbreviations = [ "h", "commands" ]
 	command.Callback = FSCC_CommandCallback_Help
 	FSCC_RegisterCommand( "help", command )
 
 	// !mods
-	command.m_UsageUser = "mods <page>"
+	command.m_UsageUser = "mods <page#/all>"
 	command.m_Description = "Lists mods installed on the server."
 	command.m_Abbreviations = []
 	command.Callback = FSCC_CommandCallback_Mods
@@ -67,7 +67,7 @@ void function FSCC_Init() {
 	FSCC_RegisterCommand( "owner", command )
 
 	// !rules
-	command.m_UsageUser = "rules <page>"
+	command.m_UsageUser = "rules <page#/all>"
 	command.m_Description = "Lists server rules."
 	command.Callback = FSCC_CommandCallback_Rules
 	FSCC_RegisterCommand( "rules", command )
@@ -116,12 +116,12 @@ ClServer_MessageStruct function FSCC_CheckForCommand( ClServer_MessageStruct mes
 
 	// Didnt find command
 	if( !foundCommand ) {
-		FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%T wasn't found!" )
+		FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%E wasn't found!" )
 	}
 	// Did find command
 	else {
 		if( commandInfo.PlayerCanUse != null && !commandInfo.PlayerCanUse( message.player ) ){
-			FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%T wasn't found!" )
+			FSU_PrivateChatMessage( message.player, "%H\"" + command + "\"%E wasn't found!" )
 		} else {
 			thread commandInfo.Callback( message.player, args )
 		}

@@ -2,99 +2,132 @@ globalize_all_functions
 
 #if FSCC_ENABLED && FSU_ENABLED
 
-struct {
-	// List of player who already voted
-	array< entity > playerBlacklist
-	table< string, int > votes
-} mapVote
-
-struct {
-	// List of players who already voted
-	array< entity > playerBlacklist
-} skipVote
-
-struct {
-	// List of players who already voted
-	array< entity > playerBlacklist
-} extendVote
-
-struct {
-	// List of kick votes per player
-	table < string, int> kickVote
-} kickVote
+table <entity, string> mapVoteTable = {}
 
 /**
  * Gets called after the map is loaded
 */
 void function FSV_Init() {
+	if (FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0)
+		FSV_UpdatePlayedMaps()
+
 	if( GetConVarBool( "FSV_CUSTOM_MAP_ROTATION" ) )
 		AddCallback_GameStateEnter( eGameState.Postmatch, FSV_EndOfMatchMatch_Threaded )
 
 	FSCC_CommandStruct command
 	command.m_UsageUser = "nextmap <map>"
-	command.m_UsageAdmin = "nextmap <map> <force>"
-	command.m_Description = "Allows you to vote for the next map"
+	command.m_UsageAdmin = "nextmap <map> force"
+	command.m_Description = "Allows you to vote for the next map, or view map rotation information."
 	command.m_Group = "VOTE"
-	command.m_Abbreviations = [ "nm" ]
+	command.m_Abbreviations = [ "nm", "maps", "map" ]
 	command.Callback = FSV_CommandCallback_NextMap
-	if( GetConVarBool( "FSV_ENABLE_MAP_VOTING" ) )
-		FSCC_RegisterCommand( "nextmap", command )
+	if( !GetConVarBool( "FSV_ENABLE_MAP_VOTING" ) )
+		command.PlayerCanUse = FSA_IsAdmin
+	FSCC_RegisterCommand( "nextmap", command )
+	command.PlayerCanUse = null
 
 	command.m_UsageUser = "skip"
-	command.m_UsageAdmin = "skip <force>"
-	command.m_Description = "Allows you to vote to skip the current map"
+	command.m_UsageAdmin = "skip force"
+	command.m_Description = "Allows you to vote to skip the current map."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = []
 	command.Callback = FSV_CommandCallback_Skip
-	if( GetConVarBool( "FSV_ENABLE_MAP_SKIPPING" ) )
-		FSCC_RegisterCommand( "skip", command )
+	if( !GetConVarBool( "FSV_ENABLE_MAP_SKIPPING" ) )
+		command.PlayerCanUse = FSA_IsAdmin
+	FSCC_RegisterCommand( "skip", command )
+	command.PlayerCanUse = null
 
 	command.m_UsageUser = "extend"
 	command.m_UsageAdmin = "extend <minutes>"
-	command.m_Description = "Allows you to vote to extend the current match"
+	command.m_Description = "Allows you to vote to extend the current match."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = [ "ex" ]
 	command.Callback = FSV_CommandCallback_Extend
-	if( GetConVarBool( "FSV_ENABLE_MAP_EXTENDING" ) )
-		FSCC_RegisterCommand( "extend", command )
+	if( !GetConVarBool( "FSV_ENABLE_MAP_EXTENDING" ) )
+		command.PlayerCanUse = FSA_IsAdmin
+	FSCC_RegisterCommand( "extend", command )
+	command.PlayerCanUse = null
 
-	command.m_UsageUser = "maps <page>"
-	command.m_UsageAdmin = ""
-	command.m_Description = "Lists maps in the voting pool."
-	command.m_Group = "VOTE"
-	command.m_Abbreviations = []
-	command.Callback = FSV_CommandCallback_Maps
-	if( GetConVarBool( "FSV_ENABLE_MAP_VOTING" ) )
-		FSCC_RegisterCommand( "maps", command )
+// 	command.m_UsageUser = "testvote"
+// 	command.m_Description = "Test MentalEdge's style of votes."
+// 	command.m_Group = "VOTE"
+// 	command.m_Abbreviations = ["tv"]
+// 	command.Callback = FSV_CommandCallback_TestVote
+// 	FSCC_RegisterCommand( "testvote", command)
 
-	command.m_UsageUser = "kick <player-name>"
-	command.m_UsageAdmin = ""
-	command.m_Description = "Starts a vote to kick a player"
+	command.m_UsageUser = "kick <partial/full-name>"
+	command.m_UsageAdmin = "kick <partial/full-name> force"
+	command.m_Description = "Starts a vote to kick a player."
 	command.m_Group = "VOTE"
 	command.m_Abbreviations = []
 	command.Callback = FSV_CommandCallback_Kick
+	if( !GetConVarBool( "FSV_ENABLE_KICK_VOTING" ) )
+		command.PlayerCanUse = FSA_IsAdmin
 	FSCC_RegisterCommand( "kick", command)
+
+	if( FSU_GetSettingIntFromConVar( "FSV_KICK_BLOCK" ) > 0 ){
+		FSV_UpdateKicked()
+		if( FSU_GetSettingIntFromConVar( "FSV_KICK_BLOCK" ) > 1 )
+			AddCallback_OnClientConnected(FSV_JoiningPlayerKickCheck)
+	}
 }
 
 /**
- * Returns a reference to an array of players who have voted to extend the match
+ * Updates last played (vote blocked) maps
 */
-array< entity > function FSV_GetPlayerArrayReference_Extend() {
-	return extendVote.playerBlacklist
+void function FSV_UpdatePlayedMaps(){
+	if(GetMapName() != "mp_lobby"){
+		array <string> playedMaps = FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")
+		playedMaps.append(GetMapName())
+		while (playedMaps.len() > FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT")){
+			playedMaps.remove(0)
+		}
+
+		FSU_SaveArrayToConVar("FSV_MAP_REPLAY_LIMIT", playedMaps)
+	}
 }
 
 /**
- * Returns a reference to an array of players who have voted to skip the map
+ * Convert seconds to minutes and seconds
 */
-array< entity > function FSV_GetPlayerArrayReference_Skip() {
-	return skipVote.playerBlacklist
+string function FSV_TimerToMinutesAndSeconds(int timer){
+	int minutes = int(floor(timer / 60))
+	string seconds = string(timer - (minutes * 60))
+	if (timer - (minutes * 60) < 10){
+		seconds = "0"+seconds
+	}
+	return minutes + ":" + seconds
 }
 
 /**
- * Returns a reference to an array of players who have voted for the next map
+ * Runs on player connected, preventing any previously kicked players from re-joining
 */
-array< entity > function FSV_GetPlayerArrayReference_NextMap() {
-	return mapVote.playerBlacklist
+void function FSV_JoiningPlayerKickCheck(entity player) {
+	if (FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0).contains(player.GetUID())) {
+		FSU_Print("previously kicked " + player.GetPlayerName() + " tried to rejoin")
+		ServerCommand("kick " + player.GetPlayerName())
+	}
+}
+
+/**
+ * Updates the kicked player re-join block list, removing any expired blocks and incrementing existing ones
+*/
+void function FSV_UpdateKicked(){
+	array <string> kicked = FSU_GetSelectedArrayFromConVar("FSV_KICK_BLOCK", 0)
+	array <string> kickedfor = FSU_GetSelectedArrayFromConVar	("FSV_KICK_BLOCK", 1)
+	int kickDuration = FSU_GetSettingIntFromConVar("FSV_KICK_BLOCK")
+
+	for(int i = kickedfor.len()-1; i > -1; i--){
+		kickedfor.insert(i, (kickedfor[i].tointeger()+1).tostring())
+		kickedfor.remove(i+1)
+		if(kickedfor[i].tointeger() > kickDuration){
+			kickedfor.remove(i)
+			kicked.remove(i)
+		}
+	}
+
+	array <array <string> > newKickedArray = [kicked, kickedfor]
+	FSU_SaveArrayArrayToConVar("FSV_KICK_BLOCK", newKickedArray)
 }
 
 /**
@@ -103,13 +136,74 @@ array< entity > function FSV_GetPlayerArrayReference_NextMap() {
  * @param map The map to vote for
 */
 void function FSV_VoteForNextMap( entity player, string map ) {
-	mapVote.playerBlacklist.append( player )
+	mapVoteTable[player] <- map;
+}
 
-	if( map in mapVote.votes ) {
-		mapVote.votes[map]++
-	} else {
-		mapVote.votes[map] <- 1
+/**
+ * Grab a reference to the mvt
+*/
+table <entity, string> function FSV_GetMapVoteTable() {
+	return mapVoteTable
+}
+
+/**
+ * Get current next map chances
+*/
+string function FSV_GetNextMapChances() {
+	table <string, float> mapChances
+	foreach(entity player, string map in mapVoteTable){
+		if((map in mapChances))
+			mapChances[map] += 100.0 / mapVoteTable.len()
+		else
+			mapChances[map] <- 100.0 / mapVoteTable.len()
 	}
+	string message = ""
+	foreach(string map, float chance in mapChances){
+		if (message == "")
+			message += FSV_Localize(map) + " %T" + floor(chance) + "%"
+		else
+			message += ", %H" + FSV_Localize(map) + " %T" + floor(chance) + "%"
+	}
+	return message
+}
+
+/**
+ * Gets the map to be played next
+*/
+string function FSV_GetNextMap(){
+	array <string> maps
+
+	// If there have been votes, choose one from the vote-pool
+	if(mapVoteTable.len() > 0){
+		foreach(entity player, string map in mapVoteTable){
+			maps.append(map)
+		}
+		if(maps.len() > 1)
+			return maps[RandomInt(maps.len()-1)]
+		return maps[0]
+	}
+
+	// Create array of valid next maps
+	maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	foreach (string blockedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
+		if(maps.find(blockedMap) > -1){
+			maps.remove(maps.find(blockedMap))
+		}
+	}
+
+	// Return either a random next map, or the one next in the playlist
+	if(GetConVarInt("FSV_RANDOM_MAP_ROTATION") == 1){
+		return maps[RandomInt(maps.len()-1)]
+	}
+	if(maps.find(GetMapName()) > -1) {
+		int nextMap = maps.find(GetMapName()) + 1
+		if( nextMap >= maps.len() )
+			nextMap = 0
+		return maps[nextMap]
+	}
+
+	// If there is no valid next map, pick a random one
+	return maps[RandomInt(maps.len()-1)]
 }
 
 /**
@@ -118,35 +212,7 @@ void function FSV_VoteForNextMap( entity player, string map ) {
 void function FSV_EndOfMatchMatch_Threaded() {
 	wait GAME_POSTMATCH_LENGTH - 1
 
-	string map = ""
-	int votes = 0
-	foreach( string m, int v in mapVote.votes ) {
-		if( v > votes ) {
-			votes = v
-			map = FSV_UnLocalize( m )
-		}
-	}
-
-	array< string > maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
-
-	// Noone voted, get the map next in line
-	if( map == "" ) {
-		int index = 1
-		foreach( string m in maps ) {
-			if( GetMapName() == m )
-				break
-
-			index++
-		}
-
-		if( index >= maps.len() )
-			index = 0
-
-		map = maps[index]
-	}
-
-	// Change map
-	GameRules_ChangeMap( map, GAMETYPE )
+	GameRules_ChangeMap( FSV_GetNextMap(), GAMETYPE )
 }
 
 
@@ -154,25 +220,7 @@ void function FSV_EndOfMatchMatch_Threaded() {
  * Skips the current map
 */
 void function FSV_SkipMatch() {
-	string map = ""
-	int votes = 0
-
-	array< string > maps = split( GetConVarString( "FSV_MAP_ROTATION" ), "," )
-
-	int index = 1
-	foreach( string m in maps ) {
-		if( GetMapName() == m )
-			break
-
-		index++
-	}
-
-	if( index >= maps.len() )
-		index = 0
-
-	map = maps[index]
-
-	SetServerVar( "gameEndTime", Time() )
+	SetServerVar( "gameEndTime", Time()+4 )
 }
 
 /**
@@ -180,60 +228,11 @@ void function FSV_SkipMatch() {
  * @param minutes The amount by which to extend the match
 */
 void function FSV_ExtendMatch( float minutes ) {
-	// Creadit:
+	// Credit:
 	// https://github.com/CTalvio/MentalEdge.FSU-fvnk/blob/main/mod/scripts/vscripts/fm.nut#L386-L394
 	float currentEndTime = expect float( GetServerVar( "gameEndTime" ) )
 	float newEndTime = currentEndTime + ( 60 * minutes )
 	SetServerVar( "gameEndTime", newEndTime )
-}
-/**
- * returns if a player has started to mamy kick votes
- * @param player The player to check
-*/
-bool function FSV_CanPlayerStartKick(entity player)
-{
-  if(player.GetPlayerName() in kickVote.kickVote && kickVote.kickVote[player.GetPlayerName()]>3)
-    return false
-  return true
-}
-
-void function FSV_PlayerKickVote_Threaded(entity player)
-{
-	array<string> options = [ "Yes, kick", "No, stay", "No opinion" ]
-
-	foreach( entity p in GetPlayerArray() )
-		NSCreatePollOnPlayer( p, "Should " + player.GetPlayerName() + " be kicked?", options, 30 )
-
-	wait 30
-
-	int YesVotes = 0
-	int NoVotes = 0
-	foreach( entity p in GetPlayerArray() ) {
-		if( NSGetPlayerResponse( p ) == 0 )
-			YesVotes++
-		if( NSGetPlayerResponse( p ) == 1 )
-			NoVotes++
-	}
-
-	if( YesVotes > NoVotes ) {
-		ServerCommand( "kick " + player.GetPlayerName() )
-
-		foreach( entity p in GetPlayerArray() ) {
-			NSSendInfoMessageToPlayer( p, "Player " + player.GetPlayerName() + " was kicked from the match." )
-		}
-	} else {
-		foreach( entity p in GetPlayerArray() ) {
-			NSSendInfoMessageToPlayer( p, "Player " + player.GetPlayerName()+ " was NOT kicked from the match." )
-		}
-	}
-}
-
-void function FSV_IncreaseVoteForPlayer( entity player ) {
-	if( player.GetPlayerName() in kickVote.kickVote )
-		kickVote.kickVote[ player.GetPlayerName() ] += 1
-	else
-		kickVote.kickVote[ player.GetPlayerName() ] <- 1
-
 }
 
 #else

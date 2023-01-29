@@ -43,12 +43,12 @@ void function FSA_CommandCallback_NPC( entity player, array< string > args ) {
 	}
 
 	if( npc.len() == 0 ) {
-		FSU_PrivateChatMessage( player, "Couldn't find entity: " + args[0] )
+		FSU_PrivateChatMessage( player, "%ECouldn't find entity: " + args[0] )
 		return
 	}
 
 	thread DEV_SpawnNPCWithWeaponAtCrosshair( npc, npc, team )
-	FSU_PrivateChatMessage( player, "Spawned a " + args[0] + "!" )
+	FSU_PrivateChatMessage( player, "%SSpawned a " + args[0] + "!" )
 }
 
 /**
@@ -102,12 +102,12 @@ void function FSA_CommandCallback_Titan( entity player, array< string > args ) {
 	}
 
 	if( titan.len() == 0 ) {
-		FSU_PrivateChatMessage( player, "Couldn't find entity: " + args[0] )
+		FSU_PrivateChatMessage( player, "%ECouldn't find entity: " + args[0] )
 		return
 	}
 
 	thread DEV_SpawnNPCWithWeaponAtCrosshair( "npc_titan", titan, team )
-	FSU_PrivateChatMessage( player, "Spawned a " + args[0] + "!" )
+	FSU_PrivateChatMessage( player, "%SSpawned a " + args[0] + "!" )
 }
 
 /**
@@ -117,7 +117,7 @@ void function FSA_CommandCallback_Titan( entity player, array< string > args ) {
 */
 void function FSA_CommandCallback_Login( entity player, array< string > args ) {
 	if( FSA_GetLoggedInAdmins().find( player ) != -1 ) {
-		FSU_PrivateChatMessage( player, "Already logged in!" )
+		FSU_PrivateChatMessage( player, "%EAlready logged in!" )
 		return
 	}
 
@@ -126,29 +126,29 @@ void function FSA_CommandCallback_Login( entity player, array< string > args ) {
 	adminIndex = adminUIDs.find( player.GetUID() )
 
 	if( adminIndex == -1 ) {
-		FSU_PrivateChatMessage( player, "You are not registered on this server. Only server owners can register admins." )
+		FSU_PrivateChatMessage( player, "%EYou are not registered on this server! %TOnly server owners can register admins." )
 		return
 	}
 
 	if( args.len() == 0 ) {
-		FSU_PrivateChatMessage( player, "Need to pass a password to login!" )
+		FSU_PrivateChatMessage( player, "%ENeed to pass a password to login!" )
 		return
 	}
 
 	array< string > passwords = split( GetConVarString( "FSA_ADMIN_PASSWORDS" ), "," )
 	if( adminUIDs.len() != passwords.len() ) {
 		FSU_Error( "FSA_ADMIN_UIDS length doesnt equal FSA_ADMIN_PASSWORDS length" )
-		FSU_PrivateChatMessage( player, "FSA_ADMIN_UIDS && FSA_ADMIN_PASSWORDS length mismatch. Please check and correct the number of entries for both of thes ConVars!" )
+		FSU_PrivateChatMessage( player, "%EFSA_ADMIN_UIDS && FSA_ADMIN_PASSWORDS length mismatch! %TPlease check and correct the number of entries for both of thes ConVars." )
 		return
 	}
 
 	if( passwords[adminIndex] == args[0] ) {
 		FSA_GetLoggedInAdmins().append( player )
-		FSU_PrivateChatMessage( player, "Logged in!" )
+		FSU_PrivateChatMessage( player, "%SLogged in!" )
 		return
 	}
 
-	FSU_PrivateChatMessage( player, "Incorrect password!" )
+	FSU_PrivateChatMessage( player, "%EIncorrect password!" )
 }
 
 /**
@@ -159,10 +159,10 @@ void function FSA_CommandCallback_Login( entity player, array< string > args ) {
 void function FSA_CommandCallback_Logout( entity player, array< string > args ) {
 	int adminIndex = FSA_GetLoggedInAdmins().find( player )
 	if( adminIndex == -1 ) {
-		FSU_PrivateChatMessage( player, "Not logged in!" )
+		FSU_PrivateChatMessage( player, "%ENot logged in!" )
 		return
 	}
 
 	FSA_GetLoggedInAdmins().remove( adminIndex )
-	FSU_PrivateChatMessage( player, "Logged out!" )
+	FSU_PrivateChatMessage( player, "%SLogged out!" )
 }

@@ -8,7 +8,7 @@ globalize_all_functions
 */
 void function FSTM_CommandCallback_Switch( entity player, array< string > args ) {
 	if( GetGameState() != eGameState.Playing ) {
-		FSU_PrivateChatMessage( player, "Can't switch teams currently." )
+		FSU_PrivateChatMessage( player, "%ECan't switch teams currently." )
 		return
 	}
 
@@ -25,7 +25,7 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 		}
 
 		if( !foundTarget ) {
-			FSU_PrivateChatMessage( player, "%H\"" + args[0] + "\"%T couldn't be found!" )
+			FSU_PrivateChatMessage( player, "%H\"" + args[0] + "\"%E couldn't be found!" )
 			return
 		}
 	}
@@ -39,5 +39,6 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 		player.Die()
 
 	SetTeam( target, GetOtherTeam( target.GetTeam() ) )
-	FSU_PrivateChatMessage( player, "Your team has been switched!" )
+	target.Die()
+	FSU_PrivateChatMessage( player, "%SYour team has been switched!" )
 }

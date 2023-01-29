@@ -15,6 +15,11 @@
 			"Name": "FSU_PREFIX_SYSTEM_MESSAGES",
 			"DefaultValue": "1",
 			"HelpString": "Whether system messages should be prefixed with '[FSU]'."
+		},
+		{
+			"Name": "FSU_COLOR_THEME",
+			"DefaultValue": "text=#a3dbff,highlight=#29a3f0,announce=#f0b930",
+			"HelpString": "Custom chat UI colors. Supported color types are: header, highlight, text, admin, owner, error, success, announce. To change a color, enter the name, an equals sign and a hex color code."
 		}
 	],
 	"Scripts": [

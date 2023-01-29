@@ -1,18 +1,42 @@
 untyped
 globalize_all_functions
 
-string header      = "\x1b[38:5:214m"
-string highlight   = "\x1b[36m"
-string text        = "\x1b[38:5:152m"
-string adminHeader = "\x1b[94m"
-string ownerHeader = "\x1b[92m"
-
-const FSU_LIST_ROWS = 5
+table <string, string> colorTable
+string header
+string highlight
+string text
+string adminHeader
+string ownerHeader
+string error
+string success
+string announce
 
 /**
  * Gets called after the map is loaded
 */
 void function FSU_Init() {
+	colorTable["header"]    <- "\x1b[38:5:214m"
+	colorTable["highlight"] <- "\x1b[36m"
+	colorTable["text"]      <- "\x1b[38:5:152m"
+	colorTable["admin"]     <- "\x1b[94m"
+	colorTable["owner"]     <- "\x1b[92m"
+	colorTable["error"]     <- "\x1b[38;5;203m"
+	colorTable["success"]   <- "\x1b[38;5;192m"
+	colorTable["announce"]  <- "\x1b[38;5;183m"
+
+	foreach(string item in split(GetConVarString( "FSU_COLOR_THEME" ), "," )){
+		colorTable[split(item, "=")[0]] = split(item, "=")[1]
+	}
+
+	header      = colorTable["header"]
+	highlight   = colorTable["highlight"]
+	text        = colorTable["text"]
+	adminHeader = colorTable["admin"]
+	ownerHeader = colorTable["owner"]
+	error       = colorTable["error"]
+	success     = colorTable["success"]
+	announce    = colorTable["announce"]
+
 	AddCallback_GameStateEnter( eGameState.Prematch, FSU_PrintPrematchMessage )
 }
 
@@ -23,7 +47,7 @@ void function FSU_Init() {
 */
 void function FSU_PrintPrematchMessage() {
 	FSU_Print( "Checking enabled modules!" )
-	FSU_ChatBroadcast( "%TFifty.ServerUtilities is active!" )
+	//FSU_ChatBroadcast( "Fifty.ServerUtilities is active!" )
 
 #if FSCC_ENABLED
 	FSU_Print( "FSCC is enabled!")
@@ -42,22 +66,6 @@ void function FSU_PrintPrematchMessage() {
 #endif
 
 	FSU_Print( "Finished! Thanks for using FSU :)" )
-}
-
-/**
- * Sets the ANSI codes used for formatting
- * @param headerCode The ANSI code to be used for the message header ( "[FSU]" )
- * @param highlightCode The ANSI code to be used for highlighted text
- * @param textCode The ANSI code to be used for normal text
- * @param adminHeaderCode The ANSI code to be used for the admin header ( "[ADMIN]" )
- * @param ownerHeaderCode The ANSI code to be used for the owner prefix ( "[OWNER]" )
-*/
-void function FSU_SetTheme( string headerCode, string highlightCode, string textCode, string adminHeaderCode, string ownerHeaderCode ) {
-	header = headerCode
-	highlight = highlightCode
-	text = textCode
-	adminHeader = adminHeaderCode
-	ownerHeader = ownerHeaderCode
 }
 
 /**
@@ -95,9 +103,9 @@ void function FSU_ChatBroadcast( string message, bool usePopUp = false ) {
 			NSSendPopUpMessageToPlayer( player, message )
 	} else {
 		if( GetConVarBool( "FSU_PREFIX_SYSTEM_MESSAGES" ) )
-			Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%T " + message ), false )
+			Chat_ServerBroadcast( FSU_FormatString( "%F[FSU]%N " + message ), false )
 		else
-			Chat_ServerBroadcast( FSU_FormatString( "%T" + message ), false )
+			Chat_ServerBroadcast( FSU_FormatString( "%N" + message ), false )
 	}
 }
 
@@ -117,9 +125,27 @@ void function FSU_PrivateChatMessage( entity player, string message ) {
  * Returns the maximum number of pages for FSU_PrintFormattedList
  * @param list The list to be printed
  * @param columns The nubre of columns per row
+ * @param separator The list item separator, inconsquential as long as charachter count is the same
 */
-int function FSU_GetListPages( array< string > list, int columns = 1 ) {
-	return int( ceil( list.len() / ( columns * 5.0 ) ) )
+int function FSU_GetListPages( array< string > list, int rows = 5, string separator = "%T, " ) {
+	string row = ""
+	array <string> rowList
+	foreach(string item in list){
+		if( row == ""){
+			row = "    " + "  " + item
+		}
+		else if( (row+separator+"  "+item).len() > 85 || FSU_FormatString(row+separator+"  "+item).len() > 200 ){
+			rowList.append(row)
+			row = "    " + "  " + item
+		}
+		else{
+			row += separator + "  " + item
+		}
+	}
+	if( row != "")
+		rowList.append(row)
+
+	return int( ceil( rowList.len() / float( rows ) ) )
 }
 
 /**
@@ -127,25 +153,56 @@ int function FSU_GetListPages( array< string > list, int columns = 1 ) {
  * @param player The player to send the list to
  * @param list The list to be printed
  * @param page The page to display
- * @param columns The nubre of columns per row
  * @param separator The list item separator
+ * @param rows The number of rows to print per page
+ * @param color The color of list items
 */
-void function FSU_PrintFormattedList( entity player, array< string > list, int page, int columns = 1, string separator = ", " ) {
-	for( int r = ( page - 1 ) * FSU_LIST_ROWS * columns; r < page * FSU_LIST_ROWS * columns; r += columns ) {
-		string row = "  "
-		for( int c = 0; c < columns; c++ ) {
-			if( r + c >= list.len() )
-				break
-
-			row += FSU_Highlight( list[r + c] )
-
-			if( r + c < list.len() - 1 )
-				row += separator
+void function FSU_PrintFormattedList( entity player, array< string > list, int page, string separator = "%T, ", int rows = 5, string color = "%H" ) {
+	string row = ""
+	array <string> rowList
+	foreach(string item in list){
+		if( row == ""){
+			row = "    " + color + item
 		}
-		if( row != "  ")
-			FSU_PrivateChatMessage( player, row )
-
+		else if( (row+separator+color+item).len() > 85 || FSU_FormatString(row+separator+color+item).len() > 200 ){
+			rowList.append(row)
+			row = "    " + color + item
+		}
+		else{
+			row += separator + color + item
+		}
 	}
+	if( row != "")
+		rowList.append(row)
+
+	for(int rowToPrint = (page * rows) - rows ; rowToPrint < page * rows; rowToPrint++ )
+		if(rowToPrint < rowList.len() )
+			FSU_PrivateChatMessage( player, rowList[rowToPrint] )
+}
+
+/**
+ * Prints a full list without pagination, as densely as possible
+ * @param player The player to send the list to
+ * @param list The list to be printed
+ * @param separator The list item separator
+ * @param color The color of list items
+*/
+void function FSU_PrintFormattedListWithoutPagination( entity player, array< string > list, string separator = "%T, ", string color = "%H" ) {
+	string row = ""
+	foreach(string item in list){
+		if( row == ""){
+			row = "    " + color + item
+		}
+		else if( (row+separator+color+item).len() > 85 || FSU_FormatString(row+separator+color+item).len() > 200 ){
+			FSU_PrivateChatMessage( player, row )
+			row = "    " + color + item
+		}
+		else{
+			row += separator + color + item
+		}
+	}
+	if( row != "")
+		FSU_PrivateChatMessage( player, row )
 }
 
 /**
@@ -156,7 +213,10 @@ void function FSU_PrintFormattedList( entity player, array< string > list, int p
 string function FSU_ArrayToString( array< string > args, string separator = " " ) {
 	string result = ""
 	foreach( string s in args )
-		result += ( s + separator )
+		if ( result == "" )
+			result = s
+		else
+			result += ( separator + s )
 	return result
 }
 
@@ -172,13 +232,16 @@ string function FSU_FormatString( string str ) {
 	formatted = StringReplace( formatted, "%T", text, true, false )
 	formatted = StringReplace( formatted, "%A", adminHeader, true, false )
 	formatted = StringReplace( formatted, "%O", ownerHeader, true, false )
+	formatted = StringReplace( formatted, "%E", error, true, false )
+	formatted = StringReplace( formatted, "%S", success, true, false )
+	formatted = StringReplace( formatted, "%N", announce, true, false )
 	formatted = StringReplace( formatted, "%0", "\x1b[0m", true, false )
 #if FSCC_ENABLED
 	formatted = StringReplace( formatted, "%P", GetConVarString( "FSCC_PREFIX" ), true, false )
 #endif
 
 	// Hex code
-	var hexColorCode = regexp("#[0-9A-F]{6}").search( formatted )
+	var hexColorCode = regexp("#[0-9A-Fa-f]{6}").search( formatted )
 	while( hexColorCode != null ) {
 		// "rrggbb" in 0-9 A-F
 		string strColor = formatted.slice( hexColorCode.begin + 1, hexColorCode.end )
@@ -194,7 +257,7 @@ string function FSU_FormatString( string str ) {
 
 		formatted = formatted.slice( 0, hexColorCode.begin ) + format( "\x1b[38;2;%i;%i;%im", red, green, blue )  + formatted.slice( hexColorCode.end, formatted.len() )
 
-		hexColorCode = regexp("#[0-9A-F]{6}").search( formatted )
+		hexColorCode = regexp("#[0-9A-Fa-f]{6}").search( formatted )
 	}
 
 	return formatted
@@ -208,7 +271,7 @@ int function FSU_GetIntegerFromHexString( string hex ) {
 	int number
 
 	for( int i = 0; i < hex.len(); i++ ) {
-		string char = hex.slice( i, i + 1 )
+		string char = hex.toupper().slice( i, i + 1 )
 		int weight = int( pow( 16, hex.len() - i - 1 ) )
 
 		if( char == "F" )
@@ -267,4 +330,75 @@ string function FSU_FmtBegin() {
 */
 string function FSU_FmtAdmin() {
 	return adminHeader
+}
+
+/**
+ * Saves a string array into a convar, as "," is used as the divider it should NEVER be present in the items of the array
+ * @param convar Which convar
+ * @param input The array that is to be saved
+*/
+void function FSU_SaveArrayToConVar(string convar, array <string> input){
+	if(GetConVarString(convar) == "0")
+		return
+
+	string newContent = split(GetConVarString(convar), ",")[0]
+	foreach(string item in input){
+		newContent += "," + item
+	}
+	SetConVarString(convar, newContent)
+}
+
+/**
+ * Saves an array of string arrays into a convar, as "," and "-" are used as the dividers, they should NEVER be present in the items of the array
+ * @param convar Which convar
+ * @param input An array of the arrays to be saved
+*/
+void function FSU_SaveArrayArrayToConVar(string convar, array <array <string> > input){
+	if(GetConVarString(convar) == "0")
+		return
+
+	array <string> newArray
+
+	for(int arrayArrayIndex = 0; arrayArrayIndex < input.len(); arrayArrayIndex++){
+		string newContent = ""
+		for(int arrayIndex = 0; arrayIndex < input[arrayArrayIndex].len(); arrayIndex++){
+			if(newContent == ""){
+				newContent = input[arrayArrayIndex][arrayIndex]
+			}
+			else{
+				newContent += "-" + input[arrayArrayIndex][arrayIndex]
+			}
+		}
+		newArray.append(newContent)
+	}
+	FSU_SaveArrayToConVar(convar, newArray)
+}
+
+/**
+ * Returns just the setting value of a convar if it is also used to store data
+ * @param convar Which convar
+*/
+int function FSU_GetSettingIntFromConVar(string convar){
+	return split(GetConVarString(convar), ",")[0].tointeger()
+}
+
+/**
+ * Returns an array that has been stored in a convar using FSU_SaveArrayToConVar
+ * @param convar Which convar
+*/
+array <string> function FSU_GetArrayFromConVar(string convar){
+	array <string> convarArray = split(GetConVarString(convar), ",")
+	convarArray.remove(0)
+	return convarArray
+}
+
+/**
+ * Returns the selected array from a convar that is storing more than one
+ * @param convar Which convar
+ * @param whichArray Which array to pull, provide an index number
+*/
+array <string> function FSU_GetSelectedArrayFromConVar(string convar, int whichArray){
+	if(FSU_GetArrayFromConVar(convar).len() != 0)
+		return split(FSU_GetArrayFromConVar(convar)[whichArray], "-")
+	return FSU_GetArrayFromConVar(convar)
 }

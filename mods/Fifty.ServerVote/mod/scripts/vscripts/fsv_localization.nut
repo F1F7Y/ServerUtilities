@@ -3,6 +3,7 @@ global function FSV_Localization_Init
 global function FSV_Localize
 global function FSV_UnLocalize
 global function FSV_LocalizeArray
+global function FSV_GetMapArrayFromConVar
 
 
 table< string, string > localizationStrings
@@ -75,4 +76,27 @@ array< string > function FSV_LocalizeArray( array< string > list ) {
 		localizedStrings.append( FSV_Localize( str ) )
 
 	return localizedStrings
+}
+
+/**
+ * Get a valid array from one of the map ConVars, discarding any invalid items and matching any partial entries to proper IDs
+*/
+array <string> function FSV_GetMapArrayFromConVar( string convar ){
+	array <string> mapArray
+	foreach( string map in split( GetConVarString( convar ), "," ) ){
+		foreach (string mapId, string mapName in localizationStrings){
+			if( map == mapId )
+				mapArray.append(mapId)
+			else{
+				string mapSearchable = StringReplace( map, " ", "", true, false )
+				mapSearchable = StringReplace( mapSearchable, "_", "", true, false )
+				if( StringReplace( mapName, " ", "", true, false ).tolower().find( mapSearchable.tolower() ) != null )
+					mapArray.append( mapId )
+			}
+		}
+	}
+	if( mapArray.len() != localizationStrings.len())
+		FSU_Error( "One or more items in the map playlists were unable to be recognized! Check your map ConVars for typos." )
+
+	return mapArray
 }

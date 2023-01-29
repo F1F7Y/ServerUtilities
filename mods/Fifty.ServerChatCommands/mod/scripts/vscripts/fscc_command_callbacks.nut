@@ -40,8 +40,15 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 		}
 	}
 
+	if (args.len() != 0 && args[0] == "all"){
+		FSU_PrivateChatMessage( player, "List of ALL available commands:" )
+		FSU_PrintFormattedListWithoutPagination(player, commands)
+		FSU_PrivateChatMessage( player, "To find out more about a command, use %H!help <command>%T." )
+		return
+	}
+
 	// Print a page of commands
-	int pages = FSU_GetListPages( commands, 3 )
+	int pages = FSU_GetListPages( commands )
 
 	int page
 	if( args.len() == 0 ) {
@@ -51,16 +58,18 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 	}
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
+		FSU_PrivateChatMessage( player, "%EMaximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
 	if( page < 1 )
 		page = 1
 
-	FSU_PrivateChatMessage( player, "List of avalible commands:" )
-	FSU_PrintFormattedList( player, commands, page, 3 )
-	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
+	FSU_PrivateChatMessage( player, "List of available commands:" )
+	FSU_PrintFormattedList( player, commands, page)
+	if(pages > 1)
+		FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
+	FSU_PrivateChatMessage( player, "To find out more about a command, use %H!help <command>%T." )
 }
 
 /**
@@ -70,7 +79,14 @@ void function FSCC_CommandCallback_Help( entity player, array< string > args ) {
 */
 void function FSCC_CommandCallback_Mods( entity player, array< string > args ) {
 	array< string > mods = NSGetModNames()
-	int pages = FSU_GetListPages( mods, 2 )
+
+	if (args.len() != 0 && args[0] == "all"){
+		FSU_PrivateChatMessage( player, "List of ALL mods installed on this server:" )
+		FSU_PrintFormattedListWithoutPagination(player, mods)
+		return
+	}
+
+	int pages = FSU_GetListPages( mods )
 
 	int page
 	if( args.len() == 0 ) {
@@ -83,13 +99,14 @@ void function FSCC_CommandCallback_Mods( entity player, array< string > args ) {
 		page = 1
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
+		FSU_PrivateChatMessage( player, "%EMaximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
 	FSU_PrivateChatMessage( player, "List of mods installed on this server:" )
-	FSU_PrintFormattedList( player, mods, page, 2 )
-	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
+	FSU_PrintFormattedList( player, mods, page)
+	if(pages > 1)
+		FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
 }
 
 /**
@@ -117,6 +134,13 @@ void function FSCC_CommandCallback_Owner( entity player, array< string > args ) 
 */
 void function FSCC_CommandCallback_Rules( entity player, array< string > args ) {
 	array< string > rules = split( GetConVarString( "FSCC_RULES" ), "," )
+
+	if (args.len() != 0 && args[0] == "all"){
+		FSU_PrivateChatMessage( player, "List of ALL rules:" )
+		FSU_PrintFormattedListWithoutPagination(player, rules)
+		return
+	}
+
 	int pages = FSU_GetListPages( rules )
 
 	int page
@@ -130,13 +154,14 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
 		page = 1
 
 	if( page > pages ) {
-		FSU_PrivateChatMessage( player, "Maximum number of pages is: %H" + string( pages ) )
+		FSU_PrivateChatMessage( player, "%EMaximum number of pages is: %H" + string( pages ) )
 		return
 	}
 
 	FSU_PrivateChatMessage( player, "List of rules:" )
 	FSU_PrintFormattedList( player, rules, page )
-	FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
+	if(pages > 1)
+		FSU_PrivateChatMessage( player, "Page: %H[" + page + "/" + pages + "]" )
 }
 
 /**
