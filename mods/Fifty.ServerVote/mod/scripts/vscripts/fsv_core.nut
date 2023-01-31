@@ -173,34 +173,45 @@ string function FSV_GetNextMapChances() {
 string function FSV_GetNextMap(){
 	array <string> maps
 
-	// If there have been votes, choose one from the vote-pool
-	if(mapVoteTable.len() > 0){
-		foreach(entity player, string map in mapVoteTable){
-			maps.append(map)
+	// If there have been votes, choose a random one from the vote-pool
+	if( mapVoteTable.len() > 0 ){
+		foreach( entity player, string map in mapVoteTable ) {
+			maps.append( map )
 		}
-		if(maps.len() > 1)
-			return maps[RandomInt(maps.len()-1)]
+
+		if( maps.len() > 1 )
+			return maps[RandomInt( maps.len() - 1 )]
+
 		return maps[0]
 	}
 
 	// Create array of valid next maps
 	maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
-	foreach (string blockedMap in FSU_GetArrayFromConVar("FSV_MAP_REPLAY_LIMIT")){
-		if(maps.find(blockedMap) > -1){
-			maps.remove(maps.find(blockedMap))
+	foreach( string blockedMap in FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ) ) {
+		int index = maps.find(blockedMap)
+		if( index != -1 ){
+			maps.remove( index )
 		}
 	}
 
-	// Return either a random next map, or the one next in the playlist
-	if(GetConVarInt("FSV_RANDOM_MAP_ROTATION") == 1){
+	// Return a random map if set
+	if( GetConVarInt( "FSV_RANDOM_MAP_ROTATION" ) ) {
 		return maps[RandomInt(maps.len()-1)]
 	}
-	if(maps.find(GetMapName()) > -1) {
-		int nextMap = maps.find(GetMapName()) + 1
+
+	// Need to get the array again because we remove current map above
+	maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	// Return the next map
+	int index = maps.find( GetMapName() )
+	if( index != -1 ) {
+		int nextMap = index + 1
 		if( nextMap >= maps.len() )
 			nextMap = 0
+
 		return maps[nextMap]
 	}
+
+	FSU_Error( "Couldn't get the next map!" );
 
 	// If there is no valid next map, pick a random one
 	return maps[RandomInt(maps.len()-1)]
