@@ -295,15 +295,6 @@ int function FSU_GetIntegerFromHexString( string hex ) {
 }
 
 /**
- * Returns a formatted string convar
- * @param convar The convar to format
-*/
-string function FSU_GetFormattedConVar( string convar ) {
-	string formatted = FSU_FormatString( GetConVarString( convar ) )
-	return formatted
-}
-
-/**
  * Highlights a string using ANSI code and returns the highlited string
  * @param mesage The string to be highlited
 */

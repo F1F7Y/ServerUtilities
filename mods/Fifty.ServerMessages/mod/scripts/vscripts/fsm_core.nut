@@ -105,7 +105,7 @@ void function FSM_BroadcastMessages_Threaded() {
 	array< string > messages
 
 	for( int i = 0; i < 5; i++ ) {
-		messages.append( FSU_GetFormattedConVar( "FSM_BROADCAST_" + i ) )
+		messages.append( GetConVarString( "FSM_BROADCAST_" + i ) )
 	}
 
 
@@ -151,8 +151,8 @@ void function FSM_PrintWelcomeMessage( entity player ) {
 	if( GetConVarBool( "FSM_WELCOME_USE_RUI" ) ) {
 		NSSendLargeMessageToPlayer( player, GetConVarString( "FSM_WELCOME_MESSAGE_TITLE" ), GetConVarString( "FSM_WELCOME_MESSAGE_TEXT" ), 20, GetConVarString( "FSM_WELCOME_MESSAGE_IMAGE" ) )
 	} else {
-		FSU_ChatBroadcast( FSU_GetFormattedConVar( "FSM_WELCOME_MESSAGE_TITLE" ) )
-		FSU_ChatBroadcast( FSU_GetFormattedConVar( "FSM_WELCOME_MESSAGE_TEXT" ) )
+		FSU_PrivateChatMessage( player, "%N" + GetConVarString( "FSM_WELCOME_MESSAGE_TITLE" ) )
+		FSU_PrivateChatMessage( player, "%N" + GetConVarString( "FSM_WELCOME_MESSAGE_TEXT" ) )
 	}
 }
 #else
