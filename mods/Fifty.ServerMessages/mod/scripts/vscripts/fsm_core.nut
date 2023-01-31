@@ -46,6 +46,7 @@ void function FSM_PrintPrematchMessage_Threaded() {
 		for( int i = 0; i < 5; i++ ) {
 			string message = GetConVarString( "FSM_INFO_" + i )
 			if( message.len() > 1 )
+				message = StringReplace( message, "\\n", "\n", true, false ) // Replace any "fake" newline charachters with real ones because docker-compose
 				foreach(string row in split(message, "\n"))
 					FSU_ChatBroadcast( row )
 		}
@@ -55,6 +56,7 @@ void function FSV_CommandCallback_Info(entity player, array <string> args ) {
 	for( int i = 0; i < 5; i++ ) {
 		string message = GetConVarString( "FSM_INFO_" + i )
 		if( message.len() > 1 )
+			message = StringReplace( message, "\\n", "\n", true, false ) // Replace any "fake" newline charachters with real ones because docker-compose
 			foreach(string row in split(message, "\n"))
 				FSU_PrivateChatMessage(player, row )
 	}
