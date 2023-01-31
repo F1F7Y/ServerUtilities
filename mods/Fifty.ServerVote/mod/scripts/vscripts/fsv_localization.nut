@@ -83,20 +83,42 @@ array< string > function FSV_LocalizeArray( array< string > list ) {
 */
 array <string> function FSV_GetMapArrayFromConVar( string convar ){
 	array <string> mapArray
-	foreach( string map in split( GetConVarString( convar ), "," ) ){
-		foreach (string mapId, string mapName in localizationStrings){
-			if( map == mapId )
+	array <string> unknownArray
+
+	foreach( string map in split( GetConVarString( convar ), "," ) ) {
+		int size = mapArray.len()
+		foreach( string mapId, string mapName in localizationStrings ) {
+			if( map == mapId ) { // Map matches, we're good :thumbsup:
 				mapArray.append(mapId)
-			else{
+				break
+			} else { // Try to match the map
 				string mapSearchable = StringReplace( map, " ", "", true, false )
 				mapSearchable = StringReplace( mapSearchable, "_", "", true, false )
-				if( StringReplace( mapName, " ", "", true, false ).tolower().find( mapSearchable.tolower() ) != null )
+
+				if( StringReplace( mapName, " ", "", true, false ).tolower().find( mapSearchable.tolower() ) != null ) {
 					mapArray.append( mapId )
+					break
+				}
 			}
 		}
+
+		if( size != mapArray.len() )
+			continue
+
+		// If we got here we didn't find the map, add it to the list
+		if( unknownArray.find(map) == -1 )
+			unknownArray.append( map )
 	}
-	if( mapArray.len() != localizationStrings.len())
-		FSU_Error( "One or more items in the map playlists were unable to be recognized! Check your map ConVars for typos." )
+
+	// We couldn't recognise some maps
+	if( unknownArray.len() ) {
+		string message = format( "One or more maps couldn't be parsed properly! These maps are: \"%s\"", FSU_ArrayToString( unknownArray, "," ) )
+
+		if( message.len() > 512 )
+			message = "One or more maps couldn't be parsed properly! The list is too long so figure it out yourself."
+
+		FSU_Error( message )
+	}
 
 	return mapArray
 }

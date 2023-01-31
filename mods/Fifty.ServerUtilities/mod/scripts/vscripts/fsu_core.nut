@@ -212,11 +212,13 @@ void function FSU_PrintFormattedListWithoutPagination( entity player, array< str
 */
 string function FSU_ArrayToString( array< string > args, string separator = " " ) {
 	string result = ""
+
 	foreach( string s in args )
 		if ( result == "" )
 			result = s
 		else
 			result += ( separator + s )
+
 	return result
 }
 
