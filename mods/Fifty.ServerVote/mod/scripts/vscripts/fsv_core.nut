@@ -170,23 +170,32 @@ string function FSV_GetNextMapChances() {
 /**
  * Gets the map to be played next
 */
-string function FSV_GetNextMap(){
-	array <string> maps
+string function FSV_GetNextMap() {
+	table< string, int > mapVotes
 
 	// If there have been votes, choose a random one from the vote-pool
-	if( mapVoteTable.len() > 0 ){
+	if( mapVoteTable.len() > 0 ) {
 		foreach( entity player, string map in mapVoteTable ) {
-			maps.append( map )
+			if( map in mapVotes )
+				mapVotes[map]++
+			else
+				mapVotes[map] <- 1
 		}
 
-		if( maps.len() > 1 )
-			return maps[RandomInt( maps.len() - 1 )]
+		string bestMap;
+		int    mostVotes;
+		foreach( string map, int votes in mapVotes ) {
+			if( votes > mostVotes ) {
+				bestMap = map
+				mostVotes = votes
+			}
+		}
 
-		return maps[0]
+		return bestMap
 	}
 
 	// Create array of valid next maps
-	maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	array<string> maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	foreach( string blockedMap in FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ) ) {
 		int index = maps.find(blockedMap)
 		if( index != -1 ){
