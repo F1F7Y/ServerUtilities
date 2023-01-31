@@ -212,11 +212,13 @@ void function FSU_PrintFormattedListWithoutPagination( entity player, array< str
 */
 string function FSU_ArrayToString( array< string > args, string separator = " " ) {
 	string result = ""
+
 	foreach( string s in args )
 		if ( result == "" )
 			result = s
 		else
 			result += ( separator + s )
+
 	return result
 }
 
@@ -292,15 +294,6 @@ int function FSU_GetIntegerFromHexString( string hex ) {
 	}
 
 	return number
-}
-
-/**
- * Returns a formatted string convar
- * @param convar The convar to format
-*/
-string function FSU_GetFormattedConVar( string convar ) {
-	string formatted = FSU_FormatString( GetConVarString( convar ) )
-	return formatted
 }
 
 /**
