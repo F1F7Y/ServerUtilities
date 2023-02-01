@@ -195,35 +195,41 @@ string function FSV_GetNextMap() {
 	}
 
 	// Create array of valid next maps
-	array<string> maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	array<string> validMaps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	foreach( string blockedMap in FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ) ) {
-		int index = maps.find(blockedMap)
+		int index = validMaps.find(blockedMap)
 		if( index != -1 ){
-			maps.remove( index )
+			validMaps.remove( index )
 		}
 	}
 
 	// Return a random map if set
 	if( GetConVarInt( "FSV_RANDOM_MAP_ROTATION" ) ) {
-		return maps[RandomInt(maps.len()-1)]
+		return validMaps[RandomInt(validMaps.len()-1)]
 	}
 
 	// Need to get the array again because we remove current map above
-	maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	mapsAll = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	// Return the next map
-	int index = maps.find( GetMapName() )
+	int index = mapsAll.find( GetMapName() )
 	if( index != -1 ) {
 		int nextMap = index + 1
-		if( nextMap >= maps.len() )
+		if( nextMap >= mapsAll.len() )
 			nextMap = 0
 
-		return maps[nextMap]
+		while( validMaps.find(mapsAll[nextMap]) == -1 ){
+			nextMap++
+			if ( nextMap >= mapsAll.len() )
+				nextMap = 0
+		}
+
+		return mapsAll[nextMap]
 	}
 
 	FSU_Error( "Couldn't get the next map!" );
 
 	// If there is no valid next map, pick a random one
-	return maps[RandomInt(maps.len()-1)]
+	return validMaps[RandomInt(validMaps.len()-1)]
 }
 
 /**
