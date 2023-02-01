@@ -27,19 +27,21 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 			FSU_PrivateChatMessage( player, "%H\"" + args[0] + "\"%E couldn't be found!" )
 			return
 		}
-		else
-			FSU_PrivateChatMessage( player, "%S The team of %H" + target.GetPlayerName() + "%S has been switched!" )
+		else{
+			FSU_PrivateChatMessage( player, "%SThe team of %H" + target.GetPlayerName() + "%S has been switched!" )
+		}
 	}
-	else
+	else{
 		target = player
+	}
 
 	if( !IsValid( target ) ) {
 		FSU_PrivateChatMessage( player, "%EThat player entity isn't valid!" )
 		return
 	}
 
-	if( IsAlive(player) && player == target )
-		player.Die()
+	if( IsAlive(target) )
+		target.Die()
 
 	SetTeam( target, GetOtherTeam( target.GetTeam() ) )
 	FSU_PrivateChatMessage( target, "%SYour team has been switched!" )
