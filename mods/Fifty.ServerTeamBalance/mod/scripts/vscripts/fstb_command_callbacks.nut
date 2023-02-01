@@ -21,7 +21,7 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 		if(target == null){
 			foreach( entity p in GetPlayerArray() ) {
 				if( p.GetPlayerName().tolower().find( args[0].tolower() ) != null ) {
-					if( target != null ) ){
+					if( target != null ){
 						FSU_PrivateChatMessage(player, "%EMore than one matching player! %TWrite a bit more of their name.")
 						return
 					}
