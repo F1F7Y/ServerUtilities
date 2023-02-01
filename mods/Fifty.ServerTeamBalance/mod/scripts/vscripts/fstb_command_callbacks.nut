@@ -14,13 +14,19 @@ void function FSTM_CommandCallback_Switch( entity player, array< string > args )
 
 	entity target
 	if( FSA_IsAdmin( player ) && args.len() != 0 ) {
-		foreach( entity p in GetPlayerArray() ) {
-			if( p.GetPlayerName().tolower().find( args[0].tolower() ) != -1 ) {
-				if( target != null ){
-					FSU_PrivateChatMessage(player, "%EMore than one matching player! %TWrite a bit more of their name.")
-					return
-				}
+		foreach( entity p in GetPlayerArray() ){
+			if( p.GetPlayerName() == args[0] ) // Maybe this should have .tolower()?? TF displays names in all-caps in many cases
 				target = p
+		}
+		if(target == null){
+			foreach( entity p in GetPlayerArray() ) {
+				if( p.GetPlayerName().tolower().find( args[0].tolower() ) != null ) {
+					if( target != null ) ){
+						FSU_PrivateChatMessage(player, "%EMore than one matching player! %TWrite a bit more of their name.")
+						return
+					}
+					target = p
+				}
 			}
 		}
 		if(target == null){
