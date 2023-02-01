@@ -209,7 +209,7 @@ string function FSV_GetNextMap() {
 	}
 
 	// Need to get the array again because we remove current map above
-	mapsAll = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	array<string> mapsAll = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	// Return the next map
 	int index = mapsAll.find( GetMapName() )
 	if( index != -1 ) {
