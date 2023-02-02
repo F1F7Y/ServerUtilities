@@ -202,7 +202,7 @@ string function FSV_GetNextMap() {
 
 	// Set up the arrays needed
 	array<string> allMaps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
-	array<string> validMaps = allMaps
+	array<string> validMaps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	array<string> blockedMaps = FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" )
 	foreach( string blockedMap in blockedMaps ) {
 		int index = validMaps.find(blockedMap)
