@@ -8,6 +8,12 @@ table <entity, string> mapVoteTable = {}
  * Gets called after the map is loaded
 */
 void function FSV_Init() {
+	int numberOfMapsInRotation = split( GetConVarString( "FSV_MAP_ROTATION" ), "," ).len()
+	if( FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > numberOfMapsInRotation ){
+		SetConVarInt("FSV_MAP_REPLAY_LIMIT", numberOfMapsInRotation - 1 )
+		FSU_Error("Map replay limit is set too high! There are not enough maps in rotation to block that many recent maps.")
+	}
+
 	if (FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0)
 		FSV_UpdatePlayedMaps()
 
@@ -200,36 +206,44 @@ string function FSV_GetNextMap() {
 		return winners[0]
 	}
 
-	// Create array of valid next maps
-	array<string> maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
-	foreach( string blockedMap in FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ) ) {
-		int index = maps.find(blockedMap)
+	// Set up the arrays needed
+	array<string> allMaps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	array<string> validMaps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	array<string> blockedMaps = FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" )
+	foreach( string blockedMap in blockedMaps ) {
+		int index = validMaps.find(blockedMap)
 		if( index != -1 ){
-			maps.remove( index )
+			validMaps.remove( index )
 		}
 	}
 
 	// Return a random map if set
 	if( GetConVarInt( "FSV_RANDOM_MAP_ROTATION" ) ) {
-		return maps[RandomInt(maps.len()-1)]
+		return validMaps[RandomInt(validMaps.len()-1)]
 	}
 
-	// Need to get the array again because we remove current map above
-	maps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	// Return the next map
-	int index = maps.find( GetMapName() )
+	int index = allMaps.find( GetMapName() )
 	if( index != -1 ) {
 		int nextMap = index + 1
-		if( nextMap >= maps.len() )
+		if( nextMap >= allMaps.len() )
 			nextMap = 0
 
-		return maps[nextMap]
+		int loop = 0
+		while( validMaps.find(allMaps[nextMap]) == -1 && loop < blockedMaps.len()){
+			nextMap++
+			loop++
+			if ( nextMap >= allMaps.len() )
+				nextMap = 0
+		}
+
+		return allMaps[nextMap]
 	}
 
 	FSU_Error( "Couldn't get the next map!" );
 
 	// If there is no valid next map, pick a random one
-	return maps[RandomInt(maps.len()-1)]
+	return validMaps[RandomInt(validMaps.len()-1)]
 }
 
 /**
