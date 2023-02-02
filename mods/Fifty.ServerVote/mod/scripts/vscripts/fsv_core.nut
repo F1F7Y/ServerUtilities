@@ -8,6 +8,12 @@ table <entity, string> mapVoteTable = {}
  * Gets called after the map is loaded
 */
 void function FSV_Init() {
+	int numberOfMapsInRotation = split( GetConVarString( "FSV_MAP_ROTATION" ), "," ).len()
+	if( FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > numberOfMapsInRotation ){
+		SetConVarInt("FSV_MAP_REPLAY_LIMIT", numberOfMapsInRotation - 1 )
+		FSU_Error("Map replay limit is set too high! There are not enough maps in rotation to block that many recent maps.")
+	}
+
 	if (FSU_GetSettingIntFromConVar("FSV_MAP_REPLAY_LIMIT") > 0)
 		FSV_UpdatePlayedMaps()
 
@@ -194,9 +200,11 @@ string function FSV_GetNextMap() {
 		return bestMap
 	}
 
-	// Create array of valid next maps
-	array<string> validMaps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
-	foreach( string blockedMap in FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" ) ) {
+	// Set up the arrays needed
+	array<string> allMaps = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
+	array<string> validMaps = allMaps
+	array<string> blockedMaps = FSU_GetArrayFromConVar( "FSV_MAP_REPLAY_LIMIT" )
+	foreach( string blockedMap in blockedMaps ) {
 		int index = validMaps.find(blockedMap)
 		if( index != -1 ){
 			validMaps.remove( index )
@@ -208,22 +216,22 @@ string function FSV_GetNextMap() {
 		return validMaps[RandomInt(validMaps.len()-1)]
 	}
 
-	// Need to get the array again because we remove current map above
-	array<string> mapsAll = FSV_GetMapArrayFromConVar( "FSV_MAP_ROTATION" )
 	// Return the next map
-	int index = mapsAll.find( GetMapName() )
+	int index = allMaps.find( GetMapName() )
 	if( index != -1 ) {
 		int nextMap = index + 1
-		if( nextMap >= mapsAll.len() )
+		if( nextMap >= allMaps.len() )
 			nextMap = 0
 
-		while( validMaps.find(mapsAll[nextMap]) == -1 ){
+		int loop = 0
+		while( validMaps.find(allMaps[nextMap]) == -1 && loop < blockedMaps.len()){
 			nextMap++
-			if ( nextMap >= mapsAll.len() )
+			loop++
+			if ( nextMap >= allMaps.len() )
 				nextMap = 0
 		}
 
-		return mapsAll[nextMap]
+		return allMaps[nextMap]
 	}
 
 	FSU_Error( "Couldn't get the next map!" );
