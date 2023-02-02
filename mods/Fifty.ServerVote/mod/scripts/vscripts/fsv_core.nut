@@ -218,7 +218,7 @@ string function FSV_GetNextMap() {
 	}
 
 	// Return a random map if set
-	if( GetConVarInt( "FSV_RANDOM_MAP_ROTATION" ) ) {
+	if( GetConVarInt( "FSV_RANDOM_MAP_ROTATION" ) && validMaps.len() > 2 ) {
 		return validMaps[RandomInt(validMaps.len()-1)]
 	}
 
@@ -243,7 +243,13 @@ string function FSV_GetNextMap() {
 	FSU_Error( "Couldn't get the next map!" );
 
 	// If there is no valid next map, pick a random one
-	return validMaps[RandomInt(validMaps.len()-1)]
+	if( allMaps.len() == 1 )
+		return allMaps[0]
+
+	if( allMaps.len() == 0 )
+		return "mp_lobby"
+
+	return allMaps[RandomInt(allMaps.len()-1)]
 }
 
 /**
