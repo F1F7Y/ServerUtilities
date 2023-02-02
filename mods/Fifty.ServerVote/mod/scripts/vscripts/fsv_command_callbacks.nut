@@ -56,14 +56,26 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 
 	string mapVoteName = ""
 	string mapVoteId = ""
+	string joinedArg = ""
+	foreach( string part in args )
+		joinedArg += part
+
 	foreach( string map in maps ){
-		if( StringReplace( map, " ", "", true, false ).tolower().find( args[0].tolower() ) != null){
-			if( mapVoteId != "" ){
-				FSU_PrivateChatMessage(player, "%EMore than one matching map! %TWrite a bit more of the name.")
-				return
-			}
+		if( StringReplace( map, " ", "", true, false ).tolower() == joinedArg.tolower() ){
 			mapVoteName = map
 			mapVoteId = FSV_UnLocalize(map)
+		}
+	}
+	if( mapVoteId == "" ){
+		foreach( string map in maps ){
+			if( StringReplace( map, " ", "", true, false ).tolower().find( joinedArg ) != null){
+				if( mapVoteId != "" ){
+					FSU_PrivateChatMessage(player, "%EMore than one matching map! %TWrite a bit more of the name.")
+					return
+				}
+				mapVoteName = map
+				mapVoteId = FSV_UnLocalize(map)
+			}
 		}
 	}
 
@@ -73,7 +85,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 	}
 
 	if( FSA_IsAdmin( player ) && args.len() >= 2 ) {
-		if( args[1].tolower() == "force" ) {
+		if( args[args.len()-1].tolower() == "force" ) {
 			GameRules_ChangeMap( mapVoteId, GAMETYPE )
 			return
 		} else {
@@ -362,12 +374,18 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 
 	entity target
 	foreach( entity p in GetPlayerArray() ){
-		if( p.GetPlayerName().tolower().find( args[0].tolower() ) != null){
-			if( target != null ){
-				FSU_PrivateChatMessage(player, "%EMore than one matching player! %TWrite a bit more of their name.")
-				return
-			}
+		if( p.GetPlayerName() == args[0] ) // Maybe this should have .tolower()?? TF displays names in all-caps in many cases
 			target = p
+	}
+	if( target == null ){
+		foreach( entity p in GetPlayerArray() ){
+			if( p.GetPlayerName().tolower().find( args[0].tolower() ) != null){
+				if( target != null ){
+					FSU_PrivateChatMessage(player, "%EMore than one matching player! %TWrite a bit more of their name.")
+					return
+				}
+				target = p
+			}
 		}
 	}
 	if( target == null ){
@@ -378,11 +396,10 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 				target = p
 			}
 		}
-		//2nd check if its still not found
-		if(target == null){
-			FSU_PrivateChatMessage (player, "%EPlayer not found!" )
-			return
-		}
+	}
+	if(target == null){
+		FSU_PrivateChatMessage (player, "%EPlayer not found!" )
+		return
 	}
 
 	string targetUid = target.GetUID()
