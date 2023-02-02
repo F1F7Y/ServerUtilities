@@ -175,23 +175,29 @@ string function FSV_GetNextMap() {
 
 	// If there have been votes, choose a random one from the vote-pool
 	if( mapVoteTable.len() > 0 ) {
+		int mostVotes = 0
+
 		foreach( entity player, string map in mapVoteTable ) {
 			if( map in mapVotes )
 				mapVotes[map]++
 			else
 				mapVotes[map] <- 1
+
+			if( mapVotes[map] > mostVotes )
+				mostVotes = mapVotes[map]
 		}
 
-		string bestMap;
-		int    mostVotes;
-		foreach( string map, int votes in mapVotes ) {
-			if( votes > mostVotes ) {
-				bestMap = map
-				mostVotes = votes
+		array<string> winners
+		foreach( string map, int votes in mapVotes ){
+			if( votes == mostVotes ){
+				winners.append( map )
 			}
 		}
 
-		return bestMap
+		if(winners.len() > 1)
+			return winners[RandomInt(winners.len()-1)]
+
+		return winners[0]
 	}
 
 	// Create array of valid next maps
