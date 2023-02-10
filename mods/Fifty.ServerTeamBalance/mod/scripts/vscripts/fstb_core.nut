@@ -1,6 +1,6 @@
 global function FSTB_Init
 
-#if FSU_ENABLED && FSCC_ENABLED
+
 /**
  * Gets called after the map is loaded
 */
@@ -59,8 +59,4 @@ float function FSTM_CalculatePlayerSkill( entity player ) {
 	float score = kills / deaths
 	return score
 }
-#else
-void function FSTB_Init() {
-	print( "[FSTB][ERRR] FSU and FSCC Need to be enabled for FSTB to work!!!" )
-}
-#endif
+

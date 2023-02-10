@@ -1,6 +1,6 @@
 global function FSM_Init
 
-#if FSU_ENABLED && FSCC_ENABLED
+
 /**
  * Gets called after the map is loaded
 */
@@ -157,8 +157,3 @@ void function FSM_PrintWelcomeMessage( entity player ) {
 		FSU_PrivateChatMessage( player, "%N" + GetConVarString( "FSM_WELCOME_MESSAGE_TEXT" ) )
 	}
 }
-#else
-void function FSM_Init() {
-	print( "[FSM][ERRR] FSU and FSCC Need to be enabled for FSM to work!!!" )
-}
-#endif

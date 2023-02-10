@@ -1,4 +1,3 @@
-#if FSU_ENABLED && FSCC_ENABLED
 global function FSM_UpdateKillstreakInformation
 
 
@@ -46,4 +45,4 @@ void function FSM_UpdateKillstreakInformation( entity victim, entity attacker ) 
 		killstreak[victim] = 0
 	}
 }
-#endif
+

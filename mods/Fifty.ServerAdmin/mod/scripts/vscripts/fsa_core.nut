@@ -1,7 +1,6 @@
 untyped
 globalize_all_functions
 
-#if FSCC_ENABLED && FSU_ENABLED
 
 struct {
 	array< entity > loggedin
@@ -436,11 +435,3 @@ void function FSCC_CommandCallback_CommandFor(entity player, array<string> args)
 	}
 
 }
-
-
-
-#else
-void function FSA_Init() {
-	print( "[FSA][ERRR] FSU and FSCC Need to be enabled for FSA to work!!!" )
-}
-#endif

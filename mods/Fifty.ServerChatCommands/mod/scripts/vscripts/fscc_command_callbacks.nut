@@ -1,6 +1,6 @@
 globalize_all_functions
 
-#if FSU_ENABLED
+
 /**
  * Gets called when a player runs !help
  * @param player The player who caled the command
@@ -172,4 +172,3 @@ void function FSCC_CommandCallback_Rules( entity player, array< string > args ) 
 void function FSCC_CommandCallback_Discord( entity player, array< string > args ) {
 	FSU_PrivateChatMessage( player, "Discord: %H\"" + GetConVarString( "FSCC_DISCORD" ) + "\"")
 }
-#endif

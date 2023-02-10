@@ -1,6 +1,5 @@
 globalize_all_functions
 
-#if FSCC_ENABLED && FSU_ENABLED
 
 table <entity, string> mapVoteTable = {}
 
@@ -280,9 +279,3 @@ void function FSV_ExtendMatch( float minutes ) {
 	float newEndTime = currentEndTime + ( 60 * minutes )
 	SetServerVar( "gameEndTime", newEndTime )
 }
-
-#else
-void function FSV_Init() {
-	print( "[FSV][ERRR] FSU and FSCC Need to be enabled for FSV to work!!!" )
-}
-#endif

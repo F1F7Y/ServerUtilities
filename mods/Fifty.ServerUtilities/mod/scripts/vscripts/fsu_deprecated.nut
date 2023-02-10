@@ -1,6 +1,6 @@
 globalize_all_functions
 
-#if FSCC_ENABLED
+
 /**
  * A deprecated FSU < v2 function used to register commands
 */
@@ -39,4 +39,4 @@ int function FSU_GetPollResultIndex () {
 	FSU_Warning( "A mod is using deprecated function!" )
 	return -1
 }
-#endif
+

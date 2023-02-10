@@ -1,6 +1,6 @@
 global function FSCC_Init
 
-#if FSU_ENABLED
+
 global function FSCC_RegisterCommand
 global function FSCC_GetCommands
 global function FSCC_GetCommandAttributes
@@ -176,9 +176,3 @@ FSCC_CommandStruct function FSCC_GetCommandAttributes( string command ) {
 table <string, FSCC_CommandStruct > function FSCC_GetCommandList() {
 	return commandsList
 }
-
-#else
-void function FSCC_Init() {
-	print( "[FSCC][ERRR] FSU and FSCC Need to be enabled for FSCC to work!!!" )
-}
-#endif

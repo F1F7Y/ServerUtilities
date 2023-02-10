@@ -3,10 +3,6 @@
 	"Description" : "Part of FSU [ Fifty Server Utilities ]\nImplements helper functions used by other mods.\n\nDependencies:\n  - Northstar",
 	"Version": "2.4.2",
 	"LoadPriority": 2,
-	"Dependencies": {
-		"FSCC_ENABLED": "Fifty.ServerChatCommands [FSCC]",
-		"FSU_ENABLED": "Fifty.ServerUtilities [FSU]"
-	},
 	"ConVars": [
 		{
 			"Name": "FSTB_TEAM_BALANCE_ENABLED",
