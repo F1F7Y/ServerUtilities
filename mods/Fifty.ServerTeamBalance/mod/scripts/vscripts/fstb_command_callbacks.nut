@@ -6,7 +6,7 @@ globalize_all_functions
  * @param player The player who caled the command
  * @param args The arguments passed by the player
 */
-void function FSTM_CommandCallback_Switch( entity player, array< string > args ) {
+void function FSTB_CommandCallback_Switch( entity player, array< string > args ) {
 	if( GetGameState() != eGameState.Playing ) {
 		FSU_PrivateChatMessage( player, "%ECan't switch teams currently." )
 		return
