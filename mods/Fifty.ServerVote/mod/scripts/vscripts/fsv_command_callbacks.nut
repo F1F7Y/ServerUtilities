@@ -444,7 +444,6 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 		KickInfo kickInfo = kickTable[targetUid]
 		if (!kickInfo.voters.contains(player.GetUID())){
 			kickInfo.voters.append(player.GetUID())
-			playersWithActiveVotes.append(player.GetUID())
 		}
 		else{
 			FSU_PrivateChatMessage( player, "%EYou have already voted to kick %H" + targetName + "%E!" )
@@ -457,6 +456,7 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 		kickInfo.voters.append(player.GetUID())
 		kickInfo.threshold = int(ceil(GetPlayerArray().len() * GetConVarFloat("FSV_KICK_PERCENTAGE")))
 		kickTable[targetUid] <- kickInfo
+		playersWithActiveVotes.append(player.GetUID())
 		thread FSV_KickThread(targetName, targetUid)
 	}
 	FSU_PrivateChatMessage(player, "%SYou voted to kick %H" + targetName + "%S!" )
@@ -478,7 +478,8 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 		}
 
 		ServerCommand("kick " + player.GetPlayerName())
-		playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
+		if( playersWithActiveVotes.find( kickInfo.voters[0] ) > -1 )
+			playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
 		if (targetUid in kickTable) {
 			delete kickTable[targetUid]
 		}
@@ -569,6 +570,8 @@ void function FSV_KickThread(string targetName, string targetUid){
 	if (targetUid in kickTable){
 		delete kickTable[targetUid]
 	}
+	if( playersWithActiveVotes.find( kickInfo.voters[0] ) > -1 )
+		playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
 	wait 10
 	if(GetConVarBool("FSV_ENABLE_RUI")){
 		foreach ( entity player in GetPlayerArray() ){
