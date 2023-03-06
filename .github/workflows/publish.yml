@@ -1,0 +1,20 @@
+name: Publish Mod
+
+on: workflow_dispatch
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: GreenTF/upload-thunderstore-package@v3.1
+        with:
+          namespace: Fifty
+          description: A server utility framework providing a robust chat commands api and much more 
+          token: ${{ secrets.YOUR_TOKEN_NAME }}
+          name: Server_Utilities
+          version: $GITHUB_REF_NAME
+          community: Northstar
+          dev: true
+          categories: Mods Server-side
+          path: mods
