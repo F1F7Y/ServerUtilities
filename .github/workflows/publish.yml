@@ -16,5 +16,5 @@ jobs:
           version: 0.0.0
           community: Northstar
           dev: true
-          categories: Mods Server-side
+#         categories: Mods Server-side
           path: mods
