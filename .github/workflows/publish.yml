@@ -14,7 +14,7 @@ jobs:
           token: ${{ secrets.THUNDERSTORE_TOKEN }}
           name: Server_Utilities
           version: 0.0.0
-          community: Northstar
+#         community: Northstar
           dev: true
 #         categories: Mods Server-side
           path: mods
