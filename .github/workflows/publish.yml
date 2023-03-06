@@ -11,7 +11,7 @@ jobs:
         with:
           namespace: Fifty
           description: A server utility framework providing a robust chat commands api and much more 
-          token: ${{ secrets.YOUR_TOKEN_NAME }}
+          token: ${{ secrets.THUNDERSTORE_TOKEN }}
           name: Server_Utilities
           version: $GITHUB_REF_NAME
           community: Northstar
