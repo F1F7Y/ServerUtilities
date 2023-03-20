@@ -16,6 +16,5 @@ jobs:
           version: 2.4.4
           community: northstar
           categories: Mods Server-side
-          icon: https://github.com/F1F7Y/ServerUtilities/blob/main/icon.png
           path: mods/
           wrap: mods/
