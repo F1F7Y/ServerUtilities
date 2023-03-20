@@ -13,8 +13,9 @@ jobs:
           description: A server utility framework providing a robust chat commands api and much more 
           token: ${{ secrets.THUNDERSTORE_TOKEN }}
           name: Server_Utilities
-          version: 2.4.4
+          version: 2.4.5
           community: northstar
           categories: Mods Server-side
+          icon: https://raw.githubusercontent.com/F1F7Y/ServerUtilities/main/icon.png
           path: mods/
           wrap: mods/
