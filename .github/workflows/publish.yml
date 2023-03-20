@@ -15,6 +15,5 @@ jobs:
           name: Server_Utilities
           version: 2.4.3
           community: Northstar
-          dev: false
           categories: Mods Server-side
           path: mods
