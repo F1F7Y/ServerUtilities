@@ -290,7 +290,7 @@ void function FSV_ExtendThread(){
 		}
 		wait 1
 		foreach (entity player in GetPlayerArray()) {
-			NSCreateStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer),  extendVoters.len() + "/" + extendThreshold + "have voted to extend map time", "extend" )
+			NSCreateStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer),  extendVoters.len() + "/" + extendThreshold + " have voted to extend map time", "extend" )
 		}
 	}
 	if(GetConVarBool("FSV_ENABLE_CHATUI")){
