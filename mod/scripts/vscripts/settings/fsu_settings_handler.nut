@@ -1,8 +1,11 @@
+untyped
 global function FSU_RegisterSettingsModule
 global function FSU_SettingsAreLoaded
 
+global function FSU_DoesSettingExistInTable
 global function FSU_DoesSettingExist
 global function FSU_GetSettingValue
+global function FSU_GetSettingArray
 
 global function FSU_GetSettingsTable
 
@@ -67,12 +70,20 @@ bool function FSU_SettingsAreLoaded() {
     return file.bInitilazed
 }
 
+bool function FSU_DoesSettingExistInTable( table tabTable, string strKey ) {
+    return strKey in tabTable
+}
+
 bool function FSU_DoesSettingExist( string strKey ) {
     return strKey in file.tabSettings
 }
 
 string function FSU_GetSettingValue( string strKey ) {
     return string( file.tabSettings[strKey] )
+}
+
+array function FSU_GetSettingArray( string strKey ) {
+    return expect array( file.tabSettings[strKey] )
 }
 
 table function FSU_GetSettingsTable() {

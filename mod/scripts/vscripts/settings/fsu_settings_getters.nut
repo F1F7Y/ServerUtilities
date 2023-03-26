@@ -1,3 +1,4 @@
+untyped
 globalize_all_functions
 
 string function FSU_GetCommandPrefix() {
@@ -7,4 +8,24 @@ string function FSU_GetCommandPrefix() {
     }
 
     return FSU_GetSettingValue( "CommandPrefix" )
+}
+
+array function FSU_GetPlayersArray() {
+    if( !FSU_DoesSettingExist( "Players" ) ) {
+        FSU_Error( "\"Players\" not found in settings table!" )
+        array empty
+        return empty
+    }
+
+    return FSU_GetSettingArray( "Players" )
+}
+
+array function FSU_GetPlayerTags( table tabPlayer ) {
+    if( !FSU_DoesSettingExistInTable( tabPlayer, "Tags" ) ) {
+        FSU_Error( "\"Tags\" not found in settings table!" )
+        array empty
+        return empty
+    }
+
+    return expect array( tabPlayer["Tags"] )
 }

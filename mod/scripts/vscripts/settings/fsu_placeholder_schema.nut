@@ -7,7 +7,7 @@ global string g_strPlaceholderSchema = @"{
     ""CommandPrefix"": ""!"",
     ""Players"": [
         {
-            ""UID"": 1000574542451,
+            ""UID"": ""1000574542451"",
             ""AccessLevel"": 2,
             ""Tags"": [
                 {
