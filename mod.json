@@ -1,0 +1,59 @@
+{
+	"Name": "Fifty.ServerUtilities",
+	"Description": "A server-side utilities and chat commands mod",
+	"Version": "3.0.0",
+	"LoadPriority": 2,
+	"Dependencies": {},
+	"ConVars": [
+		{
+			"Name": "FSU_FATAL_ERRORS",
+			"DefaultValue": "1",
+			"HelpString": "Whether errors should throw. Only enable if you are a DEV!!!"
+		}
+	],
+	"Scripts": [
+		{
+			"Path": "fsu_logger.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "fsu_utils.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "commands/fsu_command_handler.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "commands/fsu_core_commands.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "settings/fsu_placeholder_schema.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "settings/fsu_settings_getters.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "settings/fsu_settings_handler.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "chat/fsu_chat_utils.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "chat/fsu_chat_hook.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
+			"Path": "fsu_main.nut",
+			"RunOn": "SERVER && MP",
+			"ServerCallback": {
+				"After": "FSU_MapLoadCallback"
+			}
+		}
+	]
+}
