@@ -14,12 +14,12 @@ globalize_all_functions
  * Defaults to "!".
  */
 string function FSU_GetCommandPrefix() {
-    if( !FSU_DoesSettingExist( "CommandPrefix" ) ) {
-        FSU_Error( "\"CommandPrefix\" not found in settings table!" )
-        return "!"
-    }
+	if( !FSU_DoesSettingExist( "CommandPrefix" ) ) {
+		FSU_Error( "\"CommandPrefix\" not found in settings table!" )
+		return "!"
+	}
 
-    return FSU_GetSettingValue( "CommandPrefix" )
+	return FSU_GetSettingValue( "CommandPrefix" )
 }
 
 /**
@@ -27,13 +27,13 @@ string function FSU_GetCommandPrefix() {
  * Defaults to an empty array.
  */
 array function FSU_GetPlayersArray() {
-    if( !FSU_DoesSettingExist( "Players" ) ) {
-        FSU_Error( "\"Players\" not found in settings table!" )
-        array empty
-        return empty
-    }
+	if( !FSU_DoesSettingExist( "Players" ) ) {
+		FSU_Error( "\"Players\" not found in settings table!" )
+		array empty
+		return empty
+	}
 
-    return FSU_GetSettingArray( "Players" )
+	return FSU_GetSettingArray( "Players" )
 }
 
 /**
@@ -41,11 +41,11 @@ array function FSU_GetPlayersArray() {
  * Defaults to an empty array.
  */
 array function FSU_GetPlayerTags( table tabPlayer ) {
-    if( !FSU_DoesSettingExistInTable( tabPlayer, "Tags" ) ) {
-        FSU_Error( "\"Tags\" not found in settings table!" )
-        array empty
-        return empty
-    }
+	if( !FSU_DoesSettingExistInTable( tabPlayer, "Tags" ) ) {
+		FSU_Error( "\"Tags\" not found in settings table!" )
+		array empty
+		return empty
+	}
 
-    return expect array( tabPlayer["Tags"] )
+	return expect array( tabPlayer["Tags"] )
 }

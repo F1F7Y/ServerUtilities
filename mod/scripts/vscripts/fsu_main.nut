@@ -18,7 +18,7 @@ global function FSU_MapLoadCallback
  * We use cutom init callbacks so we have full control over them.
  */
 void function FSU_MapLoadCallback() {
-    thread FSU_RegisterModules_Threaded()
+	thread FSU_RegisterModules_Threaded()
 }
 
 /**
@@ -26,18 +26,18 @@ void function FSU_MapLoadCallback() {
  * basically all other modules depend on them.
  */
 void function FSU_RegisterModules_Threaded() {
-    FSU_RegisterModule( FSU_RegisterSettingsModule )
+	FSU_RegisterModule( FSU_RegisterSettingsModule )
 
-    // Wait for settings to properly init before doing anything else
-    while( !FSU_SettingsAreLoaded() ) { WaitFrame() }
+	// Wait for settings to properly init before doing anything else
+	while( !FSU_SettingsAreLoaded() ) { WaitFrame() }
 
-    FSU_RegisterModule( FSU_RegisterChatHookModule )
-    FSU_RegisterModule( FSU_RegisterCoreCommandsModule )
+	FSU_RegisterModule( FSU_RegisterChatHookModule )
+	FSU_RegisterModule( FSU_RegisterCoreCommandsModule )
 
-    FSU_GetSettingsTable()
+	FSU_GetSettingsTable()
 
-    // Callbacks
-    FSU_ReloadRegisteredCommands()
+	// Callbacks
+	FSU_ReloadRegisteredCommands()
 }
 
 /**
@@ -45,5 +45,5 @@ void function FSU_RegisterModules_Threaded() {
  * @param module The module register function
  */
 void function FSU_RegisterModule( string functionref() module ) {
-    FSU_Print( "Registering module:", module() )
+	FSU_Print( "Registering module:", module() )
 }

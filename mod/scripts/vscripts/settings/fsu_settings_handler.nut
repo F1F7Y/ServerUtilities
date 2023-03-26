@@ -22,33 +22,33 @@ const string FSU_SETTINGS_FILE_NAME = "fsu_settings.json"
 
 
 struct {
-    bool bInitilazed = false
-    bool bIsPlaceholder = false
+	bool bInitilazed = false
+	bool bIsPlaceholder = false
 
-    table tabSettings
+	table tabSettings
 } file
 
 /**
  * Settings handler init callback
  */
 string function FSU_RegisterSettingsModule() {
-    FSU_Print( "Loading settings schema!" )
-    FSU_LoadSettingsJSON()
+	FSU_Print( "Loading settings schema!" )
+	FSU_LoadSettingsJSON()
 
-    return "SettingsModule"
+	return "SettingsModule"
 }
 
 /**
  * Tries to load settings schema from disk
  */
 void function FSU_LoadSettingsJSON() {
-    file.bInitilazed = false
+	file.bInitilazed = false
 
-    if( NSDoesFileExist( FSU_SETTINGS_FILE_NAME ) ) {
-        NSLoadJSONFile( FSU_SETTINGS_FILE_NAME, FSU_LoadSettingsSuccess_Callback, FSU_LoadSettingsFailure_Callback )
-    } else {
-        FSU_LoadSettingsFailure_Callback()
-    }
+	if( NSDoesFileExist( FSU_SETTINGS_FILE_NAME ) ) {
+		NSLoadJSONFile( FSU_SETTINGS_FILE_NAME, FSU_LoadSettingsSuccess_Callback, FSU_LoadSettingsFailure_Callback )
+	} else {
+		FSU_LoadSettingsFailure_Callback()
+	}
 }
 
 /**
@@ -57,9 +57,9 @@ void function FSU_LoadSettingsJSON() {
  * @param array<string> strArgs An array of arguments
  */
 void function FSU_ReloadSettings( array<string> strArgs ) {
-    // TODO: Check for a password here as anyone can call this
-    FSU_Print( "Reloading settings schema" )
-    FSU_LoadSettingsJSON()
+	// TODO: Check for a password here as anyone can call this
+	FSU_Print( "Reloading settings schema" )
+	FSU_LoadSettingsJSON()
 }
 
 /**
@@ -67,22 +67,22 @@ void function FSU_ReloadSettings( array<string> strArgs ) {
  * @param table json The loaded Json file represented as a table
  */
 void function FSU_LoadSettingsSuccess_Callback( table json ) {
-    file.tabSettings = json
-    file.bIsPlaceholder = false
-    file.bInitilazed = true
+	file.tabSettings = json
+	file.bIsPlaceholder = false
+	file.bInitilazed = true
 }
 
 /**
  * Loads the placeholder schema
  */
 void function FSU_LoadSettingsFailure_Callback() {
-    file.tabSettings = DecodeJSON( g_strPlaceholderSchema )
+	file.tabSettings = DecodeJSON( g_strPlaceholderSchema )
 
-    if( !("Version" in file.tabSettings) )
-        FSU_Error( "Failed parsing JSON file!" )
+	if( !("Version" in file.tabSettings) )
+		FSU_Error( "Failed parsing JSON file!" )
 
-    file.bIsPlaceholder = true
-    file.bInitilazed = true
+	file.bIsPlaceholder = true
+	file.bInitilazed = true
 }
 
 /**
@@ -90,7 +90,7 @@ void function FSU_LoadSettingsFailure_Callback() {
  * and when loading settings
  */
 bool function FSU_SettingsAreLoaded() {
-    return file.bInitilazed
+	return file.bInitilazed
 }
 
 /**
@@ -99,7 +99,7 @@ bool function FSU_SettingsAreLoaded() {
  * @param string strKey The key to check for
  */
 bool function FSU_DoesSettingExistInTable( table tabTable, string strKey ) {
-    return strKey in tabTable
+	return strKey in tabTable
 }
 
 /**
@@ -107,7 +107,7 @@ bool function FSU_DoesSettingExistInTable( table tabTable, string strKey ) {
  * @param string strKey The key to check for
  */
 bool function FSU_DoesSettingExist( string strKey ) {
-    return strKey in file.tabSettings
+	return strKey in file.tabSettings
 }
 
 /**
@@ -116,7 +116,7 @@ bool function FSU_DoesSettingExist( string strKey ) {
  * @param string strKey The key to get the value of
  */
 string function FSU_GetSettingValue( string strKey ) {
-    return string( file.tabSettings[strKey] )
+	return string( file.tabSettings[strKey] )
 }
 
 /**
@@ -125,7 +125,7 @@ string function FSU_GetSettingValue( string strKey ) {
  * @param string strKey The key to get the array of
  */
 array function FSU_GetSettingArray( string strKey ) {
-    return expect array( file.tabSettings[strKey] )
+	return expect array( file.tabSettings[strKey] )
 }
 
 /**
@@ -134,5 +134,5 @@ array function FSU_GetSettingArray( string strKey ) {
  * schema directly!!
  */
 table function FSU_GetSettingsTable() {
-    return file.tabSettings
+	return file.tabSettings
 }
