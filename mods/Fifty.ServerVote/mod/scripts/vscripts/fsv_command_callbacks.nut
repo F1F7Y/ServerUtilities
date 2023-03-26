@@ -134,6 +134,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 void function FSV_CommandCallback_Skip( entity player, array< string > args ) {
 	if( FSA_IsAdmin( player ) && args.len() >= 1 ) {
 		if( args[0].tolower() == "force" ) {
+			FSU_ChatBroadcast("%AMap skipped by admin!")
 			FSV_SkipMatch()
 		} else {
 			FSU_PrivateChatMessage( player, "You are admin. You can force skip: %H%Pskip force")
@@ -250,6 +251,7 @@ void function FSV_CommandCallback_Extend( entity player, array< string > args ) 
 	if( FSA_IsAdmin( player ) && args.len() >= 1 ) {
 		FSV_ExtendMatch( float( args[0].tointeger() ) )
 		FSU_PrivateChatMessage( player, "%SExtended match." )
+		FSU_ChatBroadcast("%AMap time extended by admin!")
 		return
 	}
 
