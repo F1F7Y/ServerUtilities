@@ -53,8 +53,8 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
 			message += strTag
 
 		message += ( entPlayer.GetTeam() == player.GetTeam() ? "%F" : "%E" ) + entPlayer.GetPlayerName() + ( bIsTeam ? "(Team)" : "" ) + "%0: "
-		message += strMessage
 		message = FSU_FormatString( message )
+		message += strMessage
 
 		NSBroadcastMessage( -1, player.GetPlayerIndex(), message , true, false, 1 )
 	}
