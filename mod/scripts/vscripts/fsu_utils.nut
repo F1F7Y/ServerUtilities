@@ -17,13 +17,7 @@ string function FSU_FormatString( string strUnformatted ) {
 		int green = FSU_GetIntegerFromHexString( strColor.slice(2, 4) )
 		int blue = FSU_GetIntegerFromHexString( strColor.slice(4, 6) )
 
-		// If a value is 255 its just white so we cap at 254
-		red = int( min( 245, red ) )
-		green = int( min( 245, green ) )
-		blue = int( min( 245, blue ) )
-
-
-		strFormatted = strFormatted.slice( 0, hexColorCode.begin ) + format( "\x1b[38;2;%i;%i;%im", red, green, blue )  + strFormatted.slice( hexColorCode.end, strFormatted.len() )
+		strFormatted = strFormatted.slice( 0, hexColorCode.begin ) + FSU_GetANSICodeFromRGB( red, green, blue )  + strFormatted.slice( hexColorCode.end, strFormatted.len() )
 
 		hexColorCode = regexp("#[0-9A-Fa-f]{6}").search( strFormatted )
 	}
@@ -56,4 +50,13 @@ int function FSU_GetIntegerFromHexString( string strHex ) {
 	}
 
 	return iNumber
+}
+
+string function FSU_GetANSICodeFromRGB( int iRed, int iGreen, int iBlue ) {
+	// If a value is 255 its just white so we cap at 254
+	int red = int( min( 245, iRed ) )
+	int green = int( min( 245, iGreen ) )
+	int blue = int( min( 245, iBlue ) )
+
+	return format( "\x1b[38;2;%i;%i;%im", red, green, blue )
 }

@@ -11,6 +11,15 @@
 			"HelpString": "Whether errors should throw. Only enable if you are a DEV!!!"
 		}
 	],
+	"ConCommands": [
+		{
+			"Name": "fsu_reload_settings",
+			"Function": "FSU_ReloadSettings",
+			"Context": "SERVER",
+			"HelpString": "Reloads FSU settings",
+			"Flags": 0
+		}
+	],
 	"Scripts": [
 		{
 			"Path": "fsu_logger.nut",

@@ -19,7 +19,27 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
 				continue
 			}
 
-			arrTags.append( string( tabTag["Name"] ) )
+			int iRed = 255
+			int iGreen = 255
+			int iBlue = 255
+
+			// The reason for the string( * ).tointeger() even though the elements are ints is
+			// the squirrel complaining at compile time
+			// When compiling tabTag["*"] is a var so we need to cast it to int, but
+			// during execution tabTag["*"] is an int and we cant int( int )
+			// TODO: Possibly make FSU_GetTable<type> functions for this
+
+			if( FSU_DoesSettingExistInTable( tabTag, "Red" ) )
+				iRed = string( tabTag["Red"] ).tointeger()
+
+			if( FSU_DoesSettingExistInTable( tabTag, "Green" ) )
+				iGreen = string( tabTag["Green"] ).tointeger()
+
+			if( FSU_DoesSettingExistInTable( tabTag, "Blue" ) )
+				iBlue = string( tabTag["Blue"] ).tointeger()
+
+
+			arrTags.append( format( "%s[%s]", FSU_GetANSICodeFromRGB( iRed, iGreen, iBlue ), string( tabTag["Name"] ) ) )
 		}
 	}
 
@@ -30,7 +50,7 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
 		string message
 
 		foreach( string strTag in arrTags )
-			message += format( "[%s]", strTag )
+			message += strTag
 
 		message += ( entPlayer.GetTeam() == player.GetTeam() ? "%F" : "%E" ) + entPlayer.GetPlayerName() + ( bIsTeam ? "(Team)" : "" ) + "%0: "
 		message += strMessage

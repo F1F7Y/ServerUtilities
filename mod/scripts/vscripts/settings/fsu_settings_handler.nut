@@ -2,6 +2,8 @@ untyped
 global function FSU_RegisterSettingsModule
 global function FSU_SettingsAreLoaded
 
+global function FSU_ReloadSettings
+
 global function FSU_DoesSettingExistInTable
 global function FSU_DoesSettingExist
 global function FSU_GetSettingValue
@@ -22,6 +24,7 @@ struct {
  * Settings handler init callback
  */
 string function FSU_RegisterSettingsModule() {
+    FSU_Print( "Loading settings schema!" )
     FSU_LoadSettingsJSON()
 
     return "SettingsModule"
@@ -38,6 +41,15 @@ void function FSU_LoadSettingsJSON() {
     } else {
         FSU_LoadSettingsFailure_Callback()
     }
+}
+
+/**
+ *
+ */
+void function FSU_ReloadSettings( array<string> strArgs ) {
+    // TODO: Check for a password here as anyone can call this
+    FSU_Print( "Reloading settings schema" )
+    FSU_LoadSettingsJSON()
 }
 
 /**
