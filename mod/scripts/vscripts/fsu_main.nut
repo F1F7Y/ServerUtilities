@@ -1,5 +1,17 @@
 global function FSU_MapLoadCallback
 
+/**
+ * Entry point for the entirety of FSU3.
+ *
+ * The goal of this major release is to allow server hosters
+ * to be able to edit settings in real time, see their changes
+ * take effect instantly and most importantly have the changes
+ * persist between Server VM reloads. Most of this is achieved
+ * using custom callbacks and JSON I/O. The second big goal is
+ * graceful error handling, if it fails move on, we dont want
+ * the server to have to restart due to a script error.
+ */
+
 
 /**
  * Gets called by native after the map is loaded.
@@ -29,7 +41,7 @@ void function FSU_RegisterModules_Threaded() {
 }
 
 /**
- * Calls the module register func and logs
+ * Calls the module register func and logs the module
  * @param module The module register function
  */
 void function FSU_RegisterModule( string functionref() module ) {

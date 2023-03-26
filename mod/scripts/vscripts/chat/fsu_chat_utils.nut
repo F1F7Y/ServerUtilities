@@ -2,6 +2,18 @@ untyped
 globalize_all_functions
 
 
+/**
+ * This file contains chat utility functions.
+ */
+
+
+/**
+ * Sends a message as a player effectively impersonating them. Unlike
+ * the northstar implementation this also adds tags before their name
+ * @param entity entPlayer The player to impersonate
+ * @param string strMessage The message to send
+ * @param bool bIsTeam Wheter to use team chat
+ */
 void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool bIsTeam ) {
 	array<string> arrTags
 
@@ -60,9 +72,15 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
 	}
 }
 
+/**
+ * Sends a system message to a player.
+ * @param entity entPlayer The player to send the message to
+ * @param string strMessage The message to send them
+ */
 void function FSU_SendSystemMessageToPlayer( entity entPlayer, string strMessage ) {
 	string message
 	message += "[FSU] "
 	message += strMessage
+	message = FSU_FormatString( message )
 	NSBroadcastMessage( -1, entPlayer.GetPlayerIndex(), message , true, false, 1 )
 }

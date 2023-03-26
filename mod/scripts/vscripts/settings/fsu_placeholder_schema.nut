@@ -1,5 +1,6 @@
 /**
- * Placeholder settings schema. Gets loaded if we fail to load the schema from disk
+ * Placeholder settings schema.
+ * Gets loaded if we fail to load the schema from disk.
  */
 global string g_strPlaceholderSchema = @"{
     ""Version"": ""0.0.0"",

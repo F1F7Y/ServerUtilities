@@ -1,6 +1,11 @@
 untyped
 globalize_all_functions
 
+/**
+ * Formats a string. Currently supports hex color codes ( #RRGGBB ) and
+ * curstom presets ( %x )
+ * @param string strUnformatted The string to format
+ */
 string function FSU_FormatString( string strUnformatted ) {
 	string strFormatted = strUnformatted
 
@@ -25,6 +30,10 @@ string function FSU_FormatString( string strUnformatted ) {
 	return strFormatted
 }
 
+/**
+ * Converts a base-16 string to an integer.
+ * @param string strHex The Hexadecimal number to be converted
+ */
 int function FSU_GetIntegerFromHexString( string strHex ) {
 	int iNumber
 
@@ -52,6 +61,12 @@ int function FSU_GetIntegerFromHexString( string strHex ) {
 	return iNumber
 }
 
+/**
+ * Creates an ansi escape code using the passed colors.
+ * @param int iRed Red element ( 0 - 255 )
+ * @param int iGreen Green element ( 0 - 255 )
+ * @param int iBlue Blue element ( 0 - 255 )
+ */
 string function FSU_GetANSICodeFromRGB( int iRed, int iGreen, int iBlue ) {
 	// If a value is 255 its just white so we cap at 254
 	int red = int( min( 245, iRed ) )
