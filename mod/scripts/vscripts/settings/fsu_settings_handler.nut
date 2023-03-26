@@ -6,7 +6,7 @@ global function FSU_ReloadSettings
 
 global function FSU_DoesSettingExistInTable
 global function FSU_DoesSettingExist
-global function FSU_GetSettingValue
+global function FSU_GetSettingString
 global function FSU_GetSettingArray
 
 global function FSU_GetSettingsTable
@@ -115,7 +115,7 @@ bool function FSU_DoesSettingExist( string strKey ) {
  * loaded settings schema
  * @param string strKey The key to get the value of
  */
-string function FSU_GetSettingValue( string strKey ) {
+string function FSU_GetSettingString( string strKey ) {
 	return string( file.tabSettings[strKey] )
 }
 

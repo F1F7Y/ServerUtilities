@@ -36,5 +36,5 @@ void function FSU_OnRegisteringCommands() {
 void function FSU_CommandCallback_Test( entity entPlayer, array<string> arrArgs ) {
 	FSU_SendSystemMessageToPlayer( entPlayer, "Test" )
 
-	//FSU_Print(FSU_GetSettingValue("Version"))
+	//FSU_Print(FSU_GetSettingString("Version"))
 }

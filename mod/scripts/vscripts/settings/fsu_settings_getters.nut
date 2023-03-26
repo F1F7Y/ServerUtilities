@@ -19,14 +19,14 @@ string function FSU_GetCommandPrefix() {
 		return "!"
 	}
 
-	return FSU_GetSettingValue( "CommandPrefix" )
+	return FSU_GetSettingString( "CommandPrefix" )
 }
 
 /**
  * Gets the player array.
  * Defaults to an empty array.
  */
-array function FSU_GetPlayersArray() {
+array function FSU_GetPlayerArray() {
 	if( !FSU_DoesSettingExist( "Players" ) ) {
 		FSU_Error( "\"Players\" not found in settings table!" )
 		array empty

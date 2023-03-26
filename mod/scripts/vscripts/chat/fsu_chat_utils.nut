@@ -17,7 +17,7 @@ globalize_all_functions
 void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool bIsTeam ) {
 	array<string> arrTags
 
-	foreach( var varPlayer in FSU_GetPlayersArray() ) {
+	foreach( var varPlayer in FSU_GetPlayerArray() ) {
 		table tabPlayer = expect table( varPlayer )
 
 		if( tabPlayer["UID"] != entPlayer.GetUID() )
