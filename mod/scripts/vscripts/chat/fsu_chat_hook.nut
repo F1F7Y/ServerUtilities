@@ -6,7 +6,7 @@ global function FSU_RegisterChatHookModule
  * by players and resend them checking for commands and adding
  * custom formatting. This may break other mods, but due to FSU
  * being the largest server utilities mod and there being no other
- * way of adding tags before the players name I think this is a 
+ * way of adding tags before the players name I think this is a
  * trade-off we can make.
  */
 
@@ -26,7 +26,7 @@ string function FSU_RegisterChatHookModule() {
  */
 ClServer_MessageStruct function FSU_ChatHook( ClServer_MessageStruct message ) {
 
-	bool bBlock = !FSU_CheckMessageForCommand( message.player, message.message )
+	bool bBlock = FSU_CheckMessageForCommand( message.player, message.message )
 
 	if( !bBlock )
 		FSU_SendMessageAsPlayer( message.player, message.message, message.isTeam )

@@ -21,9 +21,9 @@ string function FSU_RegisterCoreCommandsModule() {
  */
 void function FSU_OnRegisteringCommands() {
 	FSU_CommandStruct cmd
-	cmd.iUserLevel = 0
-	cmd.strDefaultDescription = "Test"
-	cmd.arrAbbreviations = []
+	cmd.iUserLevel = eFSUPlayerLevel.DEFAULT
+	cmd.arrDescriptions[eFSUPlayerLevel.DEFAULT] = "Test desc"
+	cmd.arrAbbreviations = [ "te", "TA" ]
 	cmd.Callback = FSU_CommandCallback_Test
 	FSU_RegisterCommand( "test", cmd )
 }

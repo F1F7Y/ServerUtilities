@@ -10,16 +10,28 @@ global function FSU_CheckMessageForCommand
  * calling of chat commands
  */
 
+/**
+ * Player level used for command permissions
+ */
+global enum eFSUPlayerLevel {
+	DEFAULT = 0,
+	VIP = 1,
+	MODERATOR = 2,
+	ADMIN = 3,
+	OWNER = 4,
+	LENGTH = 5
+}
 
 /**
  * Stores information about the command
  */
 global struct FSU_CommandStruct {
 	// Minimum level for a user to be able to use / see the command
-	// 0 - Default
-	int iUserLevel = 0
-	// Default command description
-	string strDefaultDescription
+	int iUserLevel = eFSUPlayerLevel.DEFAULT
+	// Command descripiton
+	// Each array index corresponds to a eFSUPlayerLevel
+	// If a description is empty for a level we use the next one under us
+	string[eFSUPlayerLevel.LENGTH] arrDescriptions
 	// Command abbreviations
 	array<string> arrAbbreviations
 	// Callback function
@@ -82,22 +94,37 @@ void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
  * @param string strMessgae The message to check
  */
 bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) {
-	bool bIsCommand = strMessage.find( FSU_GetCommandPrefix() ) != 0
+	bool bIsCommand = strMessage.find( FSU_GetCommandPrefix() ) == 0
 
+	// Early out if we're not a command
+	if( !bIsCommand )
+		return bIsCommand
+
+	// Extract arguments
 	array<string> arrArgs = split( strMessage, " " )
 	string strCommand = arrArgs[0].tolower().slice( FSU_GetCommandPrefix().len(), arrArgs[0].len() )
 	arrArgs.remove(0)
 
+	// Try to find the command
 	FSU_CommandStruct command
 	foreach( string name, FSU_CommandStruct cmd in file.tabCommands ) {
 		if( name == strCommand ) {
 			command = cmd
 			break
 		}
+
+		foreach( string abb in cmd.arrAbbreviations ) {
+			if( abb.tolower() == strCommand ) {
+				command = cmd
+				break
+			}
+		}
 	}
 
-	if(command.Callback != null)
-		command.Callback(entPlayer, arrArgs)
+	if( command.Callback != null )
+		command.Callback( entPlayer, arrArgs )
+	else
+		FSU_SendSystemMessageToPlayer( entPlayer, format( "Command: \"%s\" not found!", strCommand ) )
 
 	return bIsCommand
 }
