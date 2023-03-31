@@ -48,3 +48,22 @@ void function FSU_Error( ... ) {
 	else
 		print( msg )
 }
+
+/**
+ * Prints a debug message into the chat and the console,
+ * if FSU_FATAL_ERRORS is set it throws an error instead
+ * @param ... A list of variables to be printed
+ */
+void function FSU_Debug( ... ) {
+	if( !GetConVarBool( "FSU_DEBUG_PRINT" ) )
+		return
+
+	if ( vargc <= 0 )
+		return
+
+	string msg = "[FSU][DEBG]"
+	for ( int i = 0; i < vargc; i++ )
+		msg += " " + vargv[i]
+
+	NSBroadcastMessage( -1, -1, msg , true, false, 1 )
+}
