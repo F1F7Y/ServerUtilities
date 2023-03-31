@@ -111,3 +111,12 @@ void function FSU_SendSystemMessageToPlayer( entity entPlayer, string strMessage
 	string message = FSU_FormatString( color + prefix + "%0 " ) + strMessage
 	NSBroadcastMessage( -1, entPlayer.GetPlayerIndex(), message , true, false, 1 )
 }
+
+/**
+ * Broadcasts a message to all players
+ * @param string strMessage The mesage to broadcast
+ */
+void function FSU_BroadcastSystemMessage( string strMessage ) {
+	foreach( entity player in GetPlayerArray() )
+		FSU_SendSystemMessageToPlayer( player, strMessage )
+}
