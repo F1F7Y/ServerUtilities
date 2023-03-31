@@ -9,8 +9,6 @@ global function FSU_DoesSettingExist
 global function FSU_GetSettingString
 global function FSU_GetSettingArray
 
-global function FSU_GetSettingsTable
-
 
 const string FSU_SETTINGS_FILE_NAME = "fsu_settings.json"
 
@@ -126,13 +124,4 @@ string function FSU_GetSettingString( string strKey ) {
  */
 array function FSU_GetSettingArray( string strKey ) {
 	return expect array( file.tabSettings[strKey] )
-}
-
-/**
- * Gets the table representing the current loaded schema
- * NOTE: This is dev only!! You shouldnt manipulate the settings
- * schema directly!!
- */
-table function FSU_GetSettingsTable() {
-	return file.tabSettings
 }

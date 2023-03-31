@@ -35,6 +35,10 @@
 			"RunOn": "SERVER && MP"
 		},
 		{
+			"Path": "fsu_custom_callbacks.nut",
+			"RunOn": "SERVER && MP"
+		},
+		{
 			"Path": "commands/fsu_command_handler.nut",
 			"RunOn": "SERVER && MP"
 		},

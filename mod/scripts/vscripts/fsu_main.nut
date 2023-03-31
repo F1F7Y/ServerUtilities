@@ -26,6 +26,7 @@ void function FSU_MapLoadCallback() {
  * basically all other modules depend on them.
  */
 void function FSU_RegisterModules_Threaded() {
+	// Load settings
 	FSU_RegisterModule( FSU_RegisterSettingsModule )
 
 	// Wait for settings to properly init before doing anything else
@@ -33,10 +34,9 @@ void function FSU_RegisterModules_Threaded() {
 
 	FSU_RegisterModule( FSU_RegisterChatHookModule )
 	FSU_RegisterModule( FSU_RegisterCoreCommandsModule )
+	FSU_RegisterModule( FSU_RegisterCustomCallbacksModule )
 
-	FSU_GetSettingsTable()
-
-	// Callbacks
+	// Register chat commands
 	FSU_ReloadRegisteredCommands()
 }
 

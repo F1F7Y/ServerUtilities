@@ -28,6 +28,8 @@ ClServer_MessageStruct function FSU_ChatHook( ClServer_MessageStruct message ) {
 
 	bool bBlock = FSU_CheckMessageForCommand( message.player, message.message )
 
+	bBlock = bBlock || FSU_RunOnReceivedSayTextMessageCallbacks( message )
+
 	if( !bBlock )
 		FSU_SendMessageAsPlayer( message.player, message.message, message.isTeam )
 
