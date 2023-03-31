@@ -6,6 +6,14 @@ global string g_strPlaceholderSchema = @"{
 	""Version"": ""0.0.0"",
 	""ChatSystemPrefix"": ""[FSU]"",
 	""CommandPrefix"": ""!"",
+	""Theme"": [
+		{
+			""Type"": ""ChatSystemPrefix"",
+			""Red"": 240,
+			""Green"": 120,
+			""Blue"": 60
+		}
+	],
 	""Players"": [
 		{
 			""UID"": ""1000574542451"",

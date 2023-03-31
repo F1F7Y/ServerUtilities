@@ -78,9 +78,36 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
  * @param string strMessage The message to send them
  */
 void function FSU_SendSystemMessageToPlayer( entity entPlayer, string strMessage ) {
-	string message
-	message += "[FSU] "
-	message += strMessage
-	message = FSU_FormatString( message )
+	string color
+	if( FSU_DoesSettingExist( "Theme" ) ) {
+		foreach( var varTheme in FSU_GetSettingArray( "Theme" ) ) {
+			table tabTheme = expect table( varTheme )
+
+			if( tabTheme["Type"] == "ChatSystemPrefix" ) {
+				int iRed = 255
+				int iGreen = 255
+				int iBlue = 255
+
+				if( FSU_DoesSettingExistInTable( tabTheme, "Red" ) )
+					iRed = string( tabTheme["Red"] ).tointeger()
+
+				if( FSU_DoesSettingExistInTable( tabTheme, "Green" ) )
+					iGreen = string( tabTheme["Green"] ).tointeger()
+
+				if( FSU_DoesSettingExistInTable( tabTheme, "Blue" ) )
+					iBlue = string( tabTheme["Blue"] ).tointeger()
+
+				color = FSU_GetANSICodeFromRGB( iRed, iGreen, iBlue )
+				break
+			}
+		}
+	}
+
+	string prefix = "[FSU]"
+	if( FSU_DoesSettingExist( "ChatSystemPrefix" ) ) {
+		prefix = FSU_GetSettingString( "ChatSystemPrefix" )
+	}
+
+	string message = FSU_FormatString( color + prefix + "%0 " ) + strMessage
 	NSBroadcastMessage( -1, entPlayer.GetPlayerIndex(), message , true, false, 1 )
 }
