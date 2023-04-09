@@ -152,22 +152,22 @@ table <entity, string> function FSV_GetMapVoteTable() {
 }
 
 /**
- * Get current next map chances
+ * Get a string containing maps that currently have votes, and how many votes they have
 */
-string function FSV_GetNextMapChances() {
-	table <string, float> mapChances
+string function FSV_GetMapVotesMessage() {
+	table <string, float> votedMaps
 	foreach(entity player, string map in mapVoteTable){
-		if((map in mapChances))
-			mapChances[map] += 100.0 / mapVoteTable.len()
+		if((map in votedMaps))
+			votedMaps[map] += 1
 		else
-			mapChances[map] <- 100.0 / mapVoteTable.len()
+			votedMaps[map] <- 1
 	}
 	string message = ""
-	foreach(string map, float chance in mapChances){
+	foreach(string map, float votes in votedMaps){
 		if (message == "")
-			message += FSV_Localize(map) + " %T" + floor(chance) + "%"
+			message += FSV_Localize(map) + ": %T" + votes + " votes"
 		else
-			message += ", %H" + FSV_Localize(map) + " %T" + floor(chance) + "%"
+			message += ", %H" + FSV_Localize(map) + ": %T" + votes + " votes"
 	}
 	return message
 }

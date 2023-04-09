@@ -123,7 +123,7 @@ void function FSV_CommandCallback_NextMap( entity player, array< string > args )
 
 	FSU_ChatBroadcast( "A player has voted for %H" + mapVoteName + "%N to be the next map, %H" + GetConVarString("FSCC_PREFIX")+"nm <map>" + "%N." )
 	FSV_VoteForNextMap( player, mapVoteId )
-	FSU_ChatBroadcast( "Next map pool: %H" + FSV_GetNextMapChances() )
+	FSU_ChatBroadcast( "Next map pool: %H" + FSV_GetMapVotesMessage() )
 }
 
 /**
