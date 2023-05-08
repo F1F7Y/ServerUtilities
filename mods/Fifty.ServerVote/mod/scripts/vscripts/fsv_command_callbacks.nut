@@ -482,9 +482,6 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 		ServerCommand("kick " + player.GetPlayerName())
 		if( playersWithActiveVotes.find( kickInfo.voters[0] ) > -1 )
 			playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
-		if (targetUid in kickTable) {
-			delete kickTable[targetUid]
-		}
 	}
 	return
 }
