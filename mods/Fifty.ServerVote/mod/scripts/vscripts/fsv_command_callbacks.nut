@@ -420,8 +420,13 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 		}
 
 		FSU_Print( targetName + " kicked by admin:" + player.GetPlayerName())
-		ServerCommand("kick " + target.GetPlayerName())
-		FSU_ChatBroadcast("%H"+player.GetPlayerName() + " %Nwas kicked by an admin.")
+		NSDisconnectPlayer(target, "You got kicked by admin")
+		FSU_ChatBroadcast("%H"+target.GetPlayerName() + " %Nwas kicked by an admin.")
+		if (targetUid in kickTable){
+			if( playersWithActiveVotes.find( kickTable[targetUid].voters[0] ) > -1 )
+				playersWithActiveVotes.remove( playersWithActiveVotes.find( kickTable[targetUid].voters[0] ) )
+			delete kickTable[targetUid]
+		}
 		return
 	}
 
@@ -479,7 +484,7 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 			FSU_SaveArrayArrayToConVar("FSV_KICK_BLOCK", newKickedArray)
 		}
 
-		ServerCommand("kick " + player.GetPlayerName())
+		NSDisconnectPlayer(target, "You got kicked by vote")
 		if( playersWithActiveVotes.find( kickInfo.voters[0] ) > -1 )
 			playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
 	}
@@ -516,7 +521,7 @@ void function FSV_KickThread(string targetName, string targetUid){
 	wait 5
 
 	// Timer and UI update loop
-	while(timer > 0 && kickTable[targetUid].voters.len() < kickTable[targetUid].threshold){
+	while(targetUid in kickTable && timer > 0 && kickTable[targetUid].voters.len() < kickTable[targetUid].threshold){
 		if(timer == nextUpdate){
 			if(GetConVarBool("FSV_ENABLE_RUI")){
 				foreach (entity player in GetPlayerArray()) {
@@ -536,41 +541,54 @@ void function FSV_KickThread(string targetName, string targetUid){
 		wait 1
 	}
 
-	// Announce results of vote
-	KickInfo kickInfo = kickTable[targetUid]
-	if(GetConVarBool("FSV_ENABLE_RUI")){
-		if (kickInfo.voters.len() >= kickInfo.threshold){
-			foreach ( entity player in GetPlayerArray() ){
-				NSSendAnnouncementMessageToPlayer( player, targetName + " has been kicked", "", <1,0,0>, 0, 1 )
+	if( targetUid in kickTable ){
+		// Announce results of vote
+		KickInfo kickInfo = kickTable[targetUid]
+		if(GetConVarBool("FSV_ENABLE_RUI")){
+			if (kickInfo.voters.len() >= kickInfo.threshold){
+				foreach ( entity player in GetPlayerArray() ){
+					NSSendAnnouncementMessageToPlayer( player, targetName + " has been kicked", "", <1,0,0>, 0, 1 )
+				}
+				wait 1
+				foreach (entity player in GetPlayerArray()) {
+					NSEditStatusMessageOnPlayer( player, "PASS", targetName + " has been kicked!", "kick" + targetName )
+				}
 			}
-			wait 1
-			foreach (entity player in GetPlayerArray()) {
-				NSEditStatusMessageOnPlayer( player, "PASS", targetName + " has been kicked!", "kick" + targetName )
-			}
-		}
-		else{
-			foreach (entity player in GetPlayerArray()) {
-				if( player.GetUID() != targetUid ){
-					NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to kick " + targetName + "!", "kick" + targetName )
+			else{
+				foreach (entity player in GetPlayerArray()) {
+					if( player.GetUID() != targetUid ){
+						NSEditStatusMessageOnPlayer( player, "FAIL", "Not enough votes to kick " + targetName + "!", "kick" + targetName )
+					}
 				}
 			}
 		}
-	}
-	if (GetConVarBool("FSV_ENABLE_CHATUI") ){
-		if (kickInfo.voters.len() >= kickInfo.threshold){
-			FSU_ChatBroadcast("Final vote received! %H"+ targetName + " %Shas been kicked!")
+		if (GetConVarBool("FSV_ENABLE_CHATUI") ){
+			if (kickInfo.voters.len() >= kickInfo.threshold){
+				FSU_ChatBroadcast("Final vote received! %H"+ targetName + " %Shas been kicked!")
+			}
+			else{
+				FSU_ChatBroadcast("%EThe vote to kick "+ targetName +" has failed! %NNot enough votes to kick.")
+			}
 		}
-		else{
-			FSU_ChatBroadcast("%EThe vote to kick "+ targetName +" has failed! %NNot enough votes to kick.")
+	}else{
+		if(GetConVarBool("FSV_ENABLE_RUI")){
+			foreach (entity player in GetPlayerArray()) {
+				if( player.GetUID() != targetUid ){
+					NSEditStatusMessageOnPlayer( player, "ADMN", "Admin kicked " + targetName + "!", "kick" + targetName )
+				}
+			}
+		}
+		if (GetConVarBool("FSV_ENABLE_CHATUI") ){
+			FSU_ChatBroadcast("%SAdmin has kicked %H"+ targetName +"%S!")
 		}
 	}
 
 	// Reset everything
 	if (targetUid in kickTable){
+		if( playersWithActiveVotes.find( kickTable[targetUid].voters[0] ) > -1 )
+			playersWithActiveVotes.remove( playersWithActiveVotes.find( kickTable[targetUid].voters[0] ) )
 		delete kickTable[targetUid]
 	}
-	if( playersWithActiveVotes.find( kickInfo.voters[0] ) > -1 )
-		playersWithActiveVotes.remove( playersWithActiveVotes.find( kickInfo.voters[0] ) )
 	wait 10
 	if(GetConVarBool("FSV_ENABLE_RUI")){
 		foreach ( entity player in GetPlayerArray() ){
