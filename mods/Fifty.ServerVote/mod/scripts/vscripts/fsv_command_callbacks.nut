@@ -508,7 +508,7 @@ void function FSV_KickThread(string targetName, string targetUid){
 		}
 		wait 1
 		foreach (entity player in GetPlayerArray()) {
-			if( player.GetUID() != targetUid){
+			if(targetUid in kickTable && player.GetUID() != targetUid){
 				NSCreateStatusMessageOnPlayer( player, FSV_TimerToMinutesAndSeconds(timer),  kickTable[targetUid].voters.len() + "/" + kickTable[targetUid].threshold + " have voted to kick " + targetName, "kick" + targetName )
 			}
 		}
