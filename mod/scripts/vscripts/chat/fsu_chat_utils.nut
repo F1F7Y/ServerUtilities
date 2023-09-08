@@ -17,41 +17,13 @@ globalize_all_functions
 void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool bIsTeam ) {
 	array<string> arrTags
 
-	foreach( var varPlayer in FSU_GetPlayerArray() ) {
-		table tabPlayer = expect table( varPlayer )
+	foreach( string svUID, FSUPlayer_t Player in FSU_GetSettings().tbPlayers ) {
 
-		if( tabPlayer["UID"] != entPlayer.GetUID() )
+		if( svUID != entPlayer.GetUID() )
 			continue
 
-		foreach( var varTag in FSU_GetPlayerTags( tabPlayer ) ) {
-			table tabTag = expect table( varTag )
-
-			if( !FSU_DoesSettingExistInTable( tabTag, "Name" ) ) {
-				FSU_Error( "Invalid tag entry for player", entPlayer.GetUID(), "!!!" )
-				continue
-			}
-
-			int iRed = 255
-			int iGreen = 255
-			int iBlue = 255
-
-			// The reason for the string(// ).tointeger() even though the elements are ints is
-			// the squirrel complaining at compile time
-			// When compiling tabTag["*"] is a var so we need to cast it to int, but
-			// during execution tabTag["*"] is an int and we cant int( int )
-			// TODO: Possibly make FSU_GetTable<type> functions for this
-
-			if( FSU_DoesSettingExistInTable( tabTag, "Red" ) )
-				iRed = string( tabTag["Red"] ).tointeger()
-
-			if( FSU_DoesSettingExistInTable( tabTag, "Green" ) )
-				iGreen = string( tabTag["Green"] ).tointeger()
-
-			if( FSU_DoesSettingExistInTable( tabTag, "Blue" ) )
-				iBlue = string( tabTag["Blue"] ).tointeger()
-
-
-			arrTags.append( format( "%s[%s]", FSU_GetANSICodeFromRGB( iRed, iGreen, iBlue ), string( tabTag["Name"] ) ) )
+		foreach( FSUPlayerTag_t Tag in Player.arTags ) {
+			arrTags.append( format( "%s[%s]", FSU_GetANSICodeFromRGB( Tag.iRed, Tag.iGreen, Tag.iBlue ), Tag.svName ) )
 		}
 	}
 
@@ -79,34 +51,15 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
 //-----------------------------------------------------------------------------
 void function FSU_SendSystemMessageToPlayer( entity entPlayer, string strMessage ) {
 	string color
-	if( FSU_DoesSettingExist( "Theme" ) ) {
-		foreach( var varTheme in FSU_GetSettingArray( "Theme" ) ) {
-			table tabTheme = expect table( varTheme )
 
-			if( tabTheme["Type"] == "ChatSystemPrefix" ) {
-				int iRed = 255
-				int iGreen = 255
-				int iBlue = 255
-
-				if( FSU_DoesSettingExistInTable( tabTheme, "Red" ) )
-					iRed = string( tabTheme["Red"] ).tointeger()
-
-				if( FSU_DoesSettingExistInTable( tabTheme, "Green" ) )
-					iGreen = string( tabTheme["Green"] ).tointeger()
-
-				if( FSU_DoesSettingExistInTable( tabTheme, "Blue" ) )
-					iBlue = string( tabTheme["Blue"] ).tointeger()
-
-				color = FSU_GetANSICodeFromRGB( iRed, iGreen, iBlue )
-				break
-			}
+	foreach( string svTheme, FSUTheme_t Theme  in FSU_GetSettings().tbThemes ) {
+		if( svTheme == "ChatSystemPrefix" ) {
+			color = FSU_GetANSICodeFromRGB( Theme.iRed, Theme.iGreen, Theme.iBlue )
+			break
 		}
 	}
 
-	string prefix = "[FSU]"
-	if( FSU_DoesSettingExist( "ChatSystemPrefix" ) ) {
-		prefix = FSU_GetSettingString( "ChatSystemPrefix" )
-	}
+	string prefix = FSU_GetSettings().svChatPrefix
 
 	string message = FSU_FormatString( color + prefix + "%0 " ) + strMessage
 	NSBroadcastMessage( -1, entPlayer.GetPlayerIndex(), message , true, false, 1 )
@@ -119,4 +72,11 @@ void function FSU_SendSystemMessageToPlayer( entity entPlayer, string strMessage
 void function FSU_BroadcastSystemMessage( string strMessage ) {
 	foreach( entity player in GetPlayerArray() )
 		FSU_SendSystemMessageToPlayer( player, strMessage )
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Returns the command prefix
+//-----------------------------------------------------------------------------
+string function FSU_GetCommandPrefix() {
+	return FSU_GetSettings().svCommandPrefix
 }

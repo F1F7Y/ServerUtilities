@@ -4,6 +4,7 @@
 	"Version": "3.0.0",
 	"LoadPriority": 2,
 	"Dependencies": {},
+	"InitScript": "fsu_init.nut",
 	"ConVars": [
 		{
 			"Name": "FSU_FATAL_ERRORS",
@@ -51,11 +52,7 @@
 			"RunOn": "SERVER && MP"
 		},
 		{
-			"Path": "settings/fsu_settings_getters.nut",
-			"RunOn": "SERVER && MP"
-		},
-		{
-			"Path": "settings/fsu_settings_handler.nut",
+			"Path": "settings/fsu_settings.nut",
 			"RunOn": "SERVER && MP"
 		},
 		{

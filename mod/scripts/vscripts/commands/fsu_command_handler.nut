@@ -12,18 +12,6 @@ global function FSU_CheckMessageForCommand
 
 
 //-----------------------------------------------------------------------------
-// Player level used for command permissions
-//-----------------------------------------------------------------------------
-global enum eFSUPlayerLevel {
-	DEFAULT = 0,
-	VIP = 1,
-	MODERATOR = 2,
-	ADMIN = 3,
-	OWNER = 4,
-	LENGTH = 5
-}
-
-//-----------------------------------------------------------------------------
 // Stores information about the command
 //-----------------------------------------------------------------------------
 global struct FSU_CommandStruct {

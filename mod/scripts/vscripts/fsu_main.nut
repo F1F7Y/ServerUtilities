@@ -28,7 +28,7 @@ void function FSU_MapLoadCallback() {
 //-----------------------------------------------------------------------------
 void function FSU_RegisterModules_Threaded() {
 	// Load settings
-	FSU_RegisterModule( FSU_RegisterSettingsModule )
+	FSU_LoadSettings()
 
 	// Wait for settings to properly init before doing anything else
 	while( !FSU_SettingsAreLoaded() ) { WaitFrame() }

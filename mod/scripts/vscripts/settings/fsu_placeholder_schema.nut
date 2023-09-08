@@ -3,10 +3,10 @@
 // Gets loaded if we fail to load the schema from disk.
 //-----------------------------------------------------------------------------
 global string g_strPlaceholderSchema = @"{
-	""Version"": ""0.0.0"",
+	""Version"": 0,
 	""ChatSystemPrefix"": ""[FSU]"",
 	""CommandPrefix"": ""!"",
-	""Theme"": [
+	""Themes"": [
 		{
 			""Type"": ""ChatSystemPrefix"",
 			""Red"": 240,
