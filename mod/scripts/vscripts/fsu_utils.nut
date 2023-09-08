@@ -75,3 +75,22 @@ string function FSU_GetANSICodeFromRGB( int iRed, int iGreen, int iBlue ) {
 
 	return format( "\x1b[38;2;%i;%i;%im", red, green, blue )
 }
+
+entity function FSU_GetPlayerEntityByName(string name){
+	if(name == "")
+		return null
+
+
+	foreach(entity p in GetPlayerArray())
+		if(p.GetPlayerName().tolower() == name.tolower())
+			return p
+
+
+	if(name.len() <= 2){
+		int PlayerIndex = name.tointeger()
+		if(GetPlayerArray().len()-1>= PlayerIndex && PlayerIndex > -1) // check if the index exits
+			return GetPlayerArray()[PlayerIndex]
+	}
+
+	return null
+}
