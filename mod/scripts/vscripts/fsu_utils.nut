@@ -77,6 +77,20 @@ string function FSU_GetANSICodeFromRGB( int iRed, int iGreen, int iBlue ) {
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: Gets an array of players based on whether they have a wildcard in
+//          their name
+// Input  : svWildCard -
+//-----------------------------------------------------------------------------
+array<entity> function FSU_GetPlayersByWildCard(string svWildCard) {
+	array<entity> ret
+	foreach(entity p in GetPlayerArray())
+		if(p.GetPlayerName().tolower().find(svWildCard.tolower()) != null)
+			ret.append(p)
+
+	return ret
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: Gets the player entity by its name
 // Input  : name - The name of the player we want
 //-----------------------------------------------------------------------------
@@ -92,8 +106,8 @@ entity function FSU_GetPlayerEntityByName(string name){
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Gets the player entity by its name
-// Input  : name - The name of the player we want
+// Purpose: Gets the player entity by its index
+// Input  : iIdx - The index of the player we want
 //-----------------------------------------------------------------------------
 entity function FSU_GetPlayerEntityByIndex(int iIdx){
 	array<entity> arPlayers = GetPlayerArray()
