@@ -48,6 +48,7 @@ struct {
 
 	array<void functionref()> arrCallbacks
 	table<string, FSU_CommandStruct> tabCommands
+	table<string, FSU_CommandStruct> abrCommands
 } file
 
 
@@ -87,7 +88,9 @@ void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
 	if( name in file.tabCommands ) 
 		FSU_Print( "Overwriting command: \"" + name + "\"" )
 	
-	file.tabCommands[name] <- cmd //since the <- operator just overrides an existing key we dont need to check if it already exists 
+	file.tabCommands[name] <- cmd //since the <- operator just overrides an existing key we dont need to check if it already exists
+	foreach( string abr in cmd.arrAbbreviations )
+		file.abrCommands[abr] <- cmd
 }
 
 /**
@@ -111,17 +114,9 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 
 	if( strCommand in file.tabCommands )
 		command = file.tabCommands[strCommand]
-	else
-	{
-		foreach( string name, FSU_CommandStruct cmd in file.tabCommands ) {
-			foreach( string abb in cmd.arrAbbreviations ) {
-				if( abb.tolower() == strCommand ) {
-					command = cmd
-					break
-				}
-			}
-		}
-	}
+	if( strCommand in file.abrCommands)
+		command = file.abrCommands[strCommand]
+		
 	//check the amount of args so we dont have to do that in each and every function :>
 	if( ( arrArgs.len() < command.args ) && ( command.Callback != null ) )
 	{	// cant use format() here because I need the colour indicator and thats incompatible
