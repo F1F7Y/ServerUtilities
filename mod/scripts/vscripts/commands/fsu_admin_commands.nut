@@ -1,6 +1,6 @@
-global function FSU_RegisterCoreCommandsModule
+global function FSU_RegisterAdminCommandsModule
 
-string function FSU_RegisterCoreCommandsModule() {
+string function FSU_RegisterAdminCommandsModule() {
 	FSU_AddCallback_ChatCommandRegister( FSU_OnRegisteringCommands )
 	return "AdminCommandsModule"
 }
