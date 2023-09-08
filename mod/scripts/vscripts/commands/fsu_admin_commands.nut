@@ -79,7 +79,7 @@ string function FSU_CommandCallback_ServerCommand( entity entPlayer, array<strin
 
 string function FSU_CommandCallback_Reload( entity player, array<string> arrArgs ){
     thread FSU_C_Reload_thread( (arrArgs.len() <= 0) ? 5.0 : arrArgs[0].tofloat() )
-    return ""
+    return "Reloading now"
 }
 
 void function FSU_C_Reload_thread(float time){
