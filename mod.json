@@ -47,10 +47,6 @@
 			"RunOn": "SERVER && MP"
 		},
 		{
-			"Path": "commands/fsu_admin_commands.nut",
-			"RunOn": "SERVER && MP"
-		},
-		{
 			"Path": "settings/fsu_placeholder_schema.nut",
 			"RunOn": "SERVER && MP"
 		},

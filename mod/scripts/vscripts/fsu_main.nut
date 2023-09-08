@@ -34,7 +34,6 @@ void function FSU_RegisterModules_Threaded() {
 
 	FSU_RegisterModule( FSU_RegisterChatHookModule )
 	FSU_RegisterModule( FSU_RegisterCoreCommandsModule )
-	FSU_RegisterModule( FSU_RegisterAdminCommandsModule )
 	FSU_RegisterModule( FSU_RegisterCustomCallbacksModule )
 
 	// Register chat commands
