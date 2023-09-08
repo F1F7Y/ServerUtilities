@@ -84,12 +84,10 @@ void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
 		return
 	}
 
-	if( name in file.tabCommands ) {
-		file.tabCommands[name] = cmd
+	if( name in file.tabCommands ) 
 		FSU_Print( "Overwriting command: \"" + name + "\"" )
-	} else {
-		file.tabCommands[name] <- cmd
-	}
+	
+	file.tabCommands[name] <- cmd //since the <- operator just overrides an existing key we dont need to check if it already exists 
 }
 
 /**
@@ -124,7 +122,7 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 			}
 		}
 	}
-
+	//check the amount of args so we dont have to do that in each and every function :>
 	if( ( arrArgs.len() < command.args ) && ( command.Callback != null ) )
 	{	// cant use format() here because I need the colour indicator and thats incompatible
 		FSU_SendSystemMessageToPlayer( entPlayer, "Wrong amount of arguments, use: %H%P" + strCommand + " " + command.argsUsage )
