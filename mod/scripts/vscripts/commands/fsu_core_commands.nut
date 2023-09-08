@@ -25,8 +25,8 @@ void function FSU_OnRegisteringCommands() {
 	cmd.arrDescriptions[eFSUPlayerLevel.DEFAULT] = "Test desc"
 	cmd.arrAbbreviations = [ "te", "TA" ]
 	cmd.Callback = FSU_CommandCallback_Test
-	cmd.args = 1
-	cmd.argsUsage = "<test arg>"
+	//cmd.args = 1
+	//cmd.argsUsage = "<test arg>"
 	FSU_RegisterCommand( "test", cmd )
 }
 
