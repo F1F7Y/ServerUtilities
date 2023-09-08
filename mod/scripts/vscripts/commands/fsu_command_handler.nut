@@ -35,15 +35,15 @@ global struct FSU_CommandStruct {
 	// Command abbreviations
 	array<string> arrAbbreviations
 	// Callback function
-	void functionref( entity, array <string> ) Callback
+	string functionref( entity, array <string> ) Callback
 }
-
 
 struct {
 	bool bCanRegisterCommands = false
 
 	array<void functionref()> arrCallbacks
 	table<string, FSU_CommandStruct> tabCommands
+	table<string, FSU_CommandStruct> abrCommands
 } file
 
 
@@ -80,12 +80,14 @@ void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
 		return
 	}
 
-	if( name in file.tabCommands ) {
-		file.tabCommands[name] = cmd
+	if( name in file.tabCommands ) 
 		FSU_Print( "Overwriting command: \"" + name + "\"" )
-	} else {
-		file.tabCommands[name] <- cmd
-	}
+	
+	file.tabCommands[name] <- cmd //since the <- operator just overrides an existing key we dont need to check if it already exists
+
+	//to avoid having a double for loop when finding a command (it looks clearner)
+	foreach( string abr in cmd.arrAbbreviations )
+		file.abrCommands[abr] <- cmd
 }
 
 /**
@@ -102,27 +104,18 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 
 	// Extract arguments
 	array<string> arrArgs = split( strMessage, " " )
-	string strCommand = arrArgs[0].tolower().slice( FSU_GetCommandPrefix().len(), arrArgs[0].len() )
-	arrArgs.remove(0)
+	string strCommand = arrArgs.remove(0).tolower().slice( FSU_GetCommandPrefix().len() )
 
 	// Try to find the command
 	FSU_CommandStruct command
-	foreach( string name, FSU_CommandStruct cmd in file.tabCommands ) {
-		if( name == strCommand ) {
-			command = cmd
-			break
-		}
 
-		foreach( string abb in cmd.arrAbbreviations ) {
-			if( abb.tolower() == strCommand ) {
-				command = cmd
-				break
-			}
-		}
-	}
+	if( strCommand in file.tabCommands )
+		command = file.tabCommands[strCommand]
+	if( strCommand in file.abrCommands)
+		command = file.abrCommands[strCommand]
 
 	if( command.Callback != null )
-		command.Callback( entPlayer, arrArgs )
+		FSU_SendSystemMessageToPlayer( entPlayer, command.Callback( entPlayer, arrArgs ) )
 	else
 		FSU_SendSystemMessageToPlayer( entPlayer, format( "Command: \"%s\" not found!", strCommand ) )
 
