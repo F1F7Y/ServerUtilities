@@ -36,6 +36,10 @@ global struct FSU_CommandStruct {
 	array<string> arrAbbreviations
 	// Callback function
 	string functionref( entity, array <string> ) Callback
+	//amount of args  that the command takes
+	int args = 0
+	// if the wrong number of args are provided this will be printed 
+    string argsUsage = "<argument>"
 }
 
 
@@ -102,23 +106,29 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 
 	// Extract arguments
 	array<string> arrArgs = split( strMessage, " " )
-	string strCommand = arrArgs[0].tolower().slice( FSU_GetCommandPrefix().len(), arrArgs[0].len() )
-	arrArgs.remove(0)
+	string strCommand = arrArgs.remove(0).tolower().slice( FSU_GetCommandPrefix().len() )
 
 	// Try to find the command
 	FSU_CommandStruct command
-	foreach( string name, FSU_CommandStruct cmd in file.tabCommands ) {
-		if( name == strCommand ) {
-			command = cmd
-			break
-		}
 
-		foreach( string abb in cmd.arrAbbreviations ) {
-			if( abb.tolower() == strCommand ) {
-				command = cmd
-				break
+	if( strCommand in file.tabCommands )
+		command = file.tabCommands[strCommand]
+	else
+	{
+		foreach( string name, FSU_CommandStruct cmd in file.tabCommands ) {
+			foreach( string abb in cmd.arrAbbreviations ) {
+				if( abb.tolower() == strCommand ) {
+					command = cmd
+					break
+				}
 			}
 		}
+	}
+
+	if( arrArgs.len() < command.args  )
+	{	// cant use format() here because I need the colour indicator and thats incompatible
+		FSU_SendSystemMessageToPlayer( entPlayer, "Wrong amount of arguments, use: %H%P" + strCommand + " " + command.argsUsage )
+		return bIsCommand
 	}
 
 	if( command.Callback != null )

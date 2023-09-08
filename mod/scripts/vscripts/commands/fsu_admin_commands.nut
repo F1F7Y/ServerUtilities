@@ -9,52 +9,62 @@ string function FSU_RegisterAdminCommandsModule() {
 void function FSU_OnRegisteringCommands() {
 	FSU_CommandStruct cmd
 	cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "execute the given script"
 	cmd.arrAbbreviations = [ ]
 	cmd.Callback = FSU_CommandCallback_Script
+	cmd.args = 1
+	cmd.argsUsage = "<script code>"
 	FSU_RegisterCommand( "script", cmd )
 
-	cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+	
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "execute the given server command"
 	cmd.arrAbbreviations = [ "sc" ]
 	cmd.Callback = FSU_CommandCallback_ServerCommand
+	cmd.args = 1
+	cmd.argsUsage = "<server command>"
 	FSU_RegisterCommand( "servercommand", cmd )
 
-    cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+    
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "reloads the server"
 	cmd.arrAbbreviations = [  ]
 	cmd.Callback = FSU_CommandCallback_Reload
+	cmd.args = 0
+	cmd.argsUsage = "<time = 5>"
 	FSU_RegisterCommand( "reload", cmd )
 
-    cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+    
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "bans the given player"
 	cmd.arrAbbreviations = [  ]
 	cmd.Callback = FSU_CommandCallback_Ban
+	cmd.args = 1
+	cmd.argsUsage = "<player name>"
 	FSU_RegisterCommand( "ban", cmd )
 
-    cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+    
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "kicks the given player"
 	cmd.arrAbbreviations = [  ]
 	cmd.Callback = FSU_CommandCallback_Kick
+	cmd.args = 1
+	cmd.argsUsage = "<player name>"
 	FSU_RegisterCommand( "kick", cmd )
 
-    // cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+    // 
 	// cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "executes a command for a given player"
 	// cmd.arrAbbreviations = [ "cf", "cmdfor" ]
 	// cmd.Callback = FSU_CommandCallback_CommandFor
 	// FSU_RegisterCommand( "commandfor", cmd )
 
-    cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+    
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "Spawns an npc at your crosshair"
-	cmd.arrAbbreviations = [ "cf", "cmdfor" ]
+	cmd.arrAbbreviations = [ ]
 	cmd.Callback = FSU_CommandCallback_NPC
+	cmd.args = 1
+	cmd.argsUsage = "<grunt/spectre/stalker/reaper/marvin> <imc/militia>"
 	FSU_RegisterCommand( "npc", cmd )    
 }
 
 string function FSU_CommandCallback_Script( entity entPlayer, array<string> arrArgs ) {
-    if(arrArgs.len() == 0)
-    return "%EMissing arguments: !script <code here>"
-
     try{
         compilestring( FSU_ArrayToString(arrArgs) )()
         return "%SYour code seems to have compiled"
@@ -66,8 +76,6 @@ string function FSU_CommandCallback_Script( entity entPlayer, array<string> arrA
 }
 
 string function FSU_CommandCallback_ServerCommand( entity entPlayer, array<string> arrArgs ) {
-	if(arrArgs.len()==0)
-		return "%EMissing arguments"
 	try{
 		ServerCommand(FSU_ArrayToString(arrArgs))
 	}
@@ -92,9 +100,6 @@ void function FSU_C_Reload_thread(float time){
 }
 
 string function FSU_CommandCallback_Ban(entity player, array<string> arrArgs) {
-	if(arrArgs.len() < 1)
-		return"%EWrong format, !ban <player name>"
-
 	entity toBan = FSU_GetPlayerEntityByName(arrArgs[0])
 
 	if(toBan == null){
@@ -108,9 +113,6 @@ string function FSU_CommandCallback_Ban(entity player, array<string> arrArgs) {
 }
 
 string function FSU_CommandCallback_Kick(entity player, array<string> arrArgs) {
-	if(arrArgs.len() < 1)
-		return"%EWrong format, !kick <player name>"
-
 	entity toBan = FSU_GetPlayerEntityByName(arrArgs[0])
 
 	if(toBan == null){
@@ -124,9 +126,6 @@ string function FSU_CommandCallback_Kick(entity player, array<string> arrArgs) {
 }
 
 string function FSU_CommandCallback_NPC( entity player, array< string > arrArgs ) {
-	if( arrArgs.len() == 0 ) 
-		return "Run %H%Pnpc <grunt/spectre/stalker/reaper/marvin> <imc/militia>%T to spawn an npc."
-
 	int team = TEAM_UNASSIGNED
 	string npc = ""
 	if( arrArgs.len() >= 1 ) {
@@ -165,9 +164,6 @@ string function FSU_CommandCallback_NPC( entity player, array< string > arrArgs 
 }
 
 string function FSA_CommandCallback_Titan( entity player, array< string > arrArgs ) {
-	if( arrArgs.len() == 0 )
-        return "Run %H%Ptitan <ion/scorch/northstar/ronin/tone/legion/monarch> <imc/militia>%T to spawn a titan."
-
 	int team = TEAM_UNASSIGNED
 	string titan = ""
 	if( arrArgs.len() >= 1 ) {
