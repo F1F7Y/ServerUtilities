@@ -89,6 +89,8 @@ void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
 		FSU_Print( "Overwriting command: \"" + name + "\"" )
 	
 	file.tabCommands[name] <- cmd //since the <- operator just overrides an existing key we dont need to check if it already exists
+
+	//to avoid having a double for loop when finding a command (it looks clearner)
 	foreach( string abr in cmd.arrAbbreviations )
 		file.abrCommands[abr] <- cmd
 }
@@ -116,7 +118,7 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 		command = file.tabCommands[strCommand]
 	if( strCommand in file.abrCommands)
 		command = file.abrCommands[strCommand]
-		
+
 	//check the amount of args so we dont have to do that in each and every function :>
 	if( ( arrArgs.len() < command.args ) && ( command.Callback != null ) )
 	{	// cant use format() here because I need the colour indicator and thats incompatible
