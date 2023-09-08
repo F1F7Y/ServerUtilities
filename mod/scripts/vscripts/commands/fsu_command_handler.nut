@@ -5,14 +5,15 @@ global function FSU_RegisterCommand
 global function FSU_CheckMessageForCommand
 
 
-/**
- * This file handles the registering, storage and
- * calling of chat commands
- */
+//-----------------------------------------------------------------------------
+// This file handles the registering, storage and
+// calling of chat commands
+//-----------------------------------------------------------------------------
 
-/**
- * Player level used for command permissions
- */
+
+//-----------------------------------------------------------------------------
+// Player level used for command permissions
+//-----------------------------------------------------------------------------
 global enum eFSUPlayerLevel {
 	DEFAULT = 0,
 	VIP = 1,
@@ -22,9 +23,9 @@ global enum eFSUPlayerLevel {
 	LENGTH = 5
 }
 
-/**
- * Stores information about the command
- */
+//-----------------------------------------------------------------------------
+// Stores information about the command
+//-----------------------------------------------------------------------------
 global struct FSU_CommandStruct {
 	// Minimum level for a user to be able to use / see the command
 	int iUserLevel = eFSUPlayerLevel.DEFAULT
@@ -47,18 +48,17 @@ struct {
 } file
 
 
-/**
- * Adds a callback function for registering commands.
- * @param void functionref() callback The function to add to our command
- * registering callback array
- */
+//-----------------------------------------------------------------------------
+// Purpose: Adds a callback function for registering commands.
+// Input  : callback  - The function to add to our command registering callback array
+//-----------------------------------------------------------------------------
 void function FSU_AddCallback_ChatCommandRegister( void functionref() callback ) {
 	file.arrCallbacks.append( callback )
 }
 
-/**
- * Calls command register callbacks.
- */
+//-----------------------------------------------------------------------------
+// Purpose: Calls command register callbacks.
+//-----------------------------------------------------------------------------
 void function FSU_ReloadRegisteredCommands() {
 	file.bCanRegisterCommands = true
 
@@ -68,21 +68,21 @@ void function FSU_ReloadRegisteredCommands() {
 	file.bCanRegisterCommands = false
 }
 
-/**
- * Registers a command. Can only be called inside the command
- * registering callback.
- * @param string name The command name
- * @param FSU_CommandStruct cmd The command struct ascosiated(?) with the command name
- */
+//-----------------------------------------------------------------------------
+// Purpose: Registers a command. Can only be called inside the command
+//          registering callback.
+// Input  : name - The command name
+//          cmd - The command struct ascosiated(?) with the command name
+//-----------------------------------------------------------------------------
 void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
 	if( !file.bCanRegisterCommands ) {
 		FSU_Error( "Tried to register command outside of command register callback!" )
 		return
 	}
 
-	if( name in file.tabCommands ) 
+	if( name in file.tabCommands )
 		FSU_Print( "Overwriting command: \"" + name + "\"" )
-	
+
 	file.tabCommands[name] <- cmd //since the <- operator just overrides an existing key we dont need to check if it already exists
 
 	//to avoid having a double for loop when finding a command (it looks clearner)
@@ -90,11 +90,11 @@ void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
 		file.abrCommands[abr] <- cmd
 }
 
-/**
- * Check a message for a command, returns true if it found a command.
- * @param entity entPlayer The player who sent the message
- * @param string strMessgae The message to check
- */
+//-----------------------------------------------------------------------------
+// Purpose: Check a message for a command, returns true if it found a command.
+// Input: entPlayer - The player who sent the message
+//        strMessgae - The message to check
+//-----------------------------------------------------------------------------
 bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) {
 	bool bIsCommand = strMessage.find( FSU_GetCommandPrefix() ) == 0
 

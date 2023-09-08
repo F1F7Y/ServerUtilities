@@ -1,30 +1,31 @@
 globalize_all_functions
 
-/**
- * This file holds general custom callbacks
- */
+//-----------------------------------------------------------------------------
+// This file holds general custom callbacks
+//-----------------------------------------------------------------------------
 
 
 struct {
-	array<void functionref()> matchEndCallbacksFirst
-	array<void functionref()> matchEndCallbacksSecond
+	array<void functionref()> matchEndCallbacksReliable
+	array<void functionref()> matchEndCallbacksUnReliable
 	array<bool functionref( ClServer_MessageStruct )> chatCallbacks
 } file
 
 
-/**
- * custom Callbacks init callback
- */
+//-----------------------------------------------------------------------------
+// Purpose: Custom callbacks init callback
+//-----------------------------------------------------------------------------
 string function FSU_RegisterCustomCallbacksModule() {
 	AddCallback_GameStateEnter( eGameState.Postmatch, FSU_EndOfMatchCallback_Threaded )
 
 	return "CustomCallbacksModule"
 }
 
-/**
- * Gets called right before the map is changed
- */
+//-----------------------------------------------------------------------------
+// Purpose: Gets called right before the map is changed
+//-----------------------------------------------------------------------------
 void function FSU_EndOfMatchCallback_Threaded() {
+	// FIXME [Fifty]: Is this, good?
 	wait GAME_POSTMATCH_LENGTH - 1
 
 	// Run first callbacks
@@ -38,30 +39,30 @@ void function FSU_EndOfMatchCallback_Threaded() {
 	FSU_Debug( "FSU_EndOfMatchCallback_Threaded" )
 }
 
-/**
- * Allows mods to register a match end callback
- * This version gets called first and shouldn't stop processing by
- * for example changing the map
- * @param callback The callback to be added
- */
-void function FSU_AddCallback_OnEndOfMatchFirst( void functionref() callback ) {
-	file.matchEndCallbacksFirst.append( callback )
+//-----------------------------------------------------------------------------
+// Purpose: Allows mods to register a match end callback
+//          This version gets called first and shouldn't stop processing by
+//           for example changing the map
+// Input  : callback - The callback to be added
+//-----------------------------------------------------------------------------
+void function FSU_AddCallback_OnEndOfMatchReliable( void functionref() callback ) {
+	file.matchEndCallbacksReliable.append( callback )
 }
 
-/**
- * Allows mods to register a match end callback
- * This version gets called second and can stop processing by
- * for example changing the map
- * @param callback The callback to be added
- */
-void function FSU_AddCallback_OnEndOfMatch( void functionref() callback ) {
-	file.matchEndCallbacksSecond.append( callback )
+//-----------------------------------------------------------------------------
+// Purpose: Allows mods to register a match end callback
+//          This version gets called second and can stop processing by
+//          for example changing the map
+// Input  : callback - The callback to be added
+//-----------------------------------------------------------------------------
+void function FSU_AddCallback_OnEndOfMatchUnReliable( void functionref() callback ) {
+	file.matchEndCallbacksUnReliable.append( callback )
 }
 
-/**
- * Runs all registered chat callbacks
- * @param message The message struct
- */
+//-----------------------------------------------------------------------------
+// Purpose: Runs all registered chat callbacks
+// Input  : message - The message struct
+//-----------------------------------------------------------------------------
 bool function FSU_RunOnReceivedSayTextMessageCallbacks( ClServer_MessageStruct message ) {
 	bool bShouldBlock = false
 
@@ -71,10 +72,10 @@ bool function FSU_RunOnReceivedSayTextMessageCallbacks( ClServer_MessageStruct m
 	return bShouldBlock
 }
 
-/**
- * Allows other mods to register a chat message callback
- * @param callback The callback func which takes in the message struct
- */
+///-----------------------------------------------------------------------------
+// Purpose: Allows other mods to register a chat message callback
+// Input  : callback - The callback func which takes in the message struct
+//-----------------------------------------------------------------------------
 void function FSU_AddCallback_OnReceivedSayTextMessage( bool functionref( ClServer_MessageStruct ) callback ) {
 	file.chatCallbacks.append( callback )
 }

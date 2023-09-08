@@ -1,11 +1,11 @@
 untyped
 globalize_all_functions
 
-/**
- * Formats a string. Currently supports hex color codes ( #RRGGBB ) and
- * curstom presets ( %x )
- * @param string strUnformatted The string to format
- */
+//-----------------------------------------------------------------------------
+// Purpose: Formats a string. Currently supports hex color codes ( #RRGGBB ) and
+//          custom presets ( %x )
+// Input  : strUnformatted - The string to format
+//-----------------------------------------------------------------------------
 string function FSU_FormatString( string strUnformatted ) {
 	string strFormatted = strUnformatted
 
@@ -30,10 +30,10 @@ string function FSU_FormatString( string strUnformatted ) {
 	return strFormatted
 }
 
-/**
- * Converts a base-16 string to an integer.
- * @param string strHex The Hexadecimal number to be converted
- */
+//-----------------------------------------------------------------------------
+// Purpose: Converts a base-16 string to an integer.
+// Input  : strHex - The Hexadecimal number to be converted
+//-----------------------------------------------------------------------------
 int function FSU_GetIntegerFromHexString( string strHex ) {
 	int iNumber
 
@@ -61,12 +61,12 @@ int function FSU_GetIntegerFromHexString( string strHex ) {
 	return iNumber
 }
 
-/**
- * Creates an ansi escape code using the passed colors.
- * @param int iRed Red element ( 0 - 255 )
- * @param int iGreen Green element ( 0 - 255 )
- * @param int iBlue Blue element ( 0 - 255 )
- */
+//-----------------------------------------------------------------------------
+// Purpose: Creates an ansi escape code using the passed colors.
+// Input  : iRed - Red element ( 0 - 255 )
+//          iGreen - Green element ( 0 - 255 )
+//          iBlue - Blue element ( 0 - 255 )
+//-----------------------------------------------------------------------------
 string function FSU_GetANSICodeFromRGB( int iRed, int iGreen, int iBlue ) {
 	// If a value is 255 its just white so we cap at 254
 	int red = int( min( 245, iRed ) )
@@ -76,15 +76,18 @@ string function FSU_GetANSICodeFromRGB( int iRed, int iGreen, int iBlue ) {
 	return format( "\x1b[38;2;%i;%i;%im", red, green, blue )
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Gets the player entity by its name
+// Input  : name - The name of the player we want
+//-----------------------------------------------------------------------------
 entity function FSU_GetPlayerEntityByName(string name){
+	// FIXME [Fifty]: Separate this into Get*ByName and Get*ByIndex
 	if(name == "")
 		return null
-
 
 	foreach(entity p in GetPlayerArray())
 		if(p.GetPlayerName().tolower() == name.tolower())
 			return p
-
 
 	if(name.len() <= 2){
 		int PlayerIndex = name.tointeger()
@@ -95,6 +98,11 @@ entity function FSU_GetPlayerEntityByName(string name){
 	return null
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Converts an array of strings to a string
+// Input  : args -
+//          separator -
+//-----------------------------------------------------------------------------
 string function FSU_ArrayToString( array< string > args, string separator = " " ) {
 	string result = ""
 

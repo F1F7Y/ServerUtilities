@@ -13,10 +13,10 @@ global function FSU_GetSettingArray
 const string FSU_SETTINGS_FILE_NAME = "fsu_settings.json"
 
 
-/**
- * This file contains the Settings module. The job of this
- * module is to store the settings Json.
- */
+//-----------------------------------------------------------------------------
+// This file contains the Settings module. The job of this
+// module is to store the settings Json.
+//-----------------------------------------------------------------------------
 
 
 struct {
@@ -26,9 +26,10 @@ struct {
 	table tabSettings
 } file
 
-/**
- * Settings handler init callback
- */
+
+//-----------------------------------------------------------------------------
+// Purpose: Settings handler init callback
+//-----------------------------------------------------------------------------
 string function FSU_RegisterSettingsModule() {
 	FSU_Print( "Loading settings schema!" )
 	FSU_LoadSettingsJSON()
@@ -36,9 +37,9 @@ string function FSU_RegisterSettingsModule() {
 	return "SettingsModule"
 }
 
-/**
- * Tries to load settings schema from disk
- */
+//-----------------------------------------------------------------------------
+// Purpose: Tries to load settings schema from disk
+//-----------------------------------------------------------------------------
 void function FSU_LoadSettingsJSON() {
 	file.bInitilazed = false
 
@@ -49,30 +50,30 @@ void function FSU_LoadSettingsJSON() {
 	}
 }
 
-/**
- * Reloads settings. This is also the callback function
- * for the "fsu_reload_settings" ConCommand
- * @param array<string> strArgs An array of arguments
- */
+//-----------------------------------------------------------------------------
+// Purpose: Reloads settings. This is also the callback function
+//          for the "fsu_reload_settings" ConCommand
+// Input  : strArgs - An array of arguments
+//-----------------------------------------------------------------------------
 void function FSU_ReloadSettings( array<string> strArgs ) {
-	// TODO: Check for a password here as anyone can call this
+	// TODO [Fifty]: Check for a password here as anyone can call this
 	FSU_Print( "Reloading settings schema" )
 	FSU_LoadSettingsJSON()
 }
 
-/**
- * Gets called after we succesfully loaded the settings schema
- * @param table json The loaded Json file represented as a table
- */
+//-----------------------------------------------------------------------------
+// Purpose: Gets called after we succesfully loaded the settings schema
+// Input  : json - The loaded Json file represented as a table
+//-----------------------------------------------------------------------------
 void function FSU_LoadSettingsSuccess_Callback( table json ) {
 	file.tabSettings = json
 	file.bIsPlaceholder = false
 	file.bInitilazed = true
 }
 
-/**
- * Loads the placeholder schema
- */
+//-----------------------------------------------------------------------------
+// Purpose: Loads the placeholder schema
+//-----------------------------------------------------------------------------
 void function FSU_LoadSettingsFailure_Callback() {
 	file.tabSettings = DecodeJSON( g_strPlaceholderSchema )
 
@@ -83,45 +84,45 @@ void function FSU_LoadSettingsFailure_Callback() {
 	file.bInitilazed = true
 }
 
-/**
- * Returns whether settings are loaded, is false only before map load calback
- * and when loading settings
- */
+//-----------------------------------------------------------------------------
+// Purpose: Returns whether settings are loaded, is false only before map load calback
+//          and when loading settings
+//-----------------------------------------------------------------------------
 bool function FSU_SettingsAreLoaded() {
 	return file.bInitilazed
 }
 
-/**
- * Check whether a key exists in a table
- * @param table tabTable The table to check against
- * @param string strKey The key to check for
- */
+//-----------------------------------------------------------------------------
+// Purpose: Check whether a key exists in a table
+// Input  : tabTable - The table to check against
+//          strKey - The key to check for
+//-----------------------------------------------------------------------------
 bool function FSU_DoesSettingExistInTable( table tabTable, string strKey ) {
 	return strKey in tabTable
 }
 
-/**
- * Check whether a key exists in the root of the current loaded settings json
- * @param string strKey The key to check for
- */
+//-----------------------------------------------------------------------------
+// Purpose: Check whether a key exists in the root of the current loaded settings json
+// Input  : strKey - The key to check for
+//-----------------------------------------------------------------------------
 bool function FSU_DoesSettingExist( string strKey ) {
 	return strKey in file.tabSettings
 }
 
-/**
- * Gets the string value of a key from the root of the current
- * loaded settings schema
- * @param string strKey The key to get the value of
- */
+//-----------------------------------------------------------------------------
+// Purpose: Gets the string value of a key from the root of the current
+//          loaded settings schema
+// Input  : strKey - The key to get the value of
+//-----------------------------------------------------------------------------
 string function FSU_GetSettingString( string strKey ) {
 	return string( file.tabSettings[strKey] )
 }
 
-/**
- * Gets the array value of a key from the root of the current
- * loaded settings schema
- * @param string strKey The key to get the array of
- */
+//-----------------------------------------------------------------------------
+// Purpose: Gets the array value of a key from the root of the current
+//          loaded settings schema
+// Input  : strKey - The key to get the array of
+//-----------------------------------------------------------------------------
 array function FSU_GetSettingArray( string strKey ) {
 	return expect array( file.tabSettings[strKey] )
 }

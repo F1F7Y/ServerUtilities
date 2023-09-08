@@ -2,18 +2,18 @@ untyped
 globalize_all_functions
 
 
-/**
- * This file contains chat utility functions.
- */
+//-----------------------------------------------------------------------------
+// This file contains chat utility functions.
+//-----------------------------------------------------------------------------
 
 
-/**
- * Sends a message as a player effectively impersonating them. Unlike
- * the northstar implementation this also adds tags before their name
- * @param entity entPlayer The player to impersonate
- * @param string strMessage The message to send
- * @param bool bIsTeam Wheter to use team chat
- */
+//-----------------------------------------------------------------------------
+// Purpose: Sends a message as a player effectively impersonating them. Unlike
+//          the northstar implementation this also adds tags before their name
+// Input  : entPlayer - The player to impersonate
+//          strMessage - The message to send
+//          bIsTeam - Wheter to use team chat
+//-----------------------------------------------------------------------------
 void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool bIsTeam ) {
 	array<string> arrTags
 
@@ -35,7 +35,7 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
 			int iGreen = 255
 			int iBlue = 255
 
-			// The reason for the string( * ).tointeger() even though the elements are ints is
+			// The reason for the string(// ).tointeger() even though the elements are ints is
 			// the squirrel complaining at compile time
 			// When compiling tabTag["*"] is a var so we need to cast it to int, but
 			// during execution tabTag["*"] is an int and we cant int( int )
@@ -72,11 +72,11 @@ void function FSU_SendMessageAsPlayer( entity entPlayer, string strMessage, bool
 	}
 }
 
-/**
- * Sends a system message to a player.
- * @param entity entPlayer The player to send the message to
- * @param string strMessage The message to send them
- */
+//-----------------------------------------------------------------------------
+// Purpose: Sends a system message to a player.
+// Input  : entPlayer - The player to send the message to
+//          strMessage - The message to send them
+//-----------------------------------------------------------------------------
 void function FSU_SendSystemMessageToPlayer( entity entPlayer, string strMessage ) {
 	string color
 	if( FSU_DoesSettingExist( "Theme" ) ) {
@@ -112,10 +112,10 @@ void function FSU_SendSystemMessageToPlayer( entity entPlayer, string strMessage
 	NSBroadcastMessage( -1, entPlayer.GetPlayerIndex(), message , true, false, 1 )
 }
 
-/**
- * Broadcasts a message to all players
- * @param string strMessage The mesage to broadcast
- */
+//-----------------------------------------------------------------------------
+// Purpose: Broadcasts a message to all players
+// Input  : strMessage - The mesage to broadcast
+//-----------------------------------------------------------------------------
 void function FSU_BroadcastSystemMessage( string strMessage ) {
 	foreach( entity player in GetPlayerArray() )
 		FSU_SendSystemMessageToPlayer( player, strMessage )

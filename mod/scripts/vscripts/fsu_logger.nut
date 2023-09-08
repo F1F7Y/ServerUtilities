@@ -1,9 +1,9 @@
 globalize_all_functions
 
-/**
- * Prints a message into console
- * @param ... A list of variables to be printed
- */
+//-----------------------------------------------------------------------------
+// Purpose: Prints a message into console
+// Input  : ... - A list of variables to be printed
+//-----------------------------------------------------------------------------
 void function FSU_Print( ... ) {
 	if ( vargc <= 0 )
 		return
@@ -15,11 +15,13 @@ void function FSU_Print( ... ) {
 	print( msg )
 }
 
-/**
- * Prints a warning into console
- * @param ... A list of variables to be printed
- */
+//-----------------------------------------------------------------------------
+// Purpose: Prints a warning into console
+// Input  : ... - A list of variables to be printed
+//-----------------------------------------------------------------------------
 void function FSU_Warning( ... ) {
+	// FIXME [Fifty]: CodeWarning calls the engine warning func, dont think ns
+	//                hooks it
 	if ( vargc <= 0 )
 		return
 
@@ -30,11 +32,11 @@ void function FSU_Warning( ... ) {
 	CodeWarning( string( msg ) )
 }
 
-/**
- * Prints an error into console, if FSU_FATAL_ERRORS is set it
- * throws an error instead
- * @param ... A list of variables to be printed
- */
+//-----------------------------------------------------------------------------
+// Purpose: Prints an error into console, if FSU_FATAL_ERRORS is set it
+//          throws an error instead
+// Input  : ... - A list of variables to be printed
+//-----------------------------------------------------------------------------
 void function FSU_Error( ... ) {
 	if ( vargc <= 0 )
 		return
@@ -49,11 +51,11 @@ void function FSU_Error( ... ) {
 		print( msg )
 }
 
-/**
- * Prints a debug message into the chat and the console,
- * if FSU_FATAL_ERRORS is set it throws an error instead
- * @param ... A list of variables to be printed
- */
+//-----------------------------------------------------------------------------
+// Purpose: Prints a debug message into the chat and the console only when
+//          FSU_DEBUG_PRINT is set
+// Input  : ... - A list of variables to be printed
+//-----------------------------------------------------------------------------
 void function FSU_Debug( ... ) {
 	if( !GetConVarBool( "FSU_DEBUG_PRINT" ) )
 		return
