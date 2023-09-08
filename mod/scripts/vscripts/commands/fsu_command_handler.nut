@@ -125,7 +125,7 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 		}
 	}
 
-	if( arrArgs.len() < command.args  )
+	if( ( arrArgs.len() < command.args ) && ( command.Callback != null ) )
 	{	// cant use format() here because I need the colour indicator and thats incompatible
 		FSU_SendSystemMessageToPlayer( entPlayer, "Wrong amount of arguments, use: %H%P" + strCommand + " " + command.argsUsage )
 		return bIsCommand
