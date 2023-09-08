@@ -36,12 +36,7 @@ global struct FSU_CommandStruct {
 	array<string> arrAbbreviations
 	// Callback function
 	string functionref( entity, array <string> ) Callback
-	//amount of args  that the command takes
-	int args = 0
-	// if the wrong number of args are provided this will be printed 
-    string argsUsage = "<argument>"
 }
-
 
 struct {
 	bool bCanRegisterCommands = false
@@ -118,13 +113,6 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 		command = file.tabCommands[strCommand]
 	if( strCommand in file.abrCommands)
 		command = file.abrCommands[strCommand]
-
-	//check the amount of args so we dont have to do that in each and every function :>
-	if( ( arrArgs.len() < command.args ) && ( command.Callback != null ) )
-	{	// cant use format() here because I need the colour indicator and thats incompatible
-		FSU_SendSystemMessageToPlayer( entPlayer, "Wrong amount of arguments, use: %H%P" + strCommand + " " + command.argsUsage )
-		return bIsCommand
-	}
 
 	if( command.Callback != null )
 		FSU_SendSystemMessageToPlayer( entPlayer, command.Callback( entPlayer, arrArgs ) )

@@ -13,40 +13,40 @@ void function FSU_OnRegisteringCommands() {
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "execute the given script"
 	cmd.arrAbbreviations = [ ]
 	cmd.Callback = FSU_CommandCallback_Script
-	cmd.args = 1
-	cmd.argsUsage = "<script code>"
+	//cmd.args = 1
+	//cmd.argsUsage = "<script code>"
 	FSU_RegisterCommand( "script", cmd )
 
 	
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "execute the given server command"
 	cmd.arrAbbreviations = [ "sc" ]
 	cmd.Callback = FSU_CommandCallback_ServerCommand
-	cmd.args = 1
-	cmd.argsUsage = "<server command>"
+	//cmd.args = 1
+	//cmd.argsUsage = "<server command>"
 	FSU_RegisterCommand( "servercommand", cmd )
 
     
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "reloads the server"
 	cmd.arrAbbreviations = [  ]
 	cmd.Callback = FSU_CommandCallback_Reload
-	cmd.args = 0
-	cmd.argsUsage = "<time = 5>"
+	//cmd.args = 0
+	//cmd.argsUsage = "<time = 5>"
 	FSU_RegisterCommand( "reload", cmd )
 
     
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "bans the given player"
 	cmd.arrAbbreviations = [  ]
 	cmd.Callback = FSU_CommandCallback_Ban
-	cmd.args = 1
-	cmd.argsUsage = "<player name>"
+	//cmd.args = 1
+	//cmd.argsUsage = "<player name>"
 	FSU_RegisterCommand( "ban", cmd )
 
     
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "kicks the given player"
 	cmd.arrAbbreviations = [  ]
 	cmd.Callback = FSU_CommandCallback_Kick
-	cmd.args = 1
-	cmd.argsUsage = "<player name>"
+	//cmd.args = 1
+	//cmd.argsUsage = "<player name>"
 	FSU_RegisterCommand( "kick", cmd )
 
     // 
@@ -59,8 +59,8 @@ void function FSU_OnRegisteringCommands() {
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "Spawns an npc at your crosshair"
 	cmd.arrAbbreviations = [ ]
 	cmd.Callback = FSU_CommandCallback_NPC
-	cmd.args = 1
-	cmd.argsUsage = "<grunt/spectre/stalker/reaper/marvin> <imc/militia>"
+	//cmd.args = 1
+	//cmd.argsUsage = "<grunt/spectre/stalker/reaper/marvin> <imc/militia>"
 	FSU_RegisterCommand( "npc", cmd )    
 }
 
