@@ -33,8 +33,8 @@ void function FSU_OnRegisteringCommands() {
  * @param entity entPlayer The player calling this command
  * @param array<string> arrArgs An array of arguments the player passed
  */
-void function FSU_CommandCallback_Test( entity entPlayer, array<string> arrArgs ) {
-	FSU_SendSystemMessageToPlayer( entPlayer, "Test" )
+string function FSU_CommandCallback_Test( entity entPlayer, array<string> arrArgs ) {
+	return "test"
 
 	//FSU_Print(FSU_GetSettingString("Version"))
 }

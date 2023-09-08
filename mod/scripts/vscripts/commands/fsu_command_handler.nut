@@ -35,7 +35,7 @@ global struct FSU_CommandStruct {
 	// Command abbreviations
 	array<string> arrAbbreviations
 	// Callback function
-	void functionref( entity, array <string> ) Callback
+	string functionref( entity, array <string> ) Callback
 }
 
 
@@ -122,7 +122,7 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 	}
 
 	if( command.Callback != null )
-		command.Callback( entPlayer, arrArgs )
+		FSU_SendSystemMessageToPlayer( entPlayer, command.Callback( entPlayer, arrArgs ) )
 	else
 		FSU_SendSystemMessageToPlayer( entPlayer, format( "Command: \"%s\" not found!", strCommand ) )
 
