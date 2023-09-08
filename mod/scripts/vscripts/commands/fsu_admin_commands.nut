@@ -1,3 +1,4 @@
+untyped
 global function FSU_RegisterAdminCommandsModule
 
 string function FSU_RegisterAdminCommandsModule() {
@@ -37,11 +38,11 @@ void function FSU_OnRegisteringCommands() {
 	cmd.Callback = FSU_CommandCallback_Kick
 	FSU_RegisterCommand( "kick", cmd )
 
-    cmd.iUserLevel = eFSUPlayerLevel.ADMIN
-	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "executes a command for a given player"
-	cmd.arrAbbreviations = [ "cf", "cmdfor" ]
-	cmd.Callback = FSU_CommandCallback_CommandFor
-	FSU_RegisterCommand( "commandfor", cmd )
+    // cmd.iUserLevel = eFSUPlayerLevel.ADMIN
+	// cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "executes a command for a given player"
+	// cmd.arrAbbreviations = [ "cf", "cmdfor" ]
+	// cmd.Callback = FSU_CommandCallback_CommandFor
+	// FSU_RegisterCommand( "commandfor", cmd )
 
     cmd.iUserLevel = eFSUPlayerLevel.ADMIN
 	cmd.arrDescriptions[eFSUPlayerLevel.ADMIN] = "Spawns an npc at your crosshair"
@@ -51,11 +52,11 @@ void function FSU_OnRegisteringCommands() {
 }
 
 string function FSU_CommandCallback_Script( entity entPlayer, array<string> arrArgs ) {
-    if(args.len() == 0)
+    if(arrArgs.len() == 0)
     return "%EMissing arguments: !script <code here>"
 
     try{
-        compilestring( FSU_ArrayToString(args) )()
+        compilestring( FSU_ArrayToString(arrArgs) )()
         return "%SYour code seems to have compiled"
     }
     catch ( ex ){
@@ -65,10 +66,10 @@ string function FSU_CommandCallback_Script( entity entPlayer, array<string> arrA
 }
 
 string function FSU_CommandCallback_ServerCommand( entity entPlayer, array<string> arrArgs ) {
-	if(args.len()==0)
+	if(arrArgs.len()==0)
 		return "%EMissing arguments"
 	try{
-		ServerCommand(FSU_ArrayToString(args))
+		ServerCommand(FSU_ArrayToString(arrArgs))
 	}
 	catch(ex){
 		return "%EThe command has caused an exception"
@@ -76,61 +77,61 @@ string function FSU_CommandCallback_ServerCommand( entity entPlayer, array<strin
 	return "%SCommand executed"
 }
 
-string function FSU_CommandCallback_Reload( entity player, array<string> args ){
-    thread FSU_C_Reload_thread( (args.len() <= 0) ? 5.0 : args[0].tofloat() )
+string function FSU_CommandCallback_Reload( entity player, array<string> arrArgs ){
+    thread FSU_C_Reload_thread( (arrArgs.len() <= 0) ? 5.0 : arrArgs[0].tofloat() )
     return ""
 }
 
 void function FSU_C_Reload_thread(float time){
 	while(time > 0){
-		FSU_ChatBroadcast("The server will reload in "+ time)
+		FSU_BroadcastSystemMessage("The server will reload in "+ time)
 		wait 1.0
 		time = time - 1.0
 	}
 	ServerCommand("reload")
 }
 
-string function FSU_CommandCallback_Ban(entity player, array<string> args) {
-	if(args.len() < 1)
+string function FSU_CommandCallback_Ban(entity player, array<string> arrArgs) {
+	if(arrArgs.len() < 1)
 		return"%EWrong format, !ban <player name>"
 
-	entity toBan = FSU_GetPlayerEntityByName(args[0])
+	entity toBan = FSU_GetPlayerEntityByName(arrArgs[0])
 
 	if(toBan == null){
 		return "%EPlayer not found"}
 
-	if( FSA_IsOwner(toBan)|| FSA_IsAdmin(toBan) )
-		return "%ECannot ban admins"
+	// if( FSA_IsOwner(toBan)|| FSA_IsAdmin(toBan) )
+	// 	return "%ECannot ban admins"
 
 	ServerCommand("ban " + toBan.GetUID())
   	return "%SSucessfully banned"
 }
 
-string function FSU_CommandCallback_Kick(entity player, array<string> args) {
-	if(args.len() < 1)
-		return"%EWrong format, !ban <player name>"
+string function FSU_CommandCallback_Kick(entity player, array<string> arrArgs) {
+	if(arrArgs.len() < 1)
+		return"%EWrong format, !kick <player name>"
 
-	entity toBan = FSU_GetPlayerEntityByName(args[0])
+	entity toBan = FSU_GetPlayerEntityByName(arrArgs[0])
 
 	if(toBan == null){
 		return "%EPlayer not found"}
 
-	if( FSA_IsOwner(toBan)|| FSA_IsAdmin(toBan) )
-		return "%ECannot ban admins"
+	// if( FSA_IsOwner(toBan)|| FSA_IsAdmin(toBan) )
+	// 	return "%ECannot ban admins"
 
 	ServerCommand( "kick " + toBan.GetUID() )
   	return "%SSucessfully kicked"
 }
 
-string function FSU_CommandCallback_NPC( entity player, array< string > args ) {
-	if( args.len() == 0 ) 
+string function FSU_CommandCallback_NPC( entity player, array< string > arrArgs ) {
+	if( arrArgs.len() == 0 ) 
 		return "Run %H%Pnpc <grunt/spectre/stalker/reaper/marvin> <imc/militia>%T to spawn an npc."
 
 	int team = TEAM_UNASSIGNED
 	string npc = ""
-	if( args.len() >= 1 ) {
-		if( args.len() >= 2 ) {
-			switch( args[1].tolower() ) {
+	if( arrArgs.len() >= 1 ) {
+		if( arrArgs.len() >= 2 ) {
+			switch( arrArgs[1].tolower() ) {
 				case "imc":
 					team = TEAM_IMC
 					break
@@ -140,7 +141,7 @@ string function FSU_CommandCallback_NPC( entity player, array< string > args ) {
 			}
 		}
 
-		switch( args[0].tolower() ) {
+		switch( arrArgs[0].tolower() ) {
 			case "grunt":
 				npc = "npc_soldier"
 				break
@@ -156,22 +157,22 @@ string function FSU_CommandCallback_NPC( entity player, array< string > args ) {
 		}
 	}
 
-	if( npc.len() == 0 ) {
-		return "%ECouldn't find entity: " + args[0]
+	if( npc.len() == 0 ) 
+		return "%ECouldn't find entity: " + arrArgs[0]
 
 	thread DEV_SpawnNPCWithWeaponAtCrosshair( npc, npc, team )
-	return "%SSpawned a " + args[0] + "!" 
+	return "%SSpawned a " + arrArgs[0] + "!" 
 }
 
-void function FSA_CommandCallback_Titan( entity player, array< string > args ) {
-	if( args.len() == 0 )
+string function FSA_CommandCallback_Titan( entity player, array< string > arrArgs ) {
+	if( arrArgs.len() == 0 )
         return "Run %H%Ptitan <ion/scorch/northstar/ronin/tone/legion/monarch> <imc/militia>%T to spawn a titan."
 
 	int team = TEAM_UNASSIGNED
 	string titan = ""
-	if( args.len() >= 1 ) {
-		if( args.len() >= 2 ) {
-			switch( args[1].tolower() ) {
+	if( arrArgs.len() >= 1 ) {
+		if( arrArgs.len() >= 2 ) {
+			switch( arrArgs[1].tolower() ) {
 				case "imc":
 					team = TEAM_IMC
 					break
@@ -181,7 +182,7 @@ void function FSA_CommandCallback_Titan( entity player, array< string > args ) {
 			}
 		}
 
-		switch( args[0].tolower() ) {
+		switch( arrArgs[0].tolower() ) {
 			case "ion":
 				titan = "npc_titan_auto_atlas_ion_prime"
 				break
@@ -207,8 +208,8 @@ void function FSA_CommandCallback_Titan( entity player, array< string > args ) {
 	}
 
 	if( titan.len() == 0 ) 
-		return "%ECouldn't find entity: " + args[0] 
+		return "%ECouldn't find entity: " + arrArgs[0] 
 
 	thread DEV_SpawnNPCWithWeaponAtCrosshair( "npc_titan", titan, team )
-	return, "%SSpawned a " + args[0] + "!" 
+	return "%SSpawned a " + arrArgs[0] + "!" 
 }
