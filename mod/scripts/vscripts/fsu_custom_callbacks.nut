@@ -29,11 +29,11 @@ void function FSU_EndOfMatchCallback_Threaded() {
 	wait GAME_POSTMATCH_LENGTH - 1
 
 	// Run first callbacks
-	foreach( void functionref() callback in file.matchEndCallbacksFirst )
+	foreach( void functionref() callback in file.matchEndCallbacksReliable )
 		callback()
 
 	// Run second callbacks
-	foreach( void functionref() callback in file.matchEndCallbacksSecond )
+	foreach( void functionref() callback in file.matchEndCallbacksUnReliable )
 		callback()
 
 	FSU_Debug( "FSU_EndOfMatchCallback_Threaded" )
