@@ -81,7 +81,6 @@ string function FSU_GetANSICodeFromRGB( int iRed, int iGreen, int iBlue ) {
 // Input  : name - The name of the player we want
 //-----------------------------------------------------------------------------
 entity function FSU_GetPlayerEntityByName(string name){
-	// FIXME [Fifty]: Separate this into Get*ByName and Get*ByIndex
 	if(name == "")
 		return null
 
@@ -89,13 +88,20 @@ entity function FSU_GetPlayerEntityByName(string name){
 		if(p.GetPlayerName().tolower() == name.tolower())
 			return p
 
-	if(name.len() <= 2){
-		int PlayerIndex = name.tointeger()
-		if(GetPlayerArray().len()-1>= PlayerIndex && PlayerIndex > -1) // check if the index exits
-			return GetPlayerArray()[PlayerIndex]
-	}
-
 	return null
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Gets the player entity by its name
+// Input  : name - The name of the player we want
+//-----------------------------------------------------------------------------
+entity function FSU_GetPlayerEntityByIndex(int iIdx){
+	array<entity> arPlayers = GetPlayerArray()
+
+	if(iIdx < 0 || iIdx > GetPlayerArray().len() - 1)
+		return null
+
+	return arPlayers[iIdx]
 }
 
 //-----------------------------------------------------------------------------
