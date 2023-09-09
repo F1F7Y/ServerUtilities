@@ -33,11 +33,14 @@ void function FSU_RegisterModules_Threaded() {
 	// Wait for settings to properly init before doing anything else
 	while( !FSU_SettingsAreLoaded() ) { WaitFrame() }
 
+	// Register framework modules
 	FSU_RegisterModule( FSU_RegisterChatHookModule )
-	FSU_RegisterModule( FSU_RegisterCoreCommandsModule )
 	FSU_RegisterModule( FSU_RegisterCustomCallbacksModule )
 
-	// Register chat commands
+	// Register game modules
+	FSU_RegisterGameModule( FSU_RegisterUnitTestsGameModule )
+
+	// Run initial callbacks
 	FSU_ReloadRegisteredCommands()
 }
 
@@ -47,4 +50,12 @@ void function FSU_RegisterModules_Threaded() {
 //-----------------------------------------------------------------------------
 void function FSU_RegisterModule( string functionref() module ) {
 	FSU_Print( "Registering module:", module() )
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Calls the game module register func and logs the module
+// Input  : module - The module register function
+//-----------------------------------------------------------------------------
+void function FSU_RegisterGameModule( string functionref() module ) {
+	FSU_Print( "Registering game module:", module() )
 }

@@ -1,4 +1,4 @@
-global function FSU_RegisterCoreCommandsModule
+global function FSU_RegisterUnitTestsGameModule
 
 
 //-----------------------------------------------------------------------------
@@ -10,9 +10,9 @@ global function FSU_RegisterCoreCommandsModule
 //-----------------------------------------------------------------------------
 // Purpose: Core commands init callback
 //-----------------------------------------------------------------------------
-string function FSU_RegisterCoreCommandsModule() {
+string function FSU_RegisterUnitTestsGameModule() {
 	FSU_AddCallback_ChatCommandRegister( FSU_OnRegisteringCommands )
-	return "CoreCommandsModule"
+	return "UnitTestsgameModule"
 }
 
 //-----------------------------------------------------------------------------
@@ -36,8 +36,6 @@ void function FSU_OnRegisteringCommands() {
 //          arrArgs - An array of arguments the player passed
 //-----------------------------------------------------------------------------
 string function FSU_CommandCallback_Test( entity entPlayer, array<string> arrArgs ) {
-	FSU_SendSystemMessageToPlayer( entPlayer, arrArgs[0] )
+	FSU_SendSystemMessageToPlayer( entPlayer, "Test" )
 	return "test"
-
-	//FSU_Print(FSU_GetSettingString("Version"))
 }

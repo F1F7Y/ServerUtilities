@@ -44,7 +44,7 @@
 			"RunOn": "SERVER && MP"
 		},
 		{
-			"Path": "commands/fsu_core_commands.nut",
+			"Path": "game/fsu_unit_tests.nut",
 			"RunOn": "SERVER && MP"
 		},
 		{
