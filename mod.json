@@ -12,9 +12,9 @@
 			"HelpString": "Whether errors should throw. Only enable if you are a DEV!!!"
 		},
 		{
-			"Name": "FSU_DEBUG_PRINT",
+			"Name": "FSU_DEBUG",
 			"DefaultValue": "1",
-			"HelpString": "Enables debug printing. Only enable if you are a DEV!!!"
+			"HelpString": "Enables debug features. Only enable if you are a DEV!!!"
 		}
 	],
 	"ConCommands": [

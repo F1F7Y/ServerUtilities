@@ -53,11 +53,11 @@ void function FSU_Error( ... ) {
 
 //-----------------------------------------------------------------------------
 // Purpose: Prints a debug message into the chat and the console only when
-//          FSU_DEBUG_PRINT is set
+//          FSU_DEBUG is set
 // Input  : ... - A list of variables to be printed
 //-----------------------------------------------------------------------------
 void function FSU_Debug( ... ) {
-	if( !GetConVarBool( "FSU_DEBUG_PRINT" ) )
+	if( !GetConVarBool( "FSU_DEBUG" ) )
 		return
 
 	if ( vargc <= 0 )

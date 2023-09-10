@@ -14,7 +14,22 @@ global enum eFSUPlayerLevel {
 }
 
 //-----------------------------------------------------------------------------
-// Settings structs
+// Commands
+global struct FSUCommand_t {
+	// Minimum level for a user to be able to use / see the command
+	int iUserLevel = eFSUPlayerLevel.DEFAULT
+	// Command descripiton
+	// Each array index corresponds to a eFSUPlayerLevel
+	// If a description is empty for a level we use the next one under us
+	string[eFSUPlayerLevel.LENGTH] arDescriptions
+	// Command abbreviations
+	array<string> arAbbreviations
+	// Callback function
+	string functionref( entity, array<string> ) fnCallback
+}
+
+//-----------------------------------------------------------------------------
+// Settings
 global struct FSUTheme_t
 {
 	int iRed   = 255

@@ -4,6 +4,7 @@ global function FSU_RegisterCommand
 
 global function FSU_CheckMessageForCommand
 
+global function FSU_DumpRegisteredCommands_Debug
 
 //-----------------------------------------------------------------------------
 // This file handles the registering, storage and
@@ -11,28 +12,15 @@ global function FSU_CheckMessageForCommand
 //-----------------------------------------------------------------------------
 
 
-//-----------------------------------------------------------------------------
-// Stores information about the command
-//-----------------------------------------------------------------------------
-global struct FSU_CommandStruct {
-	// Minimum level for a user to be able to use / see the command
-	int iUserLevel = eFSUPlayerLevel.DEFAULT
-	// Command descripiton
-	// Each array index corresponds to a eFSUPlayerLevel
-	// If a description is empty for a level we use the next one under us
-	string[eFSUPlayerLevel.LENGTH] arrDescriptions
-	// Command abbreviations
-	array<string> arrAbbreviations
-	// Callback function
-	string functionref( entity, array <string> ) Callback
-}
-
 struct {
 	bool bCanRegisterCommands = false
 
-	array<void functionref()> arrCallbacks
-	table<string, FSU_CommandStruct> tabCommands
-	table<string, FSU_CommandStruct> abrCommands
+	// Command register callbacks
+	array<void functionref()> arCallbacks
+
+	// Chat command callbacks
+	table<string, FSUCommand_t> tbCommands
+	table<string, FSUCommand_t> tbAbbreviations
 } file
 
 
@@ -41,7 +29,7 @@ struct {
 // Input  : callback  - The function to add to our command registering callback array
 //-----------------------------------------------------------------------------
 void function FSU_AddCallback_ChatCommandRegister( void functionref() callback ) {
-	file.arrCallbacks.append( callback )
+	file.arCallbacks.append( callback )
 }
 
 //-----------------------------------------------------------------------------
@@ -50,7 +38,7 @@ void function FSU_AddCallback_ChatCommandRegister( void functionref() callback )
 void function FSU_ReloadRegisteredCommands() {
 	file.bCanRegisterCommands = true
 
-	foreach( void functionref() callback in file.arrCallbacks )
+	foreach( void functionref() callback in file.arCallbacks )
 		callback()
 
 	file.bCanRegisterCommands = false
@@ -62,20 +50,25 @@ void function FSU_ReloadRegisteredCommands() {
 // Input  : name - The command name
 //          cmd - The command struct ascosiated(?) with the command name
 //-----------------------------------------------------------------------------
-void function FSU_RegisterCommand( string name, FSU_CommandStruct cmd ) {
+void function FSU_RegisterCommand( string name, FSUCommand_t cmd ) {
 	if( !file.bCanRegisterCommands ) {
 		FSU_Error( "Tried to register command outside of command register callback!" )
 		return
 	}
 
-	if( name in file.tabCommands )
-		FSU_Print( "Overwriting command: \"" + name + "\"" )
+	string svCmd = name.tolower()
 
-	file.tabCommands[name] <- cmd //since the <- operator just overrides an existing key we dont need to check if it already exists
+	if( svCmd in file.tbCommands )
+		FSU_Warning( "Overwriting command: \"" + svCmd + "\"" )
 
-	//to avoid having a double for loop when finding a command (it looks clearner)
-	foreach( string abr in cmd.arrAbbreviations )
-		file.abrCommands[abr] <- cmd
+	file.tbCommands[svCmd] <- cmd
+
+	foreach( string abr in cmd.arAbbreviations ) {
+		if( abr in file.tbAbbreviations )
+			FSU_Warning( "Overwriting abbreviation: \"" + abr + "\"" )
+
+		file.tbAbbreviations[abr.tolower()] <- cmd
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -91,21 +84,43 @@ bool function FSU_CheckMessageForCommand( entity entPlayer, string strMessage ) 
 		return bIsCommand
 
 	// Extract arguments
-	array<string> arrArgs = split( strMessage, " " )
-	string strCommand = arrArgs.remove(0).tolower().slice( FSU_GetCommandPrefix().len() )
+	array<string> arArgs = split( strMessage, " " )
+	arArgs[0] = arArgs[0].slice( FSU_GetCommandPrefix().len() )
+
+	string svCmd = arArgs[0].tolower()
+
+	FSU_Debug( "Player:", entPlayer.GetPlayerName(), "tried to run command:", svCmd )
 
 	// Try to find the command
-	FSU_CommandStruct command
+	FSUCommand_t command
 
-	if( strCommand in file.tabCommands )
-		command = file.tabCommands[strCommand]
-	if( strCommand in file.abrCommands)
-		command = file.abrCommands[strCommand]
+	if( svCmd in file.tbCommands )
+		command = file.tbCommands[svCmd]
+	if( svCmd in file.tbAbbreviations)
+		command = file.tbAbbreviations[svCmd]
 
-	if( command.Callback != null )
-		FSU_SendSystemMessageToPlayer( entPlayer, command.Callback( entPlayer, arrArgs ) )
-	else
-		FSU_SendSystemMessageToPlayer( entPlayer, format( "Command: \"%s\" not found!", strCommand ) )
+	if( command.fnCallback != null ) {
+		string svResponse = command.fnCallback( entPlayer, arArgs )
+
+		if(svResponse.len())
+			FSU_SendSystemMessageToPlayer( entPlayer, svResponse )
+	} else {
+		FSU_SendSystemMessageToPlayer( entPlayer, format( "Command: \"%s\" not found!", svCmd ) )
+	}
 
 	return bIsCommand
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: dumps all registered commands
+//-----------------------------------------------------------------------------
+void function FSU_DumpRegisteredCommands_Debug() {
+	if(!GetConVarBool("FSU_DEBUG"))
+		return
+
+	foreach( string svCmd, FSUCommand_t cmd in file.tbCommands)
+		FSU_Debug("- ", svCmd, "(Command)")
+
+	foreach( string svAbr, FSUCommand_t cmd in file.tbAbbreviations)
+		FSU_Debug("- ", svAbr, "(Abbreviation)")
 }
