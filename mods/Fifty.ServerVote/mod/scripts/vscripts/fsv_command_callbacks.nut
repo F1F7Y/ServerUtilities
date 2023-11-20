@@ -419,7 +419,7 @@ void function FSV_CommandCallback_Kick( entity player, array<string> args) {
 
 		FSU_Print( targetName + " kicked by admin:" + player.GetPlayerName())
 		ServerCommand("kick " + target.GetPlayerName())
-		FSU_ChatBroadcast("%H"+player.GetPlayerName() + " %Nwas kicked by an admin.")
+		FSU_ChatBroadcast("%H"+targetName + " %Nwas kicked by an admin.")
 		return
 	}
 
